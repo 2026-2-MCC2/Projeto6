@@ -14,7 +14,7 @@ Vide tutoriais do PI.
 
 ## Nome do Grupo: Os Ticketudo
 
-## Integrantes: <a href="https://www.linkedin.com/in/gabriel-ribeiro-alves-dev/">Gabriel Ribeiro Alves</a>, <a href="https://www.linkedin.com/in/victorbarq/"> Caio Moraes</a>, <a href="https://www.linkedin.com/in/guilherme-montes/">Guilherme Montes</a>, <a href="https://www.linkedin.com/in/otavio-sanches-pierini"> Otavio Sanches Pierini</a>, <a href="https://www.linkedin.com/in/victorbarq/">Roronoa Zoro</a>
+## Integrantes: <a href="https://www.linkedin.com/in/gabriel-ribeiro-alves-dev/">Gabriel Ribeiro Alves</a>, <a href="https://www.linkedin.com/in/victorbarq/"> Caio Moraes</a>, <a href="https://www.linkedin.com/in/guilherme-montes/">Guilherme Montes</a>, <a href="https://www.linkedin.com/in/otavio-sanches-pierini-0b6993306?trk=contact-info"> Otavio Sanches Pierini</a>, <a href="https://www.linkedin.com/in/victorbarq/">Roronoa Zoro</a>
 
 ## Professores Orientadores: <a href="https://www.linkedin.com/in/victorbarq/">Dr. Victor Von Doom</a>, <a href="https://www.linkedin.com/in/victorbarq/">Me. Saitama</a>, <a href="https://www.linkedin.com/in/victorbarq/">Dr. Strange</a>, <a href="https://www.linkedin.com/in/victorbarq/">Me. Yoda</a>, <a href="https://www.linkedin.com/in/victorbarq/">Dr. Gero</a>
 
