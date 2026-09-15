@@ -1,0 +1,742 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Fornecedores Credenciados | Segurança &amp; Brigada | TrocaTicket Produtor</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS via CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-variant": "#353534",
+            "secondary-fixed": "#e2e2eb",
+            "error": "#ffb4ab",
+            "tertiary-fixed": "#6bff8f",
+            "error-container": "#93000a",
+            "inverse-surface": "#e2e2e2",
+            "on-surface-variant": "#c4c7c8",
+            "tertiary-container": "#e2e2e2",
+            "on-secondary-container": "#b4b4bd",
+            "on-background": "#e5e2e1",
+            "surface-container-highest": "#353534",
+            "on-tertiary-container": "#636565",
+            "on-secondary-fixed-variant": "#45464e",
+            "surface-container-lowest": "#0e0e0e",
+            "outline-variant": "#444748",
+            "surface-container": "#201f1f",
+            "on-primary": "#2f3131",
+            "inverse-on-surface": "#303030",
+            "tertiary": "#ffffff",
+            "surface-container-low": "#1c1b1b",
+            "primary-fixed": "#e2e2e2",
+            "on-primary-fixed": "#1a1c1c",
+            "tertiary-fixed-dim": "#c6c6c7",
+            "surface-bright": "#393939",
+            "secondary": "#c6c6cf",
+            "on-primary-container": "#636565",
+            "on-primary-fixed-variant": "#454747",
+            "on-tertiary-fixed-variant": "#005321",
+            "surface-tint": "#c6c6c7",
+            "surface": "#131313",
+            "on-error": "#690005",
+            "surface-container-high": "#2a2a2a",
+            "secondary-fixed-dim": "#c6c6cf",
+            "on-tertiary": "#2f3131",
+            "inverse-primary": "#5d5f5f",
+            "on-secondary-fixed": "#1a1b22",
+            "surface-dim": "#131313",
+            "on-tertiary-fixed": "#002109",
+            "primary-container": "#e2e2e2",
+            "on-surface": "#e5e2e1",
+            "on-secondary": "#2e3037",
+            "primary-fixed-dim": "#c6c6c7",
+            "on-error-container": "#ffdad6",
+            "secondary-container": "#45464e",
+            "primary": "#ffffff",
+            "outline": "#8e9192",
+            "background": "#131313"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-lg": "1.5rem",
+            "margin-mobile": "1.25rem",
+            "space-2xl": "3rem",
+            "margin-desktop": "3rem",
+            "space-2xs": "0.25rem",
+            "space-3xs": "0.125rem",
+            "gutter-mobile": "1rem",
+            "space-sm": "0.75rem",
+            "space-xs": "0.5rem",
+            "space-xl": "2rem",
+            "gutter-desktop": "1.5rem",
+            "space-3xl": "4.5rem",
+            "space-4xl": "6rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "body-sm": ["Inter"],
+            "code-numeric": ["Inter"],
+            "label-md": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-xl-mobile": ["Inter"],
+            "display-hero-mobile": ["Inter"],
+            "headline-md": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-sm": ["Inter"],
+            "display-hero": ["Inter"],
+            "headline-xl": ["Inter"],
+            "body-lg": ["Inter"]
+          },
+          "fontSize": {
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+            "code-numeric": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "body-md": ["15px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "display-hero-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-hero": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "body-lg": ["17px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0e0e0e;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #353534;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased selection:bg-primary selection:text-on-primary min-h-screen flex flex-col pb-32">
+<!-- TopNavBar (Shared Component Anchor) -->
+
+<!-- Main Canvas Container -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-space-xl pb-space-3xl">
+<!-- Breadcrumb -->
+<nav aria-label="Navegação Estrutural" class="flex items-center flex-wrap gap-2 text-on-surface-variant font-label-sm text-label-sm mb-space-sm">
+<span class="hover:text-primary transition-colors cursor-pointer">Painel do Organizador</span>
+<span class="material-symbols-outlined text-xs text-outline" data-icon="chevron_right">chevron_right</span>
+<span class="hover:text-primary transition-colors cursor-pointer">Adicionar Novo Evento</span>
+<span class="material-symbols-outlined text-xs text-outline" data-icon="chevron_right">chevron_right</span>
+<span class="hover:text-primary transition-colors cursor-pointer">Módulos de Infraestrutura</span>
+<span class="material-symbols-outlined text-xs text-outline" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary font-semibold">Selecionar Fornecedor Credenciado</span>
+</nav>
+<!-- Header Section -->
+<section class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg mb-space-xl pb-space-lg border-b border-outline-variant">
+<div class="max-w-3xl">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-container-highest font-label-sm text-label-sm text-on-surface mb-3 border border-outline-variant">
+<span class="material-symbols-outlined text-sm text-tertiary-fixed" data-icon="security">security</span>
+          Categoria Crítica de Infraestrutura
+        </div>
+<h1 class="font-headline-xl text-headline-xl text-primary font-bold tracking-tight mb-space-xs">
+          Segurança Privada &amp; Brigada de Emergência
+        </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+          Escolha uma empresa de segurança e contingência pré-homologada pela Polícia Federal, auditada pela TrocaTicket com cobertura de custódia e seguro de responsabilidade civil integrado.
+        </p>
+</div>
+<!-- Quick Summary Metric Badge -->
+<div class="flex items-center gap-4 bg-surface-container-low p-4 rounded-xl border border-outline-variant self-start lg:self-auto shrink-0">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="verified">verified</span>
+</div>
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Homologação Ativa</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">4 Empresas de Elite</span>
+<span class="block font-code-numeric text-code-numeric text-tertiary-fixed">100% PF &amp; CBMSP Auditadas</span>
+</div>
+</div>
+</section>
+<!-- TrocaTicket Shield Banner -->
+<section class="mb-space-xl relative overflow-hidden rounded-xl bg-gradient-to-r from-surface-container-low via-surface-container to-surface-container-low border border-outline-variant p-space-md md:p-space-lg">
+<div class="absolute -right-8 -bottom-10 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[160px]" data-icon="shield">shield</span>
+</div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md relative z-10">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed/10 border border-tertiary-fixed/30 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-tertiary-fixed text-xl" data-icon="gshield">gshield</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Garantia TrocaTicket Shield &amp; Escrow Seguro</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-tertiary-fixed text-label-sm font-label-sm border border-outline-variant">Auditoria 2025</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-4xl">
+              100% dos fornecedores listados possuem Certidão Negativa Criminal da equipe, Portaria da Polícia Federal ativa e Apólice de Seguro de até <strong class="text-primary font-semibold">R$ 10.000.000</strong> integrada ao Escrow automático do contrato de produção.
+            </p>
+</div>
+</div>
+<div class="flex items-center gap-2 self-start md:self-auto shrink-0 font-label-sm text-label-sm text-on-surface">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface-container-highest border border-outline-variant">
+<span class="material-symbols-outlined text-base text-tertiary-fixed" data-icon="policy">policy</span>
+            Portaria DPF Atualizada
+          </span>
+</div>
+</div>
+</section>
+<!-- Search and Quick Filters Bar -->
+<section class="mb-space-xl">
+<div class="bg-surface-container-low p-space-md rounded-xl border border-outline-variant flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<!-- Search Input -->
+<div class="relative flex-1 min-w-[280px]">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded bg-surface-container-lowest border border-outline-variant text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:border-primary focus:outline-none transition-colors" placeholder="Buscar por razão social, CNPJ ou número de portaria PF..." type="text">
+</div>
+<!-- Filter Chips & Selectors -->
+<div class="flex flex-wrap items-center gap-space-xs">
+<!-- Porte Evento -->
+<div class="relative">
+<select class="appearance-none bg-surface-container text-on-surface border border-outline-variant font-label-md text-label-md py-2 pl-3 pr-8 rounded focus:border-primary focus:outline-none cursor-pointer">
+<option>Porte: Todos (Até 100k+)</option>
+<option>Mega Festivais (&gt; 40.000)</option>
+<option>Arenas &amp; Estádios (15k - 40k)</option>
+<option>Teatros &amp; VIP (&lt; 15.000)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-sm" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Classificação -->
+<div class="relative">
+<select class="appearance-none bg-surface-container text-on-surface border border-outline-variant font-label-md text-label-md py-2 pl-3 pr-8 rounded focus:border-primary focus:outline-none cursor-pointer">
+<option>Avaliação: Mais Bem Avaliados (★ 4.8+)</option>
+<option>Mais Eventos Realizados</option>
+<option>Menor Tempo de Mobilização</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-sm" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Raio de Atuação -->
+<div class="relative">
+<select class="appearance-none bg-surface-container text-on-surface border border-outline-variant font-label-md text-label-md py-2 pl-3 pr-8 rounded focus:border-primary focus:outline-none cursor-pointer">
+<option>Raio de Atuação: Grande SP &amp; Litoral</option>
+<option>Todo Estado de São Paulo</option>
+<option>Nacional / Itinerante</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-sm" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Quick Toggle Chip -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded bg-surface-container border border-outline-variant text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm text-tertiary-fixed" data-icon="local_fire_department">local_fire_department</span>
+<span class="">Apenas Homologados CBMSP</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Suppliers Grid / Comparative Bento List -->
+<div class="space-y-space-lg" id="suppliers-list">
+<!-- Supplier 1: Grupo Prosegur Special Events Security Brasil -->
+<article class="supplier-card relative rounded-xl bg-surface-container-low border border-outline-variant hover:border-outline hover:bg-surface-container transition-all duration-200 overflow-hidden" data-supplier-id="prosegur">
+<!-- Status indicator bar -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary-fixed"></div>
+<div class="p-space-md md:p-space-xl pl-space-lg md:pl-space-xl">
+<!-- Top Row: Name, Badges & High-Level Rating -->
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-space-md mb-space-md">
+<div>
+<div class="flex flex-wrap items-center gap-2 mb-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest border border-outline-variant text-primary font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed"></span>
+                  Homologado TrocaTicket Platinum
+                </span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-numeric text-xs border border-outline-variant">
+                  PF Portaria nº 4.192/2023-CGCSP
+                </span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-numeric text-xs border border-outline-variant">
+                  CNPJ: 04.912.834/0001-90
+                </span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold tracking-tight">
+                Grupo Prosegur Special Events Security Brasil
+              </h2>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span class="material-symbols-outlined text-sm text-outline" data-icon="location_on">location_on</span>
+                Bases Operacionais: São Paulo (Barra Funda &amp; Interlagos) • Cobertura Nacional
+              </p>
+</div>
+<!-- Score & Event Count Metric Cluster -->
+<div class="flex items-center gap-space-md bg-surface-container-lowest p-3 rounded-lg border border-outline-variant shrink-0 self-start">
+<div class="text-right">
+<div class="flex items-center justify-end gap-1 text-tertiary-fixed font-code-numeric font-bold text-lg">
+<span class="">★</span>
+<span class="">4.9</span>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">142 eventos atendidos</div>
+</div>
+<div class="w-px h-8 bg-outline-variant"></div>
+<div class="text-left">
+<div class="font-code-numeric font-bold text-lg text-primary">99.8%</div>
+<div class="font-label-sm text-label-sm text-tertiary-fixed">Zero Incidentes</div>
+</div>
+</div>
+</div>
+<!-- Description & Scope -->
+<div class="mb-space-md max-w-5xl">
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Líder global em inteligência tática e segurança patrimonial para operações de alta densidade. Efetivo próprio com mais de 3.200 vigilantes com reciclagem semestral específica para multidões, 180 brigadistas civis homologados no Corpo de Bombeiros de SP, além de 4 ambulâncias UTI Móveis dedicadas e centro de comando móvel (C2) com link satelital e câmeras com reconhecimento biométrico.
+            </p>
+</div>
+<!-- Technical Specs & Differentials (Grid Bento) -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm mb-space-md">
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Capacidade de Público</span>
+<span class="font-code-numeric text-code-numeric text-primary font-semibold">Até 120.000 pessoas</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Seguro Responsabilidade Civil</span>
+<span class="font-code-numeric text-code-numeric text-tertiary-fixed font-semibold">R$ 10.000.000 (Porto Seguro)</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Incidentes (Últimos 24m)</span>
+<span class="font-code-numeric text-code-numeric text-tertiary-fixed font-semibold">0 reportados</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Rádio &amp; Comunicação</span>
+<span class="font-code-numeric text-code-numeric text-primary font-semibold">Motorola MOTOTRBO AES-256</span>
+</div>
+</div>
+<!-- Social Proof Testimonial -->
+<div class="bg-surface-container-highest/60 p-3 rounded-lg border border-outline-variant flex items-start gap-2 mb-space-md">
+<span class="material-symbols-outlined text-base text-outline mt-0.5" data-icon="format_quote">format_quote</span>
+<p class="font-body-sm text-body-sm text-on-surface italic">
+              "Operou o <strong class="text-primary not-italic">Lollapalooza Brasil</strong> e o <strong class="text-primary not-italic">Primavera Sound SP</strong> com prontidão absoluta, contenção perimetral exemplar e zero ocorrências graves de furto no front-stage."
+              <span class="text-on-surface-variant not-italic block mt-0.5 text-xs">— Diretoria de Operações, Rock World &amp; LiveNation</span>
+</p>
+</div>
+<!-- Actions Footer -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-sm border-t border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pronta mobilização em até 72 horas</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-4 py-2 rounded bg-surface-container-high border border-outline-variant text-on-surface font-label-md text-label-md hover:text-primary hover:bg-surface-bright transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base" data-icon="assignment">assignment</span>
+<span class="">Ver Certidões &amp; Portarias</span>
+</button>
+<button class="select-btn px-5 py-2 rounded bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-neutral-200 active:opacity-90 transition-all flex items-center gap-1.5 shadow-sm" onclick="selectSupplier('prosegur', 'Grupo Prosegur Special Events Security Brasil', 'R$ 10.000.000')">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+<span class="">Selecionar este Fornecedor</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Supplier 2: Gocil Segurança de Grandes Eventos & Brigada Tática -->
+<article class="supplier-card relative rounded-xl bg-surface-container-low border border-outline-variant hover:border-outline hover:bg-surface-container transition-all duration-200 overflow-hidden" data-supplier-id="gocil">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-outline-variant"></div>
+<div class="p-space-md md:p-space-xl pl-space-lg md:pl-space-xl">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-space-md mb-space-md">
+<div>
+<div class="flex flex-wrap items-center gap-2 mb-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest border border-outline-variant text-primary font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed"></span>
+                  Homologado TrocaTicket Platinum
+                </span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-numeric text-xs border border-outline-variant">
+                  PF Portaria nº 2.801/2022-DELESP
+                </span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-numeric text-xs border border-outline-variant">
+                  CNPJ: 54.301.762/0001-12
+                </span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold tracking-tight">
+                Gocil Segurança de Grandes Eventos &amp; Brigada Tática
+              </h2>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span class="material-symbols-outlined text-sm text-outline" data-icon="location_on">location_on</span>
+                Bases Operacionais: São Paulo (Morumbi, Allianz Parque &amp; Anhembi)
+              </p>
+</div>
+<div class="flex items-center gap-space-md bg-surface-container-lowest p-3 rounded-lg border border-outline-variant shrink-0 self-start">
+<div class="text-right">
+<div class="flex items-center justify-end gap-1 text-tertiary-fixed font-code-numeric font-bold text-lg">
+<span class="">★</span>
+<span class="">4.8</span>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">96 eventos atendidos</div>
+</div>
+<div class="w-px h-8 bg-outline-variant"></div>
+<div class="text-left">
+<div class="font-code-numeric font-bold text-lg text-primary">99.5%</div>
+<div class="font-label-sm text-label-sm text-tertiary-fixed">Conformidade Auditada</div>
+</div>
+</div>
+</div>
+<div class="mb-space-md max-w-5xl">
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Especialização consolidada em arenas esportivas, festivais de música eletrônica de múltiplos palcos e congressos internacionais. Apresenta corpo tático de choque e desescalada pacífica, equipe de brigadistas treinada no Centro de Treinamento CBMSP de Franco da Rocha e monitoramento aéreo com drones térmicos homologados pela ANAC/DECEA.
+            </p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm mb-space-md">
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Capacidade de Público</span>
+<span class="font-code-numeric text-code-numeric text-primary font-semibold">Até 80.000 pessoas</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Seguro Responsabilidade Civil</span>
+<span class="font-code-numeric text-code-numeric text-tertiary-fixed font-semibold">R$ 8.000.000 (Allianz Global)</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Incidentes (Últimos 24m)</span>
+<span class="font-code-numeric text-code-numeric text-tertiary-fixed font-semibold">0 reportados</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Suporte Médico</span>
+<span class="font-code-numeric text-code-numeric text-primary font-semibold">Posto Médico Avançado + UTI</span>
+</div>
+</div>
+<div class="bg-surface-container-highest/60 p-3 rounded-lg border border-outline-variant flex items-start gap-2 mb-space-md">
+<span class="material-symbols-outlined text-base text-outline mt-0.5" data-icon="format_quote">format_quote</span>
+<p class="font-body-sm text-body-sm text-on-surface italic">
+              "Gestão cirúrgica de fluxo nos acessos de pista premium e camarotes da turnê Coldplay no Morumbi. Controle de credenciamento antifraude perfeito."
+              <span class="text-on-surface-variant not-italic block mt-0.5 text-xs">— Gerência Geral de Segurança de Estádio</span>
+</p>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-sm border-t border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pronta mobilização em até 48 horas</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-4 py-2 rounded bg-surface-container-high border border-outline-variant text-on-surface font-label-md text-label-md hover:text-primary hover:bg-surface-bright transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base" data-icon="assignment">assignment</span>
+<span class="">Ver Certidões &amp; Portarias</span>
+</button>
+<button class="select-btn px-5 py-2 rounded bg-surface-container-high border border-outline text-primary font-label-md text-label-md font-semibold hover:bg-primary hover:text-on-primary active:opacity-90 transition-all flex items-center gap-1.5" onclick="selectSupplier('gocil', 'Gocil Segurança de Grandes Eventos &amp; Brigada Tática', 'R$ 8.000.000')">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+<span class="">Selecionar este Fornecedor</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Supplier 3: Protege Segurança Corporativa & Contingência VIP -->
+<article class="supplier-card relative rounded-xl bg-surface-container-low border border-outline-variant hover:border-outline hover:bg-surface-container transition-all duration-200 overflow-hidden" data-supplier-id="protege">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-outline-variant"></div>
+<div class="p-space-md md:p-space-xl pl-space-lg md:pl-space-xl">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-space-md mb-space-md">
+<div>
+<div class="flex flex-wrap items-center gap-2 mb-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest border border-outline-variant text-primary font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed"></span>
+                  Homologado TrocaTicket Gold
+                </span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-numeric text-xs border border-outline-variant">
+                  PF Portaria nº 1.109/2021-CGCSP
+                </span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-numeric text-xs border border-outline-variant">
+                  CNPJ: 43.208.513/0001-44
+                </span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold tracking-tight">
+                Protege Segurança Corporativa &amp; Contingência VIP
+              </h2>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span class="material-symbols-outlined text-sm text-outline" data-icon="location_on">location_on</span>
+                Bases Operacionais: Faria Lima, Jardins e Aeroporto de Guarulhos
+              </p>
+</div>
+<div class="flex items-center gap-space-md bg-surface-container-lowest p-3 rounded-lg border border-outline-variant shrink-0 self-start">
+<div class="text-right">
+<div class="flex items-center justify-end gap-1 text-tertiary-fixed font-code-numeric font-bold text-lg">
+<span class="">★</span>
+<span class="">4.9</span>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">115 eventos atendidos</div>
+</div>
+<div class="w-px h-8 bg-outline-variant"></div>
+<div class="text-left">
+<div class="font-code-numeric font-bold text-lg text-primary">100%</div>
+<div class="font-label-sm text-label-sm text-tertiary-fixed">Discrição VIP</div>
+</div>
+</div>
+</div>
+<div class="mb-space-md max-w-5xl">
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Referência nacional em escolta armada de artistas internacionais, proteção de camarotes de alta relevância (VVIP) e custódia física de bilheterias/tesouraria de grande montante. Equipe bilíngue treinada em protocolos diplomáticos, veículos blindados nível III-A e brigadistas especializados em recintos fechados e acústicos.
+            </p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm mb-space-md">
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Capacidade de Público</span>
+<span class="font-code-numeric text-code-numeric text-primary font-semibold">Até 35.000 pessoas (VIP Focus)</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Seguro Responsabilidade Civil</span>
+<span class="font-code-numeric text-code-numeric text-tertiary-fixed font-semibold">R$ 10.000.000 (Chubb Seguros)</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Incidentes (Últimos 24m)</span>
+<span class="font-code-numeric text-code-numeric text-tertiary-fixed font-semibold">0 reportados</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Especialidade Tática</span>
+<span class="font-code-numeric text-code-numeric text-primary font-semibold">Escolta Blindada + VVIP</span>
+</div>
+</div>
+<div class="bg-surface-container-highest/60 p-3 rounded-lg border border-outline-variant flex items-start gap-2 mb-space-md">
+<span class="material-symbols-outlined text-base text-outline mt-0.5" data-icon="format_quote">format_quote</span>
+<p class="font-body-sm text-body-sm text-on-surface italic">
+              "Eficiência absoluta na logística de traslado e segurança de camarim para headliners internacionais no festival Ultra Brasil. Postura impecável."
+              <span class="text-on-surface-variant not-italic block mt-0.5 text-xs">— Produtora Executiva Artist Relations</span>
+</p>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-sm border-t border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pronta mobilização em até 24 horas</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-4 py-2 rounded bg-surface-container-high border border-outline-variant text-on-surface font-label-md text-label-md hover:text-primary hover:bg-surface-bright transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base" data-icon="assignment">assignment</span>
+<span class="">Ver Certidões &amp; Portarias</span>
+</button>
+<button class="select-btn px-5 py-2 rounded bg-surface-container-high border border-outline text-primary font-label-md text-label-md font-semibold hover:bg-primary hover:text-on-primary active:opacity-90 transition-all flex items-center gap-1.5" onclick="selectSupplier('protege', 'Protege Segurança Corporativa &amp; Contingência VIP', 'R$ 10.000.000')">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+<span class="">Selecionar este Fornecedor</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Supplier 4: Grupo Haganá Eventos & Brigada Integrada -->
+<article class="supplier-card relative rounded-xl bg-surface-container-low border border-outline-variant hover:border-outline hover:bg-surface-container transition-all duration-200 overflow-hidden" data-supplier-id="hagana">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-outline-variant"></div>
+<div class="p-space-md md:p-space-xl pl-space-lg md:pl-space-xl">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-space-md mb-space-md">
+<div>
+<div class="flex flex-wrap items-center gap-2 mb-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest border border-outline-variant text-primary font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed"></span>
+                  Homologado TrocaTicket Gold
+                </span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-numeric text-xs border border-outline-variant">
+                  PF Portaria nº 3.012/2023-CGCSP
+                </span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-numeric text-xs border border-outline-variant">
+                  CNPJ: 02.119.821/0001-77
+                </span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold tracking-tight">
+                Grupo Haganá Eventos &amp; Brigada Integrada
+              </h2>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span class="material-symbols-outlined text-sm text-outline" data-icon="location_on">location_on</span>
+                Bases Operacionais: Alphaville, Brooklin e Campinas
+              </p>
+</div>
+<div class="flex items-center gap-space-md bg-surface-container-lowest p-3 rounded-lg border border-outline-variant shrink-0 self-start">
+<div class="text-right">
+<div class="flex items-center justify-end gap-1 text-tertiary-fixed font-code-numeric font-bold text-lg">
+<span class="">★</span>
+<span class="">4.7</span>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">78 eventos atendidos</div>
+</div>
+<div class="w-px h-8 bg-outline-variant"></div>
+<div class="text-left">
+<div class="font-code-numeric font-bold text-lg text-primary">99.1%</div>
+<div class="font-label-sm text-label-sm text-tertiary-fixed">Controle de Acesso</div>
+</div>
+</div>
+</div>
+<div class="mb-space-md max-w-5xl">
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Foco prioritário em festivais culturais, eventos gastronômicos de grande porte, feiras temáticas e convenções corporativas. Especialistas em fluxo de catracas integradas à TrocaTicket RFID/QR Code e plano de abandono preventivo aprovado de antemão pelo Corpo de Bombeiros Militar de SP.
+            </p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm mb-space-md">
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Capacidade de Público</span>
+<span class="font-code-numeric text-code-numeric text-primary font-semibold">Até 45.000 pessoas</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Seguro Responsabilidade Civil</span>
+<span class="font-code-numeric text-code-numeric text-tertiary-fixed font-semibold">R$ 6.000.000 (Bradesco Seguros)</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Incidentes (Últimos 24m)</span>
+<span class="font-code-numeric text-code-numeric text-tertiary-fixed font-semibold">0 reportados</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded border border-outline-variant">
+<span class="font-label-sm text-label-sm text-outline block mb-0.5">Brigada Civil</span>
+<span class="font-code-numeric text-code-numeric text-primary font-semibold">Certificação NBR 14276</span>
+</div>
+</div>
+<div class="bg-surface-container-highest/60 p-3 rounded-lg border border-outline-variant flex items-start gap-2 mb-space-md">
+<span class="material-symbols-outlined text-base text-outline mt-0.5" data-icon="format_quote">format_quote</span>
+<p class="font-body-sm text-body-sm text-on-surface italic">
+              "Trabalharam na Feira Internacional de Música e Gastronomia no Ibirapuera. Atendimento humanizado nos portões e agilidade total na revista."
+              <span class="text-on-surface-variant not-italic block mt-0.5 text-xs">— Coordenador de Infraestrutura de Feiras</span>
+</p>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-sm border-t border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pronta mobilização em até 36 horas</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-4 py-2 rounded bg-surface-container-high border border-outline-variant text-on-surface font-label-md text-label-md hover:text-primary hover:bg-surface-bright transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base" data-icon="assignment">assignment</span>
+<span class="">Ver Certidões &amp; Portarias</span>
+</button>
+<button class="select-btn px-5 py-2 rounded bg-surface-container-high border border-outline text-primary font-label-md text-label-md font-semibold hover:bg-primary hover:text-on-primary active:opacity-90 transition-all flex items-center gap-1.5" onclick="selectSupplier('hagana', 'Grupo Haganá Eventos &amp; Brigada Integrada', 'R$ 6.000.000')">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+<span class="">Selecionar este Fornecedor</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Self-Supplier Alternative Card -->
+<div class="mt-space-xl p-space-md rounded-xl bg-surface-container-lowest border border-dashed border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-xl" data-icon="upload_file">upload_file</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Deseja homologar uma empresa própria?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Envie a Portaria da PF, Certidões Negativas e Apólice de Seguro para submissão ao time de Compliance TrocaTicket (Prazo de análise: 48h úteis).</p>
+</div>
+</div>
+<button class="shrink-0 px-4 py-2 rounded bg-surface-container border border-outline-variant text-on-surface hover:text-primary hover:bg-surface-container-high font-label-md text-label-md transition-colors">
+        Submeter Empresa Própria
+      </button>
+</div>
+</main>
+<!-- Sticky Confirmation Bottom Dock (Confirmation Flow) -->
+<aside class="fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest/95 backdrop-blur-md border-t border-outline-variant shadow-2xl transition-transform duration-200" id="confirmation-dock">
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-space-sm flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<!-- Selection Status -->
+<div class="flex items-center gap-space-md w-full sm:w-auto">
+<div class="w-3 h-3 rounded-full bg-tertiary-fixed shadow-[0_0_8px_#6bff8f] shrink-0"></div>
+<div class="truncate">
+<span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider">Fornecedor Pré-Selecionado:</span>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold truncate" id="selected-name">Grupo Prosegur Special Events Security Brasil</span>
+<span class="hidden md:inline-flex px-2 py-0.5 rounded bg-surface-container text-tertiary-fixed font-code-numeric text-xs border border-outline-variant" id="selected-insurance">
+              Cobertura: R$ 10.000.000
+            </span>
+</div>
+</div>
+</div>
+<!-- Final Actions -->
+<div class="flex items-center gap-space-sm w-full sm:w-auto justify-end">
+<button class="px-4 py-2.5 rounded bg-surface-container border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-high hover:text-primary transition-colors" id="btn-cancel">
+          Cancelar / Manter Próprio
+        </button>
+<button class="px-6 py-2.5 rounded bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-neutral-200 active:opacity-90 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)]" id="btn-confirm">
+<span class="material-symbols-outlined text-lg" data-icon="verified_user">verified_user</span>
+<span class="">Confirmar e Vincular ao Evento</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Footer (Shared Component Anchor) -->
+<footer class="bg-surface-container-lowest text-primary font-body-sm text-body-sm docked full-width bottom-0 w-full border-t border-outline-variant flat no shadows transition-colors duration-150 mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-space-md md:px-margin-desktop py-space-lg gap-space-md">
+<!-- Copyright / Certifications from JSON -->
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-primary font-semibold">VAULT ACCESS</span>
+<span class="text-outline-variant">•</span>
+<p class="text-on-surface-variant font-body-sm text-body-sm">
+          © 2025 Vault Technologies Inc. SOC2 Type II Certified &amp; ISO 27001 Compliant.
+        </p>
+</div>
+<!-- Links from JSON -->
+<nav class="flex flex-wrap items-center gap-space-md text-on-surface-variant font-label-sm text-label-sm">
+<a class="hover:text-on-surface transition-colors duration-150" href="#">Security Architecture</a>
+<a class="hover:text-on-surface transition-colors duration-150" href="#">Organizer Terms</a>
+<a class="hover:text-on-surface transition-colors duration-150" href="#">Privacy Policy</a>
+<a class="hover:text-on-surface transition-colors duration-150" href="#">Contact SecOps</a>
+</nav>
+</div>
+</footer>
+<!-- Inline Interaction Logic -->
+<script>
+    let activeSupplierId = 'prosegur';
+
+    function selectSupplier(id, name, insurance) {
+      activeSupplierId = id;
+
+      // Update dock display
+      document.getElementById('selected-name').textContent = name;
+      document.getElementById('selected-insurance').textContent = 'Cobertura: ' + insurance;
+
+      // Update card visual states
+      document.querySelectorAll('.supplier-card').forEach(card => {
+        const indicator = card.querySelector('.absolute.left-0');
+        const btn = card.querySelector('.select-btn');
+
+        if (card.getAttribute('data-supplier-id') === id) {
+          card.classList.add('border-primary', 'bg-surface-container');
+          card.classList.remove('border-outline-variant', 'bg-surface-container-low');
+          if (indicator) {
+            indicator.classList.remove('bg-outline-variant');
+            indicator.classList.add('bg-tertiary-fixed');
+          }
+          if (btn) {
+            btn.className = 'select-btn px-5 py-2 rounded bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-neutral-200 active:opacity-90 transition-all flex items-center gap-1.5 shadow-sm';
+            btn.innerHTML = '<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span><span>Fornecedor Selecionado</span>';
+          }
+        } else {
+          card.classList.remove('border-primary', 'bg-surface-container');
+          card.classList.add('border-outline-variant', 'bg-surface-container-low');
+          if (indicator) {
+            indicator.classList.remove('bg-tertiary-fixed');
+            indicator.classList.add('bg-outline-variant');
+          }
+          if (btn) {
+            btn.className = 'select-btn px-5 py-2 rounded bg-surface-container-high border border-outline text-primary font-label-md text-label-md font-semibold hover:bg-primary hover:text-on-primary active:opacity-90 transition-all flex items-center gap-1.5';
+            btn.innerHTML = '<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span><span>Selecionar este Fornecedor</span>';
+          }
+        }
+      });
+    }
+
+    document.getElementById('btn-confirm').addEventListener('click', function() {
+      const name = document.getElementById('selected-name').textContent;
+      alert(`Fornecedor [${name}] vinculado com sucesso ao evento com cobertura integral de Custódia e Seguro Escrow.`);
+    });
+
+    document.getElementById('btn-cancel').addEventListener('click', function() {
+      if (confirm('Deseja descartar a seleção de fornecedor credenciado e manter fornecimento próprio?')) {
+        window.history.back();
+      }
+    });
+  </script>
+
+
+</body></html>

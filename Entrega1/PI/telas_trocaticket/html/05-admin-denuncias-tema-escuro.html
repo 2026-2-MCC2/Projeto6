@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TrocaTicket Admin — Painel de Denúncias e Moderação Antifraude</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-fixed": "#1a1b22",
+            "inverse-surface": "#e2e2e2",
+            "on-tertiary-fixed-variant": "#005321",
+            "on-secondary-fixed-variant": "#45464e",
+            "surface": "#131313",
+            "primary": "#ffffff",
+            "on-primary-container": "#636565",
+            "on-tertiary-container": "#007432",
+            "primary-fixed-dim": "#c6c6c7",
+            "secondary-container": "#45464e",
+            "primary-fixed": "#e2e2e2",
+            "surface-tint": "#c6c6c7",
+            "error-container": "#93000a",
+            "error": "#ffb4ab",
+            "surface-container": "#1f1f1f",
+            "on-secondary": "#2f3037",
+            "surface-container-highest": "#353535",
+            "on-error-container": "#ffdad6",
+            "surface-container-lowest": "#0e0e0e",
+            "on-tertiary": "#003915",
+            "outline-variant": "#444748",
+            "primary-container": "#e2e2e2",
+            "tertiary-fixed-dim": "#4ae176",
+            "secondary-fixed": "#e2e1eb",
+            "on-secondary-container": "#b4b4bd",
+            "inverse-on-surface": "#303030",
+            "tertiary": "#ffffff",
+            "surface-dim": "#131313",
+            "on-background": "#e2e2e2",
+            "background": "#131313",
+            "tertiary-container": "#6bff8f",
+            "surface-bright": "#393939",
+            "on-surface": "#e2e2e2",
+            "secondary": "#c6c6cf",
+            "on-surface-variant": "#c4c7c8",
+            "secondary-fixed-dim": "#c6c6cf",
+            "on-primary-fixed-variant": "#454747",
+            "on-primary": "#2f3131",
+            "tertiary-fixed": "#6bff8f",
+            "surface-container-low": "#1b1b1b",
+            "outline": "#8e9192",
+            "on-primary-fixed": "#1a1c1c",
+            "on-error": "#690005",
+            "inverse-primary": "#5d5f5f",
+            "surface-container-high": "#2a2a2a",
+            "on-tertiary-fixed": "#002109",
+            "surface-variant": "#353535"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter-desktop": "1.5rem",
+            "space-sm": "0.75rem",
+            "space-md": "1rem",
+            "margin-mobile": "1.25rem",
+            "gutter-mobile": "1rem",
+            "space-3xl": "4.5rem",
+            "margin-desktop": "3rem",
+            "space-xs": "0.5rem",
+            "space-3xs": "0.125rem",
+            "space-2xl": "3rem",
+            "space-2xs": "0.25rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "space-4xl": "6rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-md": ["Inter"],
+            "label-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-xl-mobile": ["Inter"],
+            "headline-sm": ["Inter"],
+            "code-numeric": ["Inter"],
+            "body-sm": ["Inter"],
+            "display-hero-mobile": ["Inter"],
+            "headline-xl": ["Inter"],
+            "display-hero": ["Inter"]
+          },
+          "fontSize": {
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["15px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-lg": ["17px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "code-numeric": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+            "display-hero-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "display-hero": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #0e0e0e;
+      color: #e2e2e2;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0e0e0e;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #2a2a2a;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface antialiased min-h-screen flex flex-col selection:bg-surface-container-highest selection:text-primary">
+<!-- TopNavBar (Shared Component JSON Blueprint & Style Guidance) -->
+<header class="sticky top-0 z-50 bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant/30">
+<div class="flex justify-between items-center w-full px-6 md:px-12 max-w-7xl mx-auto h-16">
+<!-- Brand & Security Tag -->
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center font-headline-sm text-headline-sm font-semibold tracking-tight shadow-sm">
+<span class="material-symbols-outlined text-[19px]" data-icon="shield" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-semibold tracking-tight text-primary">TrocaTicket Admin</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Admin Master / Auditoria
+          </span>
+</div>
+</div>
+<!-- Navigation Links: "Denúncias" is contextually ACTIVE -->
+<nav class="hidden md:flex items-center gap-6">
+<a class="px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/40 text-primary font-label-md text-label-md transition-all duration-150 flex items-center gap-1.5 shadow-sm" href="#denuncias">
+<span class="material-symbols-outlined text-[16px] text-red-400" data-icon="flag" style="font-variation-settings: 'FILL' 1;">flag</span>
+          Denúncias
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-code-numeric text-code-numeric bg-red-500/20 text-red-300 border border-red-500/30 font-semibold">14</span>
+</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-150" href="#renda">
+          Renda
+        </a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-150" href="#eventos">
+          Eventos
+        </a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-150" href="#requisicoes">
+          Requisições de Cadastros
+        </a>
+</nav>
+<!-- Trailing Action Cluster & Cryptographic Status -->
+<div class="flex items-center gap-3 md:gap-4">
+<!-- Cryptographic Hardware Security Module Badge -->
+<div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant/30 text-emerald-400 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span>HSM Cripto Ativo</span>
+</div>
+<!-- Trailing Icon Action: Notifications -->
+<button aria-label="Notificações críticas" class="relative p-2 rounded-lg bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:text-primary transition-colors duration-150">
+<span class="material-symbols-outlined text-[19px] block" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-400 border border-surface-container-lowest"></span>
+</button>
+<div class="h-5 w-[1px] bg-outline-variant/30 hidden sm:block"></div>
+<!-- Trailing Primary Action: Operator Profile & Session Termination -->
+<div class="flex items-center gap-2.5">
+<div class="relative">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary font-headline-sm text-headline-sm overflow-hidden">
+<span class="material-symbols-outlined text-[18px]" data-icon="security">security</span>
+</div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-surface-container-lowest"></span>
+</div>
+<div class="hidden sm:flex flex-col text-left">
+<span class="font-label-md text-label-md text-primary leading-tight">Operador Verificado</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-code-numeric text-code-numeric">#CUST-9022</span>
+</div>
+<!-- Safe Logoff button -->
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-surface-container transition-colors duration-150 ml-1" title="Encerrar Sessão Segura">
+<span class="material-symbols-outlined text-[18px] block" data-icon="logout">logout</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Administrative Canvas -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 py-8 space-y-8">
+<!-- Header Section with Luxury Dark Aesthetics -->
+<section class="space-y-4">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/30 text-primary font-label-sm text-label-sm tracking-wider">
+<span class="material-symbols-outlined text-[14px] text-emerald-400" data-icon="verified_user">verified_user</span>
+        CONTROLE DE INTEGRIDADE &amp; CUSTÓDIA
+      </div>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg md:font-headline-xl md:text-headline-xl text-primary tracking-tight">
+            Painel de Denúncias e Moderação Antifraude
+          </h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-3xl">
+            Inspeção em tempo real de contestações de tokens em custódia, disputas de titularidade e anomalias de transação no secondary market.
+          </p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-3.5 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container border border-outline-variant/40 text-on-surface font-label-md text-label-md flex items-center gap-2 transition-all duration-150">
+<span class="material-symbols-outlined text-[17px]" data-icon="history">history</span>
+            Auditoria Ledger
+          </button>
+<button class="px-3.5 py-2 rounded-lg bg-primary hover:bg-inverse-surface text-on-primary font-label-md text-label-md font-semibold flex items-center gap-2 transition-all duration-150">
+<span class="material-symbols-outlined text-[17px]" data-icon="lock_clock">lock_clock</span>
+            Bloqueio de Emergência
+          </button>
+</div>
+</div>
+<!-- Quick Metrics Bento Bar -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+<!-- Metric 1 -->
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30 relative overflow-hidden">
+<div class="flex items-center justify-between text-on-surface-variant mb-1">
+<span class="font-label-sm text-label-sm tracking-wide">RELATÓRIOS NOVOS</span>
+<span class="material-symbols-outlined text-[18px] text-amber-400" data-icon="report">report</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary font-code-numeric text-code-numeric">14</span>
+<span class="font-label-sm text-label-sm text-amber-400 font-code-numeric text-code-numeric">+3 na última hora</span>
+</div>
+<div class="h-0.5 w-full bg-outline-variant/20 mt-3 overflow-hidden rounded-full">
+<div class="h-full bg-amber-400 w-3/4"></div>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30 relative overflow-hidden">
+<div class="flex items-center justify-between text-on-surface-variant mb-1">
+<span class="font-label-sm text-label-sm tracking-wide">EM INVESTIGAÇÃO</span>
+<span class="material-symbols-outlined text-[18px] text-sky-400" data-icon="search_check">search_check</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary font-code-numeric text-code-numeric">6</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2 analistas alocados</span>
+</div>
+<div class="h-0.5 w-full bg-outline-variant/20 mt-3 overflow-hidden rounded-full">
+<div class="h-full bg-sky-400 w-1/2"></div>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30 relative overflow-hidden">
+<div class="flex items-center justify-between text-on-surface-variant mb-1">
+<span class="font-label-sm text-label-sm tracking-wide">FRAUDES MITIGADAS HOJE</span>
+<span class="material-symbols-outlined text-[18px] text-emerald-400" data-icon="verified">verified</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary font-code-numeric text-code-numeric">28</span>
+<span class="font-label-sm text-label-sm text-emerald-400 font-code-numeric text-code-numeric">R$ 41.200 retidos</span>
+</div>
+<div class="h-0.5 w-full bg-outline-variant/20 mt-3 overflow-hidden rounded-full">
+<div class="h-full bg-emerald-400 w-full"></div>
+</div>
+</div>
+<!-- Metric 4 -->
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30 relative overflow-hidden">
+<div class="flex items-center justify-between text-on-surface-variant mb-1">
+<span class="font-label-sm text-label-sm tracking-wide">TEMPO MÉDIO DE RESPOSTA</span>
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="timer">timer</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-primary font-code-numeric text-code-numeric">8 min</span>
+<span class="font-label-sm text-label-sm text-emerald-400">-1.8m SLA seguro</span>
+</div>
+<div class="h-0.5 w-full bg-outline-variant/20 mt-3 overflow-hidden rounded-full">
+<div class="h-full bg-primary w-4/5"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Filters and Priority Sorters Bar -->
+<section class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pt-2">
+<!-- Fast Filter Pills -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 custom-scrollbar">
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-high border border-outline-variant/40 text-primary font-label-md text-label-md whitespace-nowrap shadow-sm">
+          Todas as Ocorrências (14)
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:text-primary font-label-md text-label-md whitespace-nowrap transition-colors">
+          Falsificação de Token (5)
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:text-primary font-label-md text-label-md whitespace-nowrap transition-colors">
+          Disputa de Custódia (4)
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:text-primary font-label-md text-label-md whitespace-nowrap transition-colors">
+          Spoofing &amp; Bots (3)
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:text-primary font-label-md text-label-md whitespace-nowrap transition-colors">
+          Transmissão Indevida (2)
+        </button>
+</div>
+<!-- Quick Search & Severity Filter -->
+<div class="flex items-center gap-2">
+<div class="relative flex-1 md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low border border-outline-variant/40 text-on-surface placeholder:text-on-surface-variant/60 font-body-sm text-body-sm focus:outline-none focus:border-primary" placeholder="Filtrar por ID, Usuário ou Token..." type="text"/>
+</div>
+<button class="h-10 px-3 rounded-lg bg-surface-container-low border border-outline-variant/40 text-on-surface-variant hover:text-primary flex items-center justify-center" title="Filtro Avançado">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+</div>
+</section>
+<!-- Incidents / Complaints Feed -->
+<section class="space-y-4">
+<!-- INCIDENT CARD 1: Urgência Alta (Falsificação QR Token) -->
+<article class="rounded-xl bg-surface-container-lowest border border-outline-variant/30 p-5 md:p-6 transition-all duration-150 hover:border-outline-variant/60">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+<div class="space-y-3 flex-1">
+<!-- Badges Bar -->
+<div class="flex flex-wrap items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-red-500/10 border border-red-500/30 text-red-400 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                Urgência Alta
+              </span>
+<span class="px-2.5 py-0.5 rounded-md bg-surface-container-high border border-outline-variant/30 text-on-surface font-label-sm text-label-sm font-code-numeric text-code-numeric">
+                Falsificação de Token
+              </span>
+<span class="px-2.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 font-label-sm text-label-sm">
+                Custódia Bloqueada preventivamente
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-auto font-code-numeric text-code-numeric">
+                Registrado há 12 min
+              </span>
+</div>
+<!-- Complaint Title -->
+<h2 class="font-headline-sm text-headline-sm text-primary font-semibold">
+              Tentativa de revenda com comprovante falso via QR Code já validado
+            </h2>
+<!-- Target Meta Details -->
+<div class="p-3 rounded-lg bg-surface-container-low/70 border border-outline-variant/20 flex flex-wrap items-center gap-y-1 gap-x-4 font-body-sm text-body-sm">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-error" data-icon="person_cancel">person_cancel</span>
+<span class="text-on-surface-variant">Reportado:</span>
+<span class="font-code-numeric text-code-numeric font-medium">@marcos_reseller</span>
+<span class="text-on-surface-variant text-[11px]">(ID #USR-88219)</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="confirmation_number">confirmation_number</span>
+<span class="text-on-surface-variant">Ingresso:</span>
+<span class="font-code-numeric text-code-numeric">#TK-99201</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="festival">festival</span>
+<span class="text-on-surface-variant">Evento:</span>
+<span class="font-medium">Primavera Sound 2025 • Área VIP Lote 2</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-emerald-400" data-icon="payments">payments</span>
+<span class="text-on-surface-variant">Valor em Escrow:</span>
+<span class="font-code-numeric text-code-numeric font-semibold text-emerald-400">R$ 1.850,00</span>
+</div>
+</div>
+<!-- Detailed Description -->
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              O comprador alegou que o token criptográfico fornecido no pacote de transferência rápida gerou colisão de validação no gateway da ticketmaster. A hash de assinatura do QR code apresentava divergência de timestamp em relação à emissão original de lote. Os fundos permanecem congelados na smart-custody da TrocaTicket aguardando confirmação pericial da chave RSA.
+            </p>
+</div>
+<!-- Actions Column -->
+<div class="flex lg:flex-col items-center lg:items-end justify-between gap-3 pt-2 lg:pt-0 lg:min-w-[160px]">
+<button class="w-full px-4 py-2.5 rounded-lg bg-primary hover:bg-inverse-surface text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center gap-2 transition-all duration-150">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span>
+              Ver detalhes
+            </button>
+<button class="w-full px-4 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-error font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="block">block</span>
+              Congelar Usuário
+            </button>
+</div>
+</div>
+</article>
+<!-- INCIDENT CARD 2: Disputa de Custódia (Transferência Não Autorizada) -->
+<article class="rounded-xl bg-surface-container-lowest border border-outline-variant/30 p-5 md:p-6 transition-all duration-150 hover:border-outline-variant/60">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+<div class="space-y-3 flex-1">
+<!-- Badges Bar -->
+<div class="flex flex-wrap items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-400 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                Urgência Média
+              </span>
+<span class="px-2.5 py-0.5 rounded-md bg-surface-container-high border border-outline-variant/30 text-on-surface font-label-sm text-label-sm font-code-numeric text-code-numeric">
+                Disputa de Custódia
+              </span>
+<span class="px-2.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-label-sm text-label-sm">
+                Pagamento Retido
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-auto font-code-numeric text-code-numeric">
+                Registrado há 47 min
+              </span>
+</div>
+<!-- Complaint Title -->
+<h2 class="font-headline-sm text-headline-sm text-primary font-semibold">
+              Ingresso transferido sem autorização após pagamento confirmado em custódia
+            </h2>
+<!-- Target Meta Details -->
+<div class="p-3 rounded-lg bg-surface-container-low/70 border border-outline-variant/20 flex flex-wrap items-center gap-y-1 gap-x-4 font-body-sm text-body-sm">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-amber-400" data-icon="storefront">storefront</span>
+<span class="text-on-surface-variant">Anúncio:</span>
+<span class="font-code-numeric text-code-numeric font-medium">#LST-4091</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="badge">badge</span>
+<span class="text-on-surface-variant">Vendedor:</span>
+<span class="font-medium">Rodrigo N.</span>
+<span class="text-emerald-400 text-[11px]">(Nível 2 Verificado)</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="theater_comedy">theater_comedy</span>
+<span class="text-on-surface-variant">Evento:</span>
+<span class="font-medium">Alok Tour Brasil 2025 • Pista Premium</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-emerald-400" data-icon="payments">payments</span>
+<span class="text-on-surface-variant">Valor em Escrow:</span>
+<span class="font-code-numeric text-code-numeric font-semibold text-emerald-400">R$ 720,00</span>
+</div>
+</div>
+<!-- Detailed Description -->
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Compradora (@carol_souza89) relata que o repasse de custódia foi executado via aplicativo de parceiro externo de bilheteria, porém a carteira de destino foi subitamente alterada por um terceiro antes da confirmação do smart-contract da TrocaTicket. O repasse manual foi pausado pelo gatilho automático de divergência de e-mail cadastral.
+            </p>
+</div>
+<!-- Actions Column -->
+<div class="flex lg:flex-col items-center lg:items-end justify-between gap-3 pt-2 lg:pt-0 lg:min-w-[160px]">
+<button class="w-full px-4 py-2.5 rounded-lg bg-primary hover:bg-inverse-surface text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center gap-2 transition-all duration-150">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span>
+              Ver detalhes
+            </button>
+<button class="w-full px-4 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:text-primary font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="contact_support">contact_support</span>
+              Acionar Vendedor
+            </button>
+</div>
+</div>
+</article>
+<!-- INCIDENT CARD 3: Urgência Crítica (Spoofing de Identidade & Conexão de Bot) -->
+<article class="rounded-xl bg-surface-container-lowest border border-outline-variant/30 p-5 md:p-6 transition-all duration-150 hover:border-outline-variant/60">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+<div class="space-y-3 flex-1">
+<!-- Badges Bar -->
+<div class="flex flex-wrap items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-red-500/10 border border-red-500/30 text-red-400 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping"></span>
+                Urgência Crítica
+              </span>
+<span class="px-2.5 py-0.5 rounded-md bg-surface-container-high border border-outline-variant/30 text-on-surface font-label-sm text-label-sm font-code-numeric text-code-numeric">
+                Spoofing de Identidade
+              </span>
+<span class="px-2.5 py-0.5 rounded-md bg-surface-container-high border border-outline-variant/30 text-on-surface-variant font-label-sm text-label-sm">
+                Origem: 8 IPs Concorrentes (TOR Node)
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-auto font-code-numeric text-code-numeric">
+                Registrado há 1h 05 min
+              </span>
+</div>
+<!-- Complaint Title -->
+<h2 class="font-headline-sm text-headline-sm text-primary font-semibold">
+              Suspeita de spoofing de identidade em evento esgotado com disparos automatizados
+            </h2>
+<!-- Target Meta Details -->
+<div class="p-3 rounded-lg bg-surface-container-low/70 border border-outline-variant/20 flex flex-wrap items-center gap-y-1 gap-x-4 font-body-sm text-body-sm">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-error" data-icon="fingerprint">fingerprint</span>
+<span class="text-on-surface-variant">Identidade Alvo:</span>
+<span class="font-code-numeric text-code-numeric font-medium">CPF ***.481.902-**</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="sports_soccer">sports_soccer</span>
+<span class="text-on-surface-variant">Evento:</span>
+<span class="font-medium">Final Copa Libertadores 2025 • Cadeira Central</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-emerald-400" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="text-on-surface-variant">Lotes Comprometidos:</span>
+<span class="font-code-numeric text-code-numeric font-semibold">4 Ingressos (R$ 9.400,00)</span>
+</div>
+</div>
+<!-- Detailed Description -->
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              O titular legítimo da conta reportou acesso não autorizado após receber notificações de SMS com código OTP não solicitadas. O atacante tentou transferir 4 bilhetes de cadeira especial para contas laranjas recém-criadas. O motor de risco comportamental bloqueou a emissão dos tokens dinâmicos por detecção de salto de geolocalização (São Paulo -&gt; Frankfurt em 4 minutos).
+            </p>
+</div>
+<!-- Actions Column -->
+<div class="flex lg:flex-col items-center lg:items-end justify-between gap-3 pt-2 lg:pt-0 lg:min-w-[160px]">
+<button class="w-full px-4 py-2.5 rounded-lg bg-primary hover:bg-inverse-surface text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center gap-2 transition-all duration-150">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span>
+              Ver detalhes
+            </button>
+<button class="w-full px-4 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-amber-300 font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="history_toggle_off">history_toggle_off</span>
+              Reverter Sessão
+            </button>
+</div>
+</div>
+</article>
+</section>
+<!-- Pagination & Audit Log Trigger Footer -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-outline-variant/20">
+<span class="font-body-sm text-body-sm text-on-surface-variant font-code-numeric text-code-numeric">
+        Exibindo 3 de 14 relatórios em fila ativa de moderação
+      </span>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface-variant hover:text-primary font-label-sm text-label-sm flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_left">chevron_left</span>
+          Anterior
+        </button>
+<span class="px-3 py-1 text-primary font-label-sm text-label-sm font-code-numeric text-code-numeric bg-surface-container-high rounded-md">1 / 5</span>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface-variant hover:text-primary font-label-sm text-label-sm flex items-center gap-1 transition-colors">
+          Próxima
+          <span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component JSON Blueprint & Style Guidance) -->
+<footer class="mt-auto bg-surface border-t border-outline-variant/30">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-6 md:px-12 py-6 max-w-7xl mx-auto gap-4">
+<div class="flex items-center gap-3">
+<span class="font-headline-sm text-headline-sm font-semibold text-primary">TrocaTicket</span>
+<span class="text-outline-variant text-[12px]">•</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          © 2025 TrocaTicket Inc. Moderação &amp; Custódia Segura. Todos os direitos reservados.
+        </p>
+</div>
+<nav class="flex flex-wrap items-center gap-4 md:gap-6 font-label-sm text-label-sm">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#termos">
+          Termos de Conformidade
+        </a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#prevencao">
+          Políticas de Prevenção a Fraude
+        </a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#auditoria">
+          Auditoria do Sistema
+        </a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#suporte">
+          Suporte Técnico
+        </a>
+</nav>
+</div>
+</footer>
+</body></html>

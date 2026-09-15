@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TrocaTicket Admin — Requisições de Cadastros e Homologação</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary-fixed": "#1c1b1b",
+            "surface-container": "#F3F4F6",
+            "surface-dim": "#F4F4F5",
+            "surface-container-low": "#f4f2fd",
+            "on-surface": "#1a1b22",
+            "on-primary-container": "#858383",
+            "on-background": "#1a1b22",
+            "inverse-surface": "#2f3038",
+            "background": "#fbf8ff",
+            "error": "#EF4444",
+            "outline-variant": "#EEEEF0",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed-variant": "#47464a",
+            "primary-fixed": "#e5e2e1",
+            "primary": "#000000",
+            "on-primary-fixed-variant": "#474646",
+            "secondary-container": "#e4e1e5",
+            "on-error-container": "#93000a",
+            "on-secondary-container": "#656467",
+            "primary-container": "#1c1b1b",
+            "surface-variant": "#e3e1ec",
+            "inverse-on-surface": "#f1effa",
+            "primary-fixed-dim": "#c9c6c5",
+            "tertiary-container": "#002114",
+            "on-secondary-fixed": "#1b1b1e",
+            "surface-container-highest": "#e3e1ec",
+            "surface-container-high": "#e8e7f1",
+            "surface": "#FAFAFA",
+            "tertiary-fixed-dim": "#68dba9",
+            "outline": "#E4E4E7",
+            "surface-bright": "#FFFFFF",
+            "on-tertiary-fixed": "#002114",
+            "on-tertiary-fixed-variant": "#005137",
+            "secondary": "#5f5e61",
+            "inverse-primary": "#c9c6c5",
+            "surface-tint": "#5f5e5e",
+            "tertiary-fixed": "#85f8c4",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-tertiary-container": "#069669",
+            "on-surface-variant": "#444748",
+            "error-container": "#ffdad6",
+            "on-primary": "#ffffff",
+            "accent-amber": "#D97706",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#c8c6c9",
+            "secondary-fixed": "#e4e1e5",
+            "tertiary": "#000000"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter-desktop": "1.5rem",
+            "space-md": "1rem",
+            "space-sm": "0.75rem",
+            "space-2xs": "0.25rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.5rem",
+            "gutter-mobile": "1rem",
+            "margin-desktop": "3rem",
+            "space-3xl": "4rem",
+            "space-2xl": "3rem",
+            "margin-mobile": "1rem",
+            "space-xl": "2rem"
+          },
+          "fontFamily": {
+            "label-lg": ["Inter"],
+            "headline-md": ["Inter"],
+            "headline-sm": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "label-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "display-lg": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-lg": ["Inter"]
+          },
+          "fontSize": {
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.015em", "fontWeight": "500" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "headline-lg-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.06em", "fontWeight": "600" }],
+            "body-md": ["0.9375rem", { "lineHeight": "1.5rem", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-sm": ["0.8125rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "display-lg": ["3.5rem", { "lineHeight": "4rem", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-md": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "headline-lg": ["2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col antialiased selection:bg-primary selection:text-surface-bright">
+<!-- Top Navigation Header (from Shared Components JSON) -->
+<header class="bg-surface-bright/80 dark:bg-inverse-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline dark:border-outline-variant">
+<div class="flex justify-between items-center w-full px-6 md:px-12 max-w-7xl mx-auto h-16">
+<!-- Brand & Security Token -->
+<div class="flex items-center gap-6">
+<a class="font-headline-sm text-headline-sm font-semibold tracking-tight text-primary dark:text-inverse-primary flex items-center gap-2 transition-all duration-150 active:scale-[0.98]" href="#">
+<span class="w-7 h-7 bg-primary text-surface-bright flex items-center justify-center rounded-lg text-xs font-semibold tracking-tighter">TT</span>
+          TrocaTicket Admin
+        </a>
+<div class="hidden lg:flex items-center gap-2 pl-4 border-l border-outline">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+            HSM Cripto Ativo
+          </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-dim text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+            Operador Master
+          </span>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-lg text-label-lg hover:text-primary dark:hover:text-surface-bright transition-colors flex items-center gap-1.5" href="#">
+          Denúncias
+          <span class="px-1.5 py-0.2 rounded-full text-[10px] font-label-sm bg-surface-container text-on-surface-variant font-semibold">14</span>
+</a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-lg text-label-lg hover:text-primary dark:hover:text-surface-bright transition-colors" href="#">
+          Renda
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-lg text-label-lg hover:text-primary dark:hover:text-surface-bright transition-colors" href="#">
+          Eventos
+        </a>
+<!-- Active Nav Item -->
+<a class="text-primary dark:text-surface-bright font-label-lg text-label-lg border-b-2 border-primary dark:border-surface-bright pb-1 transition-colors flex items-center gap-2" href="#">
+          Requisições de Cadastros
+          <span class="px-1.5 py-0.5 rounded-full text-[11px] font-label-sm bg-primary text-surface-bright font-semibold">12</span>
+</a>
+</nav>
+<!-- Right Action Cluster -->
+<div class="flex items-center gap-3">
+<button aria-label="Notificações do Sistema" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline hover:border-primary text-on-surface-variant hover:text-primary transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</button>
+<button aria-label="Segurança e Logs de Auditoria" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline hover:border-primary text-on-surface-variant hover:text-primary transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="shield">shield</span>
+</button>
+<div class="h-6 w-px bg-outline mx-1 hidden sm:block"></div>
+<div class="flex items-center gap-2.5 pl-1">
+<div class="w-8 h-8 rounded-full bg-surface-dim border border-outline flex items-center justify-center text-on-surface font-label-md text-label-md font-semibold">
+            OP
+          </div>
+<div class="hidden xl:flex flex-col text-left">
+<span class="font-label-md text-label-md leading-none text-primary font-semibold">Operador Verificado</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Sessão Segura mTLS</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow w-full max-w-7xl mx-auto px-6 md:px-12 py-8 space-y-8">
+<!-- Page Header & Action Bar -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2 border-b border-outline-variant">
+<div class="space-y-2">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-surface-bright border border-outline text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-accent-amber"></span>
+          CONTROLE DE CONFORMIDADE &amp; ONBOARDING CORPORATIVO
+        </div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">
+          Painel de Requisições de Cadastros e Homologação
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+          Avaliação e auditoria cadastral de novos Organizadores de Eventos e Fornecedores de Infraestrutura com verificação documental e KYC.
+        </p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-bright hover:bg-surface-dim text-primary border border-outline rounded-lg font-label-lg text-label-lg transition-colors duration-150">
+<span class="material-symbols-outlined text-[18px]">download</span>
+          Exportar Fila (.CSV)
+        </button>
+<button class="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary-container text-surface-bright rounded-lg font-label-lg text-label-lg transition-colors duration-150">
+<span class="material-symbols-outlined text-[18px]">policy</span>
+          Regras de Credenciamento
+        </button>
+</div>
+</div>
+<!-- Operational Metrics Grid (Bento Style 4 Columns) -->
+<section aria-label="Métricas Operacionais" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Metric 1 -->
+<div class="p-5 rounded-lg bg-surface-bright border border-outline flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Requisições Pendentes</span>
+<span class="p-1.5 rounded bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[18px]">pending_actions</span>
+</span>
+</div>
+<div class="mt-4">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary font-semibold">12</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">solicitações</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-accent-amber font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span>+4 nas últimas 24h</span>
+</div>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="p-5 rounded-lg bg-surface-bright border border-outline flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Organizadores em Análise</span>
+<span class="p-1.5 rounded bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[18px]">theater_comedy</span>
+</span>
+</div>
+<div class="mt-4">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary font-semibold">7</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">produtoras</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-on-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">account_balance_wallet</span>
+<span>Volume previsto: R$ 14.8M</span>
+</div>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="p-5 rounded-lg bg-surface-bright border border-outline flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Fornecedores Técnicos</span>
+<span class="p-1.5 rounded bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[18px]">developer_board</span>
+</span>
+</div>
+<div class="mt-4">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary font-semibold">5</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">empresas</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>Validação de API &amp; Hardware</span>
+</div>
+</div>
+</div>
+<!-- Metric 4 -->
+<div class="p-5 rounded-lg bg-surface-bright border border-outline flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Taxa de Aprovação Média</span>
+<span class="p-1.5 rounded bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[18px]">speed</span>
+</span>
+</div>
+<div class="mt-4">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary font-semibold">84.2%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">conformidade</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span>SLA de triagem: 4.2 horas</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Filters and Search Toolbar -->
+<div class="p-4 rounded-lg bg-surface-bright border border-outline space-y-4">
+<!-- Tabs Segmented -->
+<div class="flex flex-wrap items-center justify-between gap-4 border-b border-outline-variant pb-3">
+<div class="flex flex-wrap items-center gap-2">
+<button class="px-3.5 py-1.5 rounded-lg bg-primary text-surface-bright font-label-md text-label-md font-semibold">
+            Todas as Requisições (12)
+          </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface hover:bg-surface-dim text-on-surface-variant font-label-md text-label-md transition-colors">
+            Organizadores (7)
+          </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface hover:bg-surface-dim text-on-surface-variant font-label-md text-label-md transition-colors">
+            Fornecedores (5)
+          </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface hover:bg-surface-dim text-on-surface-variant font-label-md text-label-md transition-colors flex items-center gap-1.5">
+<span>Documentação Pendente (2)</span>
+<span class="w-2 h-2 rounded-full bg-accent-amber"></span>
+</button>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+          Última sincronização: Há 2 minutos
+        </div>
+</div>
+<!-- Search and Secondary Controls -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+<div class="md:col-span-7 relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-bright border border-outline rounded-lg font-body-md text-body-md text-primary placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Buscar por Razão Social, CNPJ, responsável ou protocolo..." type="text"/>
+</div>
+<div class="md:col-span-3">
+<select class="w-full py-2 px-3 bg-surface-bright border border-outline rounded-lg font-body-md text-body-md text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+<option value="all">Status: Todos os Status</option>
+<option value="pending">Aguardando Auditoria</option>
+<option value="review">Em Validação Jurídica</option>
+<option value="docs">Ajuste Documental</option>
+</select>
+</div>
+<div class="md:col-span-2">
+<select class="w-full py-2 px-3 bg-surface-bright border border-outline rounded-lg font-body-md text-body-md text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+<option value="priority">Prioridade: Alta</option>
+<option value="recent">Mais Recentes</option>
+<option value="volume">Maior Volume</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Structured Queue List (Detailed Dossier Cards) -->
+<div class="space-y-4">
+<!-- CARD 1: Time For Fun Entretenimento S.A. -->
+<article class="p-6 rounded-lg bg-surface-bright border border-outline hover:border-on-surface-variant/40 transition-all duration-150">
+<!-- Header row of the card -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 border-b border-outline-variant">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="px-2.5 py-1 rounded bg-surface-container text-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+              Organizador de Eventos
+            </span>
+<span class="px-2 py-0.5 rounded bg-error-container text-error font-label-sm text-label-sm uppercase font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+              Prioridade Alta
+            </span>
+<span class="font-label-md text-label-md text-on-surface-variant font-mono">
+              Protocolo #REQ-9082
+            </span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+            Enviado há 2 horas
+          </div>
+</div>
+<!-- Body content -->
+<div class="py-5 space-y-4">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary font-semibold">
+                Time For Fun Entretenimento S.A. (T4F Brasil)
+              </h2>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span><strong>CNPJ:</strong> 03.225.148/0001-92</span>
+<span class="text-outline">•</span>
+<span><strong>Responsável Legal:</strong> Roberto Medina de Souza</span>
+<span class="text-outline">•</span>
+<span><strong>Cidade:</strong> São Paulo, SP</span>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-2 px-3 py-1.5 rounded bg-surface-container border border-outline-variant text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-on-tertiary-container">verified</span>
+              Score de Risco: <span class="text-primary font-bold">96/100 (Baixo)</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+            Produtora líder de festivais musicais de grande escala e turnês internacionais no Brasil há mais de 20 anos. Solicitação de homologação na TrocaTicket para custódia fiduciária de bilheterias oficiais e integração de repasses automáticos P2P para a temporada 2025/2026.
+          </p>
+<!-- Audit Box Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">KYC &amp; Contrato Social</span>
+<span class="font-body-sm text-body-sm text-on-tertiary-container font-semibold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+                Verificado (JUCESP)
+              </span>
+</div>
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Histórico Fiscal</span>
+<span class="font-body-sm text-body-sm text-primary font-medium mt-1">
+                Sem restrições fiscais ativas
+              </span>
+</div>
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Previsão Anual</span>
+<span class="font-body-sm text-body-sm text-primary font-medium mt-1">
+                8 festivais (~320.000 ingressos)
+              </span>
+</div>
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Escrow Bancário</span>
+<span class="font-body-sm text-body-sm text-primary font-medium mt-1">
+                Itaú Corp (Ag 0921 C/C 44920-1)
+              </span>
+</div>
+</div>
+</div>
+<!-- Footer Card Actions -->
+<div class="pt-4 border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-3">
+<div class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">folder_shared</span>
+            Dossiê completo anexado: 6 arquivos PDF autenticados
+          </div>
+<div class="flex items-center gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg border border-outline hover:bg-surface-dim font-label-md text-label-md text-primary transition-colors">
+              Visualizar Dossiê &amp; Documentos
+            </button>
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg border border-error text-error hover:bg-error-container/30 font-label-md text-label-md transition-colors">
+              Negar Cadastro
+            </button>
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-surface-bright font-label-md text-label-md transition-colors">
+              Aceitar e Homologar Cadastro
+            </button>
+</div>
+</div>
+</article>
+<!-- CARD 2: Turnstile Tech & Smart Access -->
+<article class="p-6 rounded-lg bg-surface-bright border border-outline hover:border-on-surface-variant/40 transition-all duration-150">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 border-b border-outline-variant">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="px-2.5 py-1 rounded bg-surface-container text-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+              Fornecedor de Infraestrutura
+            </span>
+<span class="font-label-md text-label-md text-on-surface-variant font-mono">
+              Protocolo #REQ-9079
+            </span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+            Enviado há 5 horas
+          </div>
+</div>
+<div class="py-5 space-y-4">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary font-semibold">
+                Turnstile Tech &amp; Smart Access Soluções de Catracas
+              </h2>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span><strong>CNPJ:</strong> 28.910.442/0001-15</span>
+<span class="text-outline">•</span>
+<span><strong>Responsável:</strong> Mariana Duarte Prado</span>
+<span class="text-outline">•</span>
+<span><strong>Cidade:</strong> Florianópolis, SC</span>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-2 px-3 py-1.5 rounded bg-surface-container border border-outline-variant text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-on-tertiary-container">router</span>
+              Hardware Homologado: <span class="text-primary font-bold">Anatel / RSA-4096</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+            Fabricante e operadora de totens de leitura biométrica facial e leitores dinâmicos de QR Code com firmware criptografado antifraude. Requisita credenciamento como Fornecedora Oficial para integração via API Webhook TrocaTicket e repasse por validação de acesso em portarias de estádios.
+          </p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Certificação de Hardware</span>
+<span class="font-body-sm text-body-sm text-primary font-semibold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-tertiary-container">verified</span>
+                Homologação Anatel &amp; RSA-4096
+              </span>
+</div>
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">SLA Técnico Garantido</span>
+<span class="font-body-sm text-body-sm text-primary font-medium mt-1">
+                99.99% uptime em teste de estresse
+              </span>
+</div>
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Taxa de Repasse Proposta</span>
+<span class="font-body-sm text-body-sm text-primary font-medium mt-1">
+                R$ 0,45 por validação em catraca
+              </span>
+</div>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-3">
+<div class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">terminal</span>
+            SDK de Catraca v3.4 validado em ambiente Sandbox
+          </div>
+<div class="flex items-center gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg border border-outline hover:bg-surface-dim font-label-md text-label-md text-primary transition-colors">
+              Visualizar Dossiê Técnico
+            </button>
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg border border-error text-error hover:bg-error-container/30 font-label-md text-label-md transition-colors">
+              Negar Cadastro
+            </button>
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-surface-bright font-label-md text-label-md transition-colors">
+              Aceitar e Homologar Cadastro
+            </button>
+</div>
+</div>
+</article>
+<!-- CARD 3: Nexus Live Produções Culturais -->
+<article class="p-6 rounded-lg bg-surface-bright border border-outline hover:border-on-surface-variant/40 transition-all duration-150">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 border-b border-outline-variant">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="px-2.5 py-1 rounded bg-surface-container text-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+              Organizador de Eventos
+            </span>
+<span class="font-label-md text-label-md text-on-surface-variant font-mono">
+              Protocolo #REQ-9075
+            </span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+            Enviado há 1 dia
+          </div>
+</div>
+<div class="py-5 space-y-4">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary font-semibold">
+                Nexus Live Produções Culturais &amp; Teatrais LTDA
+              </h2>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span><strong>CNPJ:</strong> 41.870.293/0001-80</span>
+<span class="text-outline">•</span>
+<span><strong>Responsável:</strong> Carlos Eduardo Nogueira</span>
+<span class="text-outline">•</span>
+<span><strong>Cidade:</strong> Rio de Janeiro, RJ</span>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-2 px-3 py-1.5 rounded bg-surface-container border border-outline-variant text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-on-tertiary-container">verified</span>
+              Status KYC: <span class="text-primary font-bold">Documentação Auditada</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+            Organização de circuitos teatrais, espetáculos orquestrais e exposições imersivas. Busca credenciamento para gestão de assentos marcados e lote de meia-entrada digital com validação automática de carteirinhas de estudante.
+          </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Conformidade Cadastral &amp; Sede</span>
+<span class="font-body-sm text-body-sm text-primary font-medium mt-1">
+                Documento dos sócios validado, comprovante de sede auditado.
+              </span>
+</div>
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Domicílio Bancário</span>
+<span class="font-body-sm text-body-sm text-primary font-medium mt-1">
+                Banco Bradesco PJ (Conta vinculada verificada com micro-depósito)
+              </span>
+</div>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-3">
+<div class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">theater_comedy</span>
+            Segmentação: Setor Cultural &amp; Espetáculos
+          </div>
+<div class="flex items-center gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg border border-outline hover:bg-surface-dim font-label-md text-label-md text-primary transition-colors">
+              Visualizar Dossiê &amp; Documentos
+            </button>
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg border border-error text-error hover:bg-error-container/30 font-label-md text-label-md transition-colors">
+              Negar Cadastro
+            </button>
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-surface-bright font-label-md text-label-md transition-colors">
+              Aceitar e Homologar Cadastro
+            </button>
+</div>
+</div>
+</article>
+<!-- CARD 4: Liveness Vision -->
+<article class="p-6 rounded-lg bg-surface-bright border border-outline hover:border-on-surface-variant/40 transition-all duration-150">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 border-b border-outline-variant">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="px-2.5 py-1 rounded bg-surface-container text-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+              Fornecedor de Biometria &amp; KYC
+            </span>
+<span class="font-label-md text-label-md text-on-surface-variant font-mono">
+              Protocolo #REQ-9068
+            </span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+            Enviado há 1 dia
+          </div>
+</div>
+<div class="py-5 space-y-4">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary font-semibold">
+                Liveness Vision Inteligência de Identidade Digital
+              </h2>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span><strong>CNPJ:</strong> 33.150.887/0001-04</span>
+<span class="text-outline">•</span>
+<span><strong>Responsável:</strong> Felipe Fontana</span>
+<span class="text-outline">•</span>
+<span><strong>Cidade:</strong> Belo Horizonte, MG</span>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-2 px-3 py-1.5 rounded bg-surface-container border border-outline-variant text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-on-tertiary-container">face</span>
+              Prova de Vida 3D: <span class="text-primary font-bold">99.98% Precisão</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+            Motor de conferência de prova de vida em 3D e detecção de deepfakes para portarias de acesso e validação na revenda P2P de ingressos nominais.
+          </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Teste de Colisão Antifraude</span>
+<span class="font-body-sm text-body-sm text-on-tertiary-container font-semibold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+                99.98% de precisão anti-spoofing
+              </span>
+</div>
+<div class="p-3 rounded bg-surface border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase">Homologação Técnica</span>
+<span class="font-body-sm text-body-sm text-primary font-medium mt-1">
+                Integração de API Sandbox concluída com sucesso
+              </span>
+</div>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-3">
+<div class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">security</span>
+            Certificado ISO/IEC 30107-3 compliant
+          </div>
+<div class="flex items-center gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg border border-outline hover:bg-surface-dim font-label-md text-label-md text-primary transition-colors">
+              Visualizar Dossiê Técnico
+            </button>
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg border border-error text-error hover:bg-error-container/30 font-label-md text-label-md transition-colors">
+              Negar Cadastro
+            </button>
+<button class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-surface-bright font-label-md text-label-md transition-colors">
+              Aceitar e Homologar Cadastro
+            </button>
+</div>
+</div>
+</article>
+</div>
+<!-- Pagination Component -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 pb-12 border-t border-outline-variant">
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+        Exibindo <span class="text-primary font-semibold">4</span> de <span class="text-primary font-semibold">12</span> requisições em fila ativa
+      </span>
+<div class="inline-flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-lg border border-outline bg-surface-bright text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors disabled:opacity-40" disabled="">
+          Anterior
+        </button>
+<button class="w-8 h-8 rounded-lg bg-primary text-surface-bright font-label-sm text-label-sm font-semibold flex items-center justify-center">
+          1
+        </button>
+<button class="w-8 h-8 rounded-lg border border-outline bg-surface-bright hover:bg-surface-dim text-primary font-label-sm text-label-sm font-semibold flex items-center justify-center transition-colors">
+          2
+        </button>
+<button class="w-8 h-8 rounded-lg border border-outline bg-surface-bright hover:bg-surface-dim text-primary font-label-sm text-label-sm font-semibold flex items-center justify-center transition-colors">
+          3
+        </button>
+<button class="px-3 py-1.5 rounded-lg border border-outline bg-surface-bright text-primary font-label-sm text-label-sm hover:bg-surface-dim transition-colors">
+          Próxima
+        </button>
+</div>
+</div>
+</main>
+<!-- Web Footer (from Shared Components JSON) -->
+<footer class="bg-surface dark:bg-inverse-surface border-t border-outline dark:border-outline-variant mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-6 md:px-12 py-6 max-w-7xl mx-auto gap-4">
+<div class="flex items-center gap-3">
+<span class="font-headline-sm text-headline-sm font-semibold text-primary dark:text-inverse-primary tracking-tight">TrocaTicket Admin</span>
+<span class="text-outline">•</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">© 2025 TrocaTicket Inc. Moderação &amp; Custódia Segura. Todos os direitos reservados.</span>
+</div>
+<nav class="flex flex-wrap items-center gap-6">
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150" href="#">
+          Termos de Conformidade
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150" href="#">
+          Políticas de Prevenção a Fraude
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150" href="#">
+          Auditoria do Sistema
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150" href="#">
+          Suporte Técnico
+        </a>
+</nav>
+</div>
+</footer>
+</body></html>

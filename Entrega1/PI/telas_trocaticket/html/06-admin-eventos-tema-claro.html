@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TrocaTicket Admin - Painel de Eventos Ativos</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary-fixed-variant": "#474646",
+            "secondary-container": "#e4e1e5",
+            "on-secondary-fixed-variant": "#47464a",
+            "surface-container-highest": "#D1D5DB",
+            "surface-variant": "#e3e1ec",
+            "primary": "#000000",
+            "accent-amber": "#D97706",
+            "on-tertiary-fixed-variant": "#005137",
+            "error": "#EF4444",
+            "tertiary-container": "#002114",
+            "inverse-primary": "#c9c6c5",
+            "on-tertiary-fixed": "#002114",
+            "secondary-fixed": "#e4e1e5",
+            "surface-bright": "#FFFFFF",
+            "surface-container": "#F3F4F6",
+            "on-surface-variant": "#444748",
+            "primary-fixed": "#e5e2e1",
+            "surface-container-low": "#F9FAFB",
+            "on-surface": "#1a1b22",
+            "on-secondary-container": "#656467",
+            "on-error": "#ffffff",
+            "on-tertiary-container": "#069669",
+            "surface-container-high": "#E5E7EB",
+            "inverse-surface": "#2f3038",
+            "surface-dim": "#F4F4F5",
+            "outline-variant": "#EEEEF0",
+            "surface-container-lowest": "#FFFFFF",
+            "tertiary-fixed-dim": "#68dba9",
+            "error-container": "#ffdad6",
+            "on-secondary": "#ffffff",
+            "on-primary": "#ffffff",
+            "primary-fixed-dim": "#c9c6c5",
+            "tertiary": "#000000",
+            "inverse-on-surface": "#f1effa",
+            "secondary": "#5f5e61",
+            "background": "#fbf8ff",
+            "tertiary-fixed": "#85f8c4",
+            "on-tertiary": "#ffffff",
+            "on-error-container": "#93000a",
+            "primary-container": "#1c1b1b",
+            "secondary-fixed-dim": "#c8c6c9",
+            "surface": "#FAFAFA",
+            "on-background": "#1a1b22",
+            "outline": "#E4E4E7",
+            "surface-tint": "#5f5e5e",
+            "on-secondary-fixed": "#1b1b1e",
+            "on-primary-container": "#858383",
+            "on-primary-fixed": "#1c1b1b"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter-mobile": "1rem",
+            "space-xs": "0.5rem",
+            "space-2xl": "3rem",
+            "margin-mobile": "1rem",
+            "gutter-desktop": "1.5rem",
+            "margin-desktop": "3rem",
+            "space-sm": "0.75rem",
+            "space-lg": "1.5rem",
+            "space-md": "1rem",
+            "space-xl": "2rem",
+            "space-3xl": "4rem",
+            "space-2xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-lg": ["Inter"],
+            "headline-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-lg": ["Inter"],
+            "body-md": ["Inter"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["1.75rem", { lineHeight: "2.25rem", letterSpacing: "-0.015em", fontWeight: "600" }],
+            "body-sm": ["0.8125rem", { lineHeight: "1.25rem", letterSpacing: "0.01em", fontWeight: "400" }],
+            "label-sm": ["0.6875rem", { lineHeight: "0.875rem", letterSpacing: "0.06em", fontWeight: "600" }],
+            "body-lg": ["1.125rem", { lineHeight: "1.75rem", letterSpacing: "0em", fontWeight: "400" }],
+            "label-lg": ["0.875rem", { lineHeight: "1.25rem", letterSpacing: "0.02em", fontWeight: "600" }],
+            "headline-sm": ["1.25rem", { lineHeight: "1.75rem", letterSpacing: "-0.01em", fontWeight: "500" }],
+            "headline-md": ["1.5rem", { lineHeight: "2rem", letterSpacing: "-0.015em", fontWeight: "500" }],
+            "display-lg": ["3.5rem", { lineHeight: "4rem", letterSpacing: "-0.03em", fontWeight: "600" }],
+            "label-md": ["0.75rem", { lineHeight: "1rem", letterSpacing: "0.04em", fontWeight: "500" }],
+            "headline-lg": ["2rem", { lineHeight: "2.5rem", letterSpacing: "-0.02em", fontWeight: "600" }],
+            "body-md": ["0.9375rem", { lineHeight: "1.5rem", letterSpacing: "0em", fontWeight: "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 1.25rem;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md antialiased min-h-screen flex flex-col selection:bg-primary selection:text-surface-bright">
+<!-- Top Navigation Bar (Shared Component Anchor) -->
+<header class="bg-surface-bright/80 dark:bg-inverse-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline dark:border-outline-variant">
+<div class="flex justify-between items-center w-full px-6 md:px-12 max-w-7xl mx-auto h-16">
+<!-- Brand & Global Nav Links -->
+<div class="flex items-center gap-8">
+<a class="font-headline-sm text-headline-sm font-semibold tracking-tight text-primary dark:text-inverse-primary flex items-center gap-2" href="#">
+<span class="w-7 h-7 bg-primary text-surface-bright flex items-center justify-center font-bold text-sm rounded-lg">TT</span>
+<span>TrocaTicket Admin</span>
+</a>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-lg text-label-lg hover:text-primary dark:hover:text-surface-bright transition-colors duration-150 flex items-center gap-1.5" href="#">
+<span>Denúncias</span>
+<span class="bg-surface-container-high text-primary px-1.5 py-0.5 rounded-full font-label-sm text-label-sm">14</span>
+</a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-lg text-label-lg hover:text-primary dark:hover:text-surface-bright transition-colors duration-150" href="#">
+            Renda
+          </a>
+<!-- Eventos is the ACTIVE navigation destination -->
+<a class="text-primary dark:text-surface-bright font-label-lg text-label-lg border-b-2 border-primary dark:border-surface-bright pb-1 transition-colors" href="#">
+            Eventos
+          </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-lg text-label-lg hover:text-primary dark:hover:text-surface-bright transition-colors duration-150" href="#">
+            Requisições de Cadastros
+          </a>
+</nav>
+</div>
+<!-- Trailing Status & User Metadata -->
+<div class="flex items-center gap-4">
+<!-- Cryptographic Hardware Module Status -->
+<div class="hidden lg:flex items-center gap-2 px-3 py-1 bg-surface-container-low border border-outline rounded-lg text-primary">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase text-on-surface-variant">HSM Cripto: Ativo</span>
+</div>
+<button aria-label="Notificações" class="p-2 text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full ring-2 ring-surface-bright"></span>
+</button>
+<div class="h-5 w-[1px] bg-outline"></div>
+<div class="flex items-center gap-2.5">
+<div class="flex flex-col text-right">
+<span class="font-label-md text-label-md text-primary flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-[1rem] text-on-tertiary-container" data-icon="shield" data-weight="fill" style="font-variation-settings: 'FILL' 1;">shield</span>
+              Operador Verificado
+            </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">#CUST-9022 (Nível 4)</span>
+</div>
+<div class="w-9 h-9 rounded-lg bg-surface-container-high border border-outline flex items-center justify-center font-label-md font-semibold text-primary overflow-hidden">
+<img alt="Avatar do operador de segurança" class="w-full h-full object-cover" data-alt="Professional security custodian portrait photograph in neutral lighting, wearing formal dark attire with an authorized digital cryptographic token lanyard, set against a pristine, architectural white background reflecting high assurance and digital finance standards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoxCQuKYB-z9trM8uVTp9DAZBK0EEEYcnXt1ccZKhWyUd5qffDOMXsGXkfrgU1uu5OY5C87kKlcddshlGez3MWS88bqgOPiQRcAjDM-whUipLQatZ43aYy5NWkG6CCT28mPaHX1BjrZmB2vIJ7AVOfGr3aT1EcdPHN5rwaBNpUBuInVZUIWpOj0MeAZER8tsVZrl5qDdzekfaxT6bDv2ods9Nbi8HB-gNYJ8DpGrpUw1EVNJ5mHjLPNw"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas Container -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-6 md:px-12 py-8 space-y-8">
+<!-- Page Header & Global Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-outline-variant">
+<div class="space-y-2 max-w-3xl">
+<div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-surface-container border border-outline text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+<span>CONTROLE DE BILHETERIAS & CUSTÓDIA DE EVENTOS</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">
+          Painel de Eventos Ativos e Monitoramento de Lotes
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Supervisão operacional em tempo real de ingressos emitidos, lotes abertos, volume em custódia e integridade antifraude de produtores credenciados.
+        </p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="h-10 px-4 bg-surface-bright border border-outline text-primary font-label-lg text-label-lg rounded-lg hover:bg-surface-dim transition-colors flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[1.125rem]" data-icon="file_download">file_download</span>
+<span>Exportar Relatório Geral</span>
+</button>
+<button class="h-10 px-4 bg-primary text-surface-bright font-label-lg text-label-lg rounded-lg hover:bg-primary-container transition-all active:scale-[0.98] flex items-center gap-2">
+<span class="material-symbols-outlined text-[1.125rem]" data-icon="add">add</span>
+<span>+ Novo Evento / Credenciar</span>
+</button>
+</div>
+</div>
+<!-- Metrics Bento Grid (4 KPIs) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- KPI 1 -->
+<div class="bg-surface-bright p-5 border border-outline rounded-lg flex flex-col justify-between space-y-4">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant">Total de Eventos Ativos</span>
+<span class="p-1.5 bg-surface-container rounded border border-outline-variant text-primary">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-primary font-semibold">48 eventos</div>
+<div class="font-body-sm text-body-sm text-on-tertiary-container flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[0.875rem]" data-icon="trending_up">trending_up</span>
+<span>+4 adicionados nesta semana</span>
+</div>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-bright p-5 border border-outline rounded-lg flex flex-col justify-between space-y-4">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant">Ingressos em Custódia Ativa</span>
+<span class="p-1.5 bg-surface-container rounded border border-outline-variant text-primary">
+<span class="material-symbols-outlined" data-icon="fingerprint">fingerprint</span>
+</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-primary font-semibold">142.890 un.</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+<span class="text-on-tertiary-container font-medium">99.4%</span> validados por biometria/token
+          </div>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-bright p-5 border border-outline rounded-lg flex flex-col justify-between space-y-4">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant">Volume Financeiro Retido</span>
+<span class="p-1.5 bg-surface-container rounded border border-outline-variant text-primary">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-primary font-semibold">R$ 18.450.000,00</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+            Liquidação automatizada em D+1
+          </div>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-bright p-5 border border-outline rounded-lg flex flex-col justify-between space-y-4 border-l-4 border-l-accent-amber">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant">Alertas de Risco / Lotes Sob Suspeita</span>
+<span class="p-1.5 bg-error-container/40 text-accent-amber rounded border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="shield_with_heart">shield_with_heart</span>
+</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-primary font-semibold">2 eventos</div>
+<div class="font-body-sm text-body-sm text-accent-amber flex items-center gap-1 mt-1 font-medium">
+<span class="material-symbols-outlined text-[0.875rem]" data-icon="warning">warning</span>
+<span>Triagem preventiva de cambismo</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Controls, Filter Tabs & Search Bar -->
+<section class="space-y-4">
+<!-- Category Tabs -->
+<div class="flex flex-wrap items-center gap-2 border-b border-outline pb-2">
+<button class="px-4 py-2 bg-primary text-surface-bright rounded-lg font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span>Todos os Eventos</span>
+<span class="bg-surface-bright/20 text-surface-bright px-1.5 py-0.2 rounded font-label-sm text-label-sm">48</span>
+</button>
+<button class="px-4 py-2 text-on-surface-variant hover:text-primary rounded-lg font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span>Shows & Festivais</span>
+<span class="text-on-surface-variant/70 font-label-sm text-label-sm">22</span>
+</button>
+<button class="px-4 py-2 text-on-surface-variant hover:text-primary rounded-lg font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span>Esportivos</span>
+<span class="text-on-surface-variant/70 font-label-sm text-label-sm">14</span>
+</button>
+<button class="px-4 py-2 text-on-surface-variant hover:text-primary rounded-lg font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span>Teatro & Cultura</span>
+<span class="text-on-surface-variant/70 font-label-sm text-label-sm">8</span>
+</button>
+<button class="px-4 py-2 text-on-surface-variant hover:text-primary rounded-lg font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span>Conferências</span>
+<span class="text-on-surface-variant/70 font-label-sm text-label-sm">4</span>
+</button>
+</div>
+<!-- Query Form Controls -->
+<div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+<div class="relative flex-1 max-w-xl">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-bright border border-outline rounded-lg font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="Buscar evento por nome, produtor, ID ou local..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<!-- Status do Lote -->
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap">Status:</span>
+<select class="bg-surface-bright border border-outline rounded-lg py-2 px-3 font-label-md text-label-md text-primary focus:outline-none focus:ring-1 focus:ring-primary">
+<option>Todos os Lotes</option>
+<option>1º Lote</option>
+<option>Lote Final</option>
+<option>Esgotado</option>
+</select>
+</div>
+<!-- Ordenação -->
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap">Ordenar por:</span>
+<select class="bg-surface-bright border border-outline rounded-lg py-2 px-3 font-label-md text-label-md text-primary focus:outline-none focus:ring-1 focus:ring-primary">
+<option>Mais recentes</option>
+<option>Maior volume em custódia</option>
+<option>Maior volume de transações</option>
+</select>
+</div>
+</div>
+</div>
+</section>
+<!-- Structured List of Active Events (Cards Ricos e Precisos) -->
+<section class="space-y-4">
+<!-- Event Card 1: Rock in Rio 2026 -->
+<div class="bg-surface-bright border border-outline rounded-lg p-6 space-y-5 transition-shadow hover:shadow-[0px_4px_20px_-2px_rgba(10,10,10,0.04)]">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+<div class="space-y-1.5">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="font-headline-sm text-headline-sm font-semibold text-primary tracking-tight">Rock in Rio 2026 - Palco Mundo</span>
+<span class="px-2 py-0.5 rounded bg-surface-container border border-outline text-on-surface-variant font-label-sm text-label-sm">
+                Festival de Grande Porte
+              </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">#EVT-9042</span>
+</div>
+<div class="flex flex-wrap items-center gap-4 text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-primary" data-icon="corporate_fare">corporate_fare</span>
+                Produtor: <strong class="text-primary font-medium">Rock World Entretenimento S.A.</strong> (Produtor Verificado Nível 4)
+              </span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-on-surface-variant" data-icon="calendar_today">calendar_today</span>
+                18 a 27 de Setembro de 2026
+              </span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-on-surface-variant" data-icon="location_on">location_on</span>
+                Cidade do Rock, Rio de Janeiro - RJ
+              </span>
+</div>
+</div>
+<!-- Status Antifraude Badge -->
+<div class="shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-semibold uppercase">100% Protegido</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">| Validação Facial Ativa</span>
+</div>
+</div>
+<!-- Recessed Metrics Well -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Lote Atual</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">Lote 2 (78% vendido)</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 78%"></div>
+</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Emissão & Revendas</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">45.000 un. emitidos</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">4.820 revendas autorizadas</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Volume em Custódia Segura</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">R$ 3.856.000,00</div>
+<div class="font-label-sm text-label-sm text-on-tertiary-container mt-0.5">Fundos auditados em smart contract</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Taxa de Liquidez P2P</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">10.7% transferidos</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Zero ocorrências de duplicidade</div>
+</div>
+</div>
+<!-- Card Footprint & Action Buttons -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[1rem]" data-icon="lock_clock">lock_clock</span>
+<span>Última reconciliação de custódia: há 4 minutos</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-1.5 bg-surface-bright border border-outline text-primary rounded-lg font-label-lg text-label-lg hover:bg-surface-dim transition-colors">
+              Pausar Revendas
+            </button>
+<button class="px-3.5 py-1.5 bg-surface-bright border border-outline text-primary rounded-lg font-label-lg text-label-lg hover:bg-surface-dim transition-colors">
+              Auditar Ingressos
+            </button>
+<button class="px-3.5 py-1.5 bg-primary text-surface-bright rounded-lg font-label-lg text-label-lg hover:bg-primary-container transition-colors">
+              Gerenciar Lotes & Regras
+            </button>
+</div>
+</div>
+</div>
+<!-- Event Card 2: Primavera Sound São Paulo 2025 -->
+<div class="bg-surface-bright border border-outline rounded-lg p-6 space-y-5 transition-shadow hover:shadow-[0px_4px_20px_-2px_rgba(10,10,10,0.04)]">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+<div class="space-y-1.5">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="font-headline-sm text-headline-sm font-semibold text-primary tracking-tight">Primavera Sound São Paulo 2025</span>
+<span class="px-2 py-0.5 rounded bg-surface-container border border-outline text-on-surface-variant font-label-sm text-label-sm">
+                Festival Internacional
+              </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">#EVT-8831</span>
+</div>
+<div class="flex flex-wrap items-center gap-4 text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-primary" data-icon="corporate_fare">corporate_fare</span>
+                Produtor: <strong class="text-primary font-medium">Time For Fun (T4F) Produções</strong> (Produtor Verificado)
+              </span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-on-surface-variant" data-icon="calendar_today">calendar_today</span>
+                29 e 30 de Novembro de 2025
+              </span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-on-surface-variant" data-icon="location_on">location_on</span>
+                Autódromo de Interlagos, São Paulo - SP
+              </span>
+</div>
+</div>
+<!-- Status Antifraude Badge (Warning state) -->
+<div class="shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-error-container/30 border border-outline">
+<span class="w-2 h-2 rounded-full bg-accent-amber"></span>
+<span class="font-label-sm text-label-sm text-accent-amber font-semibold uppercase">1 denúncia em mediação</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">| Análise Operacional</span>
+</div>
+</div>
+<!-- Recessed Metrics Well -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Lote Atual</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">Passaporte 2 Dias - Lote 3 (92%)</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 92%"></div>
+</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Ingressos Emitidos / P2P</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">28.000 un. emitidos</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">2.140 transações P2P monitoradas</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Volume em Custódia</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">R$ 2.412.000,00</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Garantia bancária vinculada</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Monitoramento Cambista</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">Teto ágio: +15%</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Regra de revenda justa aplicada</div>
+</div>
+</div>
+<!-- Card Footprint & Action Buttons -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-accent-amber">
+<span class="material-symbols-outlined text-[1rem]" data-icon="flag">flag</span>
+<span>Suspeita de revenda bot em lote privado reportada pela comunidade</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-1.5 bg-surface-bright border border-outline text-primary rounded-lg font-label-lg text-label-lg hover:bg-surface-dim transition-colors">
+              Pausar Revendas
+            </button>
+<button class="px-3.5 py-1.5 bg-surface-bright border border-outline text-primary rounded-lg font-label-lg text-label-lg hover:bg-surface-dim transition-colors">
+              Auditar Ingressos
+            </button>
+<button class="px-3.5 py-1.5 bg-primary text-surface-bright rounded-lg font-label-lg text-label-lg hover:bg-primary-container transition-colors">
+              Gerenciar Lotes & Regras
+            </button>
+</div>
+</div>
+</div>
+<!-- Event Card 3: Final da Copa Libertadores da América 2025 -->
+<div class="bg-surface-bright border border-outline rounded-lg p-6 space-y-5 transition-shadow hover:shadow-[0px_4px_20px_-2px_rgba(10,10,10,0.04)]">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+<div class="space-y-1.5">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="font-headline-sm text-headline-sm font-semibold text-primary tracking-tight">Final da Copa Libertadores da América 2025</span>
+<span class="px-2 py-0.5 rounded bg-surface-container border border-outline text-on-surface-variant font-label-sm text-label-sm">
+                Esportivo Oficial
+              </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">#EVT-8710</span>
+</div>
+<div class="flex flex-wrap items-center gap-4 text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-primary" data-icon="sports_soccer">sports_soccer</span>
+                Produtor: <strong class="text-primary font-medium">Conmebol Eventos & Gestão de Bilhetagem</strong>
+</span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-on-surface-variant" data-icon="calendar_today">calendar_today</span>
+                29 de Novembro de 2025
+              </span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-on-surface-variant" data-icon="location_on">location_on</span>
+                Estádio Monumental • Buenos Aires / Transmissão Arena SP
+              </span>
+</div>
+</div>
+<!-- Status Antifraude Badge -->
+<div class="shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-semibold uppercase">Alerta de Bots Mitigado</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">| Bloqueio Geográfico Ativo</span>
+</div>
+</div>
+<!-- Recessed Metrics Well -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Status do Lote</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">Esgotado Oficialmente</div>
+<div class="font-body-sm text-body-sm text-on-tertiary-container mt-0.5">100% token dinâmico rotativo</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Ingressos & Fila de Troca</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">60.000 un. lotação máx.</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">840 revendas autorizadas em fila</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Volume em Custódia</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">R$ 5.920.000,00</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Protocolo multifirma ativado</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Proteção Anti-Screen Capture</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">QR Rotativo 15s</div>
+<div class="font-body-sm text-body-sm text-on-tertiary-container mt-0.5">Biometria no gate habilitada</div>
+</div>
+</div>
+<!-- Card Footprint & Action Buttons -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[1rem]" data-icon="shield">shield</span>
+<span>4.180 conexões suspeitas filtradas pelo firewall na última hora</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-1.5 bg-surface-bright border border-outline text-primary rounded-lg font-label-lg text-label-lg hover:bg-surface-dim transition-colors">
+              Mais Opções
+            </button>
+<button class="px-3.5 py-1.5 bg-surface-bright border border-outline text-primary rounded-lg font-label-lg text-label-lg hover:bg-surface-dim transition-colors">
+              Auditar Tokens
+            </button>
+<button class="px-3.5 py-1.5 bg-primary text-surface-bright rounded-lg font-label-lg text-label-lg hover:bg-primary-container transition-colors">
+              Painel de Contingência
+            </button>
+</div>
+</div>
+</div>
+<!-- Event Card 4: Alok Tour Infinite Experience -->
+<div class="bg-surface-bright border border-outline rounded-lg p-6 space-y-5 transition-shadow hover:shadow-[0px_4px_20px_-2px_rgba(10,10,10,0.04)]">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+<div class="space-y-1.5">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="font-headline-sm text-headline-sm font-semibold text-primary tracking-tight">Alok Tour Infinite Experience</span>
+<span class="px-2 py-0.5 rounded bg-surface-container border border-outline text-on-surface-variant font-label-sm text-label-sm">
+                Turnê Eletrônica
+              </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">#EVT-8524</span>
+</div>
+<div class="flex flex-wrap items-center gap-4 text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-primary" data-icon="corporate_fare">corporate_fare</span>
+                Produtor: <strong class="text-primary font-medium">Artist Management & Live Music Brasil</strong>
+</span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-on-surface-variant" data-icon="calendar_today">calendar_today</span>
+                14 de Dezembro de 2025
+              </span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[1rem] text-on-surface-variant" data-icon="location_on">location_on</span>
+                Estádio Couto Pereira, Curitiba - PR
+              </span>
+</div>
+</div>
+<!-- Status Antifraude Badge -->
+<div class="shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-semibold uppercase">Normalidade Operacional</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">| 0 Incidentes</span>
+</div>
+</div>
+<!-- Recessed Metrics Well -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Lote Atual</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">Pista Premium Lote 1 (65%)</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 65%"></div>
+</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Ingressos Totais & P2P</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">15.000 un. capacidade</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">530 revendas TrocaTicket</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Volume em Custódia</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">R$ 980.000,00</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Liberação após check-in no portão</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">Validação de Identidade</div>
+<div class="font-label-lg text-label-lg text-primary font-semibold mt-0.5">CPF Vinculado</div>
+<div class="font-body-sm text-body-sm text-on-tertiary-container mt-0.5">Troca de titularidade permitida (1x)</div>
+</div>
+</div>
+<!-- Card Footprint & Action Buttons -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[1rem]" data-icon="check_circle">check_circle</span>
+<span>Fluxo de transferências dentro do padrão algorítmico seguro</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-1.5 bg-surface-bright border border-outline text-primary rounded-lg font-label-lg text-label-lg hover:bg-surface-dim transition-colors">
+              Auditar Ingressos
+            </button>
+<button class="px-3.5 py-1.5 bg-primary text-surface-bright rounded-lg font-label-lg text-label-lg hover:bg-primary-container transition-colors">
+              Gerenciar Lotes & Regras
+            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Compact Pagination Controls -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 border-t border-outline">
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+        Exibindo <span class="font-medium text-primary">4</span> de <span class="font-medium text-primary">48</span> eventos ativos
+      </div>
+<div class="flex items-center gap-2">
+<button class="h-9 px-3 border border-outline rounded-lg bg-surface-bright text-on-surface-variant opacity-40 cursor-not-allowed font-label-sm text-label-sm flex items-center gap-1" disabled="">
+<span class="material-symbols-outlined text-[1rem]" data-icon="chevron_left">chevron_left</span>
+<span>Anterior</span>
+</button>
+<div class="flex items-center gap-1 font-label-sm text-label-sm">
+<button class="w-9 h-9 bg-primary text-surface-bright rounded-lg font-medium">1</button>
+<button class="w-9 h-9 bg-surface-bright border border-outline text-primary hover:bg-surface-dim rounded-lg font-medium transition-colors">2</button>
+<button class="w-9 h-9 bg-surface-bright border border-outline text-primary hover:bg-surface-dim rounded-lg font-medium transition-colors">3</button>
+<span class="px-1 text-on-surface-variant">...</span>
+<button class="w-9 h-9 bg-surface-bright border border-outline text-primary hover:bg-surface-dim rounded-lg font-medium transition-colors">12</button>
+</div>
+<button class="h-9 px-3 border border-outline rounded-lg bg-surface-bright text-primary hover:bg-surface-dim font-label-sm text-label-sm flex items-center gap-1 transition-colors">
+<span>Próximo</span>
+<span class="material-symbols-outlined text-[1rem]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component Anchor) -->
+<footer class="bg-surface dark:bg-inverse-surface border-t border-outline dark:border-outline-variant mt-12">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-6 md:px-12 py-6 max-w-7xl mx-auto gap-4">
+<div class="flex flex-col md:flex-row items-center gap-3">
+<span class="font-headline-sm text-headline-sm font-semibold text-primary dark:text-inverse-primary">TrocaTicket Admin</span>
+<span class="hidden md:inline text-outline">•</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant dark:text-secondary-fixed text-center md:text-left">
+          © 2025 TrocaTicket Inc. Moderação & Custódia Segura. Todos os direitos reservados.
+        </p>
+</div>
+<nav class="flex flex-wrap justify-center items-center gap-6">
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150 active:opacity-80" href="#">
+          Termos de Conformidade
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150 active:opacity-80" href="#">
+          Políticas de Prevenção a Fraude
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150 active:opacity-80" href="#">
+          Auditoria do Sistema
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150 active:opacity-80" href="#">
+          Suporte Técnico
+        </a>
+</nav>
+</div>
+</footer>
+</body></html>

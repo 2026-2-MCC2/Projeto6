@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acesso Administrativo | TrocaTicket Custódia &amp; Auditoria</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Inter Google Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed-dim": "#c8c6c9",
+            "surface": "#FAFAFA",
+            "surface-dim": "#F4F4F5",
+            "surface-container": "#eeedf7",
+            "surface-container-high": "#E5E7EB",
+            "primary-fixed": "#e5e2e1",
+            "on-tertiary-fixed": "#002114",
+            "primary-fixed-dim": "#c9c6c5",
+            "error": "#EF4444",
+            "surface-bright": "#fbf8ff",
+            "on-tertiary-container": "#069669",
+            "surface-container-low": "#F9FAFB",
+            "surface-variant": "#e3e1ec",
+            "outline-variant": "#EEEEF0",
+            "tertiary-fixed-dim": "#68dba9",
+            "surface-tint": "#5f5e5e",
+            "on-error": "#ffffff",
+            "secondary": "#5f5e61",
+            "inverse-on-surface": "#f1effa",
+            "inverse-surface": "#2f3038",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#e3e1ec",
+            "primary-container": "#1c1b1b",
+            "on-secondary-fixed": "#1b1b1e",
+            "accent-amber": "#D97706",
+            "outline": "#E4E4E7",
+            "on-secondary-container": "#656467",
+            "background": "#fbf8ff",
+            "on-secondary-fixed-variant": "#47464a",
+            "on-tertiary-fixed-variant": "#005137",
+            "on-primary-container": "#858383",
+            "tertiary-fixed": "#85f8c4",
+            "primary": "#000000",
+            "surface-container-lowest": "#FFFFFF",
+            "inverse-primary": "#c9c6c5",
+            "on-background": "#1a1b22",
+            "secondary-fixed": "#e4e1e5",
+            "tertiary": "#000000",
+            "on-primary": "#ffffff",
+            "secondary-container": "#e4e1e5",
+            "on-surface-variant": "#444748",
+            "on-primary-fixed-variant": "#474646",
+            "on-primary-fixed": "#1c1b1b",
+            "on-secondary": "#ffffff",
+            "on-surface": "#1a1b22",
+            "error-container": "#ffdad6",
+            "tertiary-container": "#002114",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin-desktop": "3rem",
+            "space-2xl": "3rem",
+            "space-md": "1rem",
+            "gutter-desktop": "1.5rem",
+            "gutter-mobile": "1rem",
+            "space-lg": "1.5rem",
+            "space-2xs": "0.25rem",
+            "margin-mobile": "1rem",
+            "space-sm": "0.75rem",
+            "space-xl": "2rem",
+            "space-xs": "0.5rem",
+            "space-3xl": "4rem"
+          },
+          "fontFamily": {
+            "headline-sm": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-sm": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-md": ["Inter"],
+            "label-lg": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-lg-mobile": ["Inter"]
+          },
+          "fontSize": {
+            "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "display-lg": ["3.5rem", { "lineHeight": "4rem", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.06em", "fontWeight": "600" }],
+            "label-md": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.015em", "fontWeight": "500" }],
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-lg": ["2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["0.9375rem", { "lineHeight": "1.5rem", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-sm": ["0.8125rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "headline-lg-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md antialiased min-h-screen flex flex-col justify-between selection:bg-primary selection:text-surface">
+<!-- Header / Top Navigation Bar -->
+<header class="w-full bg-surface-container-lowest border-b border-outline-variant/60 sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop h-16 flex items-center justify-between">
+<!-- Brand Logo and Return Link -->
+<div class="flex items-center gap-space-lg">
+<a class="flex items-center gap-space-xs text-headline-sm font-headline-sm tracking-tight text-primary hover:opacity-90 transition-opacity" href="#">
+<span class="material-symbols-outlined text-primary text-[24px]" data-icon="confirmation_number">confirmation_number</span>
+<span>TrocaTicket</span>
+</a>
+<div class="hidden md:block h-4 w-px bg-outline"></div>
+<a class="hidden md:flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_back">arrow_back</span>
+<span>Voltar para seleção de perfis</span>
+</a>
+</div>
+<!-- Security Status Badge -->
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-low rounded-lg border border-outline text-label-md font-label-md text-primary">
+<span class="inline-block w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
+<span class="font-medium tracking-wide">Ambiente Restrito &amp; Criptografado</span>
+<span class="material-symbols-outlined text-[16px] text-on-tertiary-container ml-0.5" data-icon="lock">lock</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Mobile Back Link Strip -->
+<div class="md:hidden w-full px-margin-mobile py-2 bg-surface-container-low border-b border-outline-variant flex items-center">
+<a class="flex items-center gap-1 text-body-sm font-body-sm text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_back">arrow_back</span>
+<span>Voltar para seleção de perfis</span>
+</a>
+</div>
+<!-- Main Canvas Container -->
+<main class="flex-1 flex flex-col justify-center items-center px-margin-mobile md:px-margin-desktop py-space-2xl md:py-space-3xl">
+<div class="w-full max-w-[480px]">
+<!-- Central Admin Login Card -->
+<div class="bg-surface-container-lowest border border-outline rounded-xl p-6 md:p-10 shadow-[0px_4px_20px_-2px_rgba(10,10,10,0.04),0px_12px_32px_-4px_rgba(10,10,10,0.06)] relative overflow-hidden">
+<!-- Subtle Top Accent Line -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-amber/40 via-primary to-accent-amber/40"></div>
+<!-- Header Section of Form -->
+<div class="flex flex-col items-center text-center mb-space-xl">
+<!-- Institutional Badge -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-accent-amber/10 border border-accent-amber/30 rounded-full mb-space-md">
+<span class="material-symbols-outlined text-accent-amber text-[16px]" data-icon="shield_lock">shield_lock</span>
+<span class="text-label-sm font-label-sm text-accent-amber tracking-wider uppercase font-semibold">Gestão Interna &amp; Auditoria</span>
+</div>
+<h1 class="text-headline-md font-headline-md text-primary tracking-tight mb-2">
+            Acesso Administrativo
+          </h1>
+<p class="text-body-sm font-body-sm text-on-surface-variant max-w-sm">
+            Portal restrito a operadores de custódia, auditoria e controle master do ecossistema TrocaTicket.
+          </p>
+</div>
+<!-- Admin Login Form -->
+<form class="space-y-5" onsubmit="event.preventDefault();">
+<!-- Field 1: Operator ID / Corporate Email -->
+<div class="space-y-1.5">
+<label class="block text-label-lg font-label-lg text-primary" for="operator-id">
+              E-mail institucional ou ID de Operador
+            </label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="badge">badge</span>
+</span>
+<input class="w-full pl-10 pr-3.5 py-2.5 bg-surface-container-lowest border border-outline rounded-lg text-body-md font-body-md text-primary placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-150" id="operator-id" name="operator-id" placeholder="op.auditoria@trocaticket.com.br" required="" type="text"/>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant/70 pl-1">Identificador verificado sob matriz de permissão RBAC-3</p>
+</div>
+<!-- Field 2: Master Access Key / Password -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<label class="block text-label-lg font-label-lg text-primary" for="master-key">
+                Chave de Acesso / Senha Mestra
+              </label>
+<a class="text-label-md font-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">
+                Esqueceu a chave de acesso?
+              </a>
+</div>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="key">key</span>
+</span>
+<input class="w-full pl-10 pr-10 py-2.5 bg-surface-container-lowest border border-outline rounded-lg text-body-md font-body-md text-primary placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-150 font-mono" id="master-key" name="master-key" placeholder="••••••••••••••••" required="" type="password"/>
+<button aria-label="Alternar visibilidade da senha" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-on-surface-variant hover:text-primary transition-colors focus:outline-none" id="toggle-pwd-btn" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility" id="pwd-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Field 3: Two-Factor / Hardware Token Section -->
+<div class="pt-1 pb-1">
+<div class="p-3.5 bg-surface-container-low rounded-lg border border-outline">
+<div class="flex items-center justify-between mb-2.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="passkey">passkey</span>
+<span class="text-label-md font-label-md text-primary font-semibold">Token FIDO2 / 2FA Authenticator</span>
+</div>
+<span class="text-label-sm font-label-sm px-2 py-0.5 bg-surface-container-high rounded border border-outline-variant text-on-surface-variant font-medium">Obrigatório</span>
+</div>
+<div class="flex gap-2">
+<input class="w-full text-center tracking-[0.35em] font-mono text-body-lg font-bold py-2 bg-surface-container-lowest border border-outline rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary" maxlength="6" placeholder="000 000" type="text"/>
+<button class="px-3.5 py-2 bg-surface-container-lowest hover:bg-surface-dim border border-outline rounded-lg flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" title="Conectar chave de segurança USB/NFC" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="usb">usb</span>
+</button>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant/80 mt-1.5 text-center">
+                Aproxime sua Security Key ou insira o código TOTP do autenticador
+              </p>
+</div>
+</div>
+<!-- Field 4: Remember Device Checkbox -->
+<div class="flex items-center">
+<input class="h-4 w-4 rounded-[2px] border-outline text-primary focus:ring-primary focus:ring-offset-0 transition-colors" id="remember-device" name="remember-device" type="checkbox"/>
+<label class="ml-2.5 text-body-sm font-body-sm text-on-surface-variant cursor-pointer select-none" for="remember-device">
+              Lembrar sessão neste dispositivo seguro por 12 horas
+            </label>
+</div>
+<!-- Action Button: Primary Solid Black -->
+<div class="pt-2">
+<button class="w-full py-3 px-4 bg-primary text-on-primary font-label-lg text-label-lg rounded-lg hover:bg-primary-container active:scale-[0.99] transition-all duration-150 flex items-center justify-center gap-2 shadow-sm" type="submit">
+<span class="material-symbols-outlined text-[20px]" data-icon="verified_user">verified_user</span>
+<span>Autenticar no Painel Master</span>
+</button>
+</div>
+</form>
+<!-- Emergency Support Notice -->
+<div class="mt-6 pt-5 border-t border-outline-variant text-center">
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+            Dispositivo não reconhecido ou perda de credenciais? 
+            <a class="font-medium text-primary underline underline-offset-4 hover:opacity-80 transition-opacity" href="#">Contatar Suporte SOC</a>
+</p>
+</div>
+</div>
+<!-- Compliance & Security Audit Block -->
+<div class="mt-space-lg bg-surface-container-lowest/70 backdrop-blur-sm border border-outline rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-3 text-on-surface-variant">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-surface-container-high rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="policy">policy</span>
+</div>
+<div>
+<div class="text-label-md font-label-md font-semibold text-primary">Conexão TLS 1.3 / FIPS 140-2</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">Auditoria ativa e criptografia de ponta a ponta</div>
+</div>
+</div>
+<div class="text-right flex md:flex-col items-center md:items-end justify-between w-full md:w-auto text-label-sm font-label-sm font-mono border-t md:border-t-0 border-outline-variant pt-2 md:pt-0">
+<span class="text-on-surface-variant/70">IP de Origem:</span>
+<span class="text-primary font-semibold">189.40.122.95 (Registrado)</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Global Footer -->
+<footer class="w-full bg-surface-container-lowest border-t border-outline-variant/60">
+<div class="w-full px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto py-space-2xl flex flex-col gap-space-xl">
+<!-- Footer Top / Links -->
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-outline-variant/60">
+<div class="flex items-center gap-space-xs text-headline-sm font-headline-sm text-primary">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="confirmation_number">confirmation_number</span>
+<span>TrocaTicket</span>
+</div>
+<nav class="flex flex-wrap gap-x-6 gap-y-2 text-label-sm font-label-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors duration-150" href="#">Termos de Uso</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">Política de Privacidade</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">Garantia Antifraude</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">Status da Plataforma</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">Central de Ajuda</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">API de Parceiros</a>
+</nav>
+</div>
+<!-- Footer Bottom / Copyright -->
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-body-sm font-body-sm text-on-surface-variant">
+<p>© 2025 TrocaTicket Tecnologias S.A. Todos os direitos reservados. Custódia protegida e transferências 100% verificadas.</p>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface-variant/80">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+<span>Sistemas Operacionais 100% Online</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Script for micro-interaction: Password Toggle -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('toggle-pwd-btn');
+      const pwdInput = document.getElementById('master-key');
+      const pwdIcon = document.getElementById('pwd-icon');
+
+      if (toggleBtn && pwdInput && pwdIcon) {
+        toggleBtn.addEventListener('click', () => {
+          const isPassword = pwdInput.getAttribute('type') === 'password';
+          pwdInput.setAttribute('type', isPassword ? 'text' : 'password');
+          pwdIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+        });
+      }
+    });
+  </script>
+</body></html>

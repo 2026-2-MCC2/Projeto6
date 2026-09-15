@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Requisições de Cadastros - TrocaTicket Admin</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with configuration -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-primary": "#5d5f5f",
+            "on-tertiary": "#003915",
+            "on-primary-fixed-variant": "#454747",
+            "tertiary-container": "#6bff8f",
+            "tertiary": "#ffffff",
+            "on-tertiary-fixed-variant": "#005321",
+            "on-background": "#e2e2e2",
+            "surface-variant": "#353535",
+            "error-container": "#93000a",
+            "on-secondary-fixed": "#1a1b22",
+            "on-surface": "#e2e2e2",
+            "on-secondary-container": "#b4b4bd",
+            "on-tertiary-container": "#007432",
+            "on-primary-fixed": "#1a1c1c",
+            "surface-container-lowest": "#0e0e0e",
+            "on-error": "#690005",
+            "on-error-container": "#ffdad6",
+            "inverse-on-surface": "#303030",
+            "on-surface-variant": "#c4c7c8",
+            "on-tertiary-fixed": "#002109",
+            "outline": "#8e9192",
+            "surface-bright": "#393939",
+            "background": "#131313",
+            "surface-container-high": "#2a2a2a",
+            "on-secondary-fixed-variant": "#45464e",
+            "surface-container": "#1f1f1f",
+            "secondary-fixed": "#e2e1eb",
+            "secondary-container": "#45464e",
+            "surface": "#131313",
+            "surface-dim": "#131313",
+            "error": "#ffb4ab",
+            "on-secondary": "#2f3037",
+            "surface-container-low": "#1b1b1b",
+            "on-primary": "#2f3131",
+            "surface-tint": "#c6c6c7",
+            "on-primary-container": "#636565",
+            "primary-container": "#e2e2e2",
+            "secondary-fixed-dim": "#c6c6cf",
+            "primary-fixed-dim": "#c6c6c7",
+            "primary-fixed": "#e2e2e2",
+            "tertiary-fixed-dim": "#4ae176",
+            "inverse-surface": "#e2e2e2",
+            "secondary": "#c6c6cf",
+            "tertiary-fixed": "#6bff8f",
+            "outline-variant": "#444748",
+            "primary": "#ffffff",
+            "surface-container-highest": "#353535"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.75rem",
+            "space-2xl": "3rem",
+            "margin-desktop": "3rem",
+            "space-3xs": "0.125rem",
+            "space-xl": "2rem",
+            "space-4xl": "6rem",
+            "space-3xl": "4.5rem",
+            "gutter-desktop": "1.5rem",
+            "margin-mobile": "1.25rem",
+            "space-2xs": "0.25rem",
+            "space-md": "1rem",
+            "gutter-mobile": "1rem",
+            "space-xs": "0.5rem",
+            "space-lg": "1.5rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-sm": ["Inter"],
+            "headline-xl-mobile": ["Inter"],
+            "headline-md": ["Inter"],
+            "display-hero-mobile": ["Inter"],
+            "display-hero": ["Inter"],
+            "code-numeric": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-xl": ["Inter"]
+          },
+          "fontSize": {
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "body-lg": ["17px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "body-md": ["15px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "display-hero-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "display-hero": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "code-numeric": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #000000;
+      color: #e2e2e2;
+      font-family: 'Inter', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-black text-on-surface antialiased selection:bg-surface-variant selection:text-primary">
+<!-- TOP APP BAR (Shared Components Exact Execution) -->
+<header class="w-full sticky top-0 z-50 bg-surface-bright/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-outline dark:border-outline-variant">
+<div class="flex justify-between items-center w-full px-6 md:px-12 max-w-7xl mx-auto h-16">
+<!-- Brand & Security Identifier -->
+<div class="flex items-center gap-6">
+<a class="font-headline-sm text-headline-sm font-semibold tracking-tight text-primary dark:text-inverse-primary flex items-center gap-2" href="#">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary-fixed shadow-[0_0_8px_rgba(107,255,143,0.8)]"></span>
+<span>TrocaTicket Admin</span>
+</a>
+<!-- Hardware Security Module Pill -->
+<div class="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded bg-surface-container-lowest border border-white/10 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="font-mono text-tertiary-fixed tracking-wider">HSM-FIPS 140-2 ATIVO</span>
+</div>
+</div>
+<!-- Navigation Links with Active State Mapping -->
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-lg text-label-lg hover:text-primary dark:hover:text-surface-bright transition-colors flex items-center gap-1.5" href="#">
+<span>Denúncias</span>
+<span class="px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-surface-container-high text-on-surface-variant border border-white/10">14</span>
+</a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-lg text-label-lg hover:text-primary dark:hover:text-surface-bright transition-colors" href="#">
+          Renda
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-lg text-label-lg hover:text-primary dark:hover:text-surface-bright transition-colors" href="#">
+          Eventos
+        </a>
+<!-- ACTIVE STATE: Requisições de Cadastros -->
+<a class="text-primary dark:text-surface-bright font-label-lg text-label-lg border-b-2 border-primary dark:border-surface-bright pb-1 transition-colors flex items-center gap-2 font-semibold" href="#">
+<span>Requisições de Cadastros</span>
+<span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-white text-black leading-none">12</span>
+</a>
+</nav>
+<!-- Trailing Cluster: Search, Actions, Profile -->
+<div class="flex items-center gap-4">
+<!-- Search icon button -->
+<button aria-label="Pesquisar" class="p-2 text-on-surface-variant hover:text-primary transition-colors duration-150 active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<!-- Notification action with indicator -->
+<button aria-label="Notificações" class="relative p-2 text-on-surface-variant hover:text-primary transition-colors duration-150 active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error-container ring-2 ring-black"></span>
+</button>
+<!-- Trailing primary badge & operator info -->
+<div class="hidden sm:flex items-center gap-3 pl-2 border-l border-white/10">
+<div class="flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 border border-white/10 text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim" data-icon="shield" data-weight="fill" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span>Operador Verificado</span>
+</div>
+<div class="relative">
+<img alt="Avatar do operador de segurança" class="w-8 h-8 rounded-full border border-white/20 object-cover" data-alt="Close-up portrait of a senior system security supervisor in a high-tech dimly lit operations room with subtle dark tones and pristine white accents. The lighting is crisp and minimalist, conveying institutional trust and digital precision with deep black contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxm6kqoUmWvrw8k77kzUafOi49PBAlZ5hNs4-h_MbxPBXNL-tuExwIkSjIescqD8pfCB6PGly28oxn1WQZKLryTAPiJbZw5auSpX9pYvVAXUW26et651t9tGotYqT3OcOezhMZ9sQkJfCn9HwCSaRYkTw0Z3Y6E9uf_A4eoJ9yv5s7k2_w7KsYANPJ-0ZC592JbcjunYjijKFmYuDRp8-AKwnhcnwJP9q2_zosoCJimUDmlwKNSXMLcw"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim border-2 border-black"></span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- MAIN VIEWPORT CANVAS -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 py-8 space-y-8">
+<!-- HEADER / HERO CONTROLS -->
+<section class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-white/[0.08]">
+<div class="space-y-2">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-white/[0.04] border border-white/10">
+<span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">CONTROLE DE CONFORMIDADE &amp; ONBOARDING CORPORATIVO</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-primary font-semibold tracking-tight">
+          Painel de Requisições de Cadastros e Homologação
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+          Avaliação e auditoria cadastral de novos Organizadores de Eventos e Fornecedores de Infraestrutura com verificação documental e KYC.
+        </p>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-3 shrink-0">
+<button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/12 text-primary bg-transparent hover:bg-white/[0.05] hover:border-white/24 transition-all duration-150 active:scale-[0.98] font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="file_download">file_download</span>
+<span>Exportar Fila (.CSV)</span>
+</button>
+<button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white text-black font-semibold hover:bg-white/90 transition-all duration-150 active:scale-[0.98] font-label-md text-label-md shadow-[0_0_20px_rgba(255,255,255,0.12)]" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="gavel">gavel</span>
+<span>Regras de Credenciamento</span>
+</button>
+</div>
+</section>
+<!-- METRICS SECTION (4 Columns Bento Grid) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Metric 1 -->
+<div class="p-5 rounded-xl bg-[#0A0A0A] border border-white/[0.08] hover:border-white/[0.18] transition-colors relative overflow-hidden group">
+<div class="flex justify-between items-start mb-3">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Requisições Pendentes</span>
+<span class="p-2 rounded bg-white/[0.04] text-white">
+<span class="material-symbols-outlined text-[20px]" data-icon="pending_actions">pending_actions</span>
+</span>
+</div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-lg text-headline-lg text-white font-bold tracking-tight">12</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">solicitações</span>
+</div>
+<p class="font-body-sm text-body-sm text-tertiary-fixed-dim flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+<span>+4 nas últimas 24h</span>
+</p>
+</div>
+<!-- Metric 2 -->
+<div class="p-5 rounded-xl bg-[#0A0A0A] border border-white/[0.08] hover:border-white/[0.18] transition-colors relative overflow-hidden group">
+<div class="flex justify-between items-start mb-3">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Organizadores em Análise</span>
+<span class="p-2 rounded bg-white/[0.04] text-white">
+<span class="material-symbols-outlined text-[20px]" data-icon="theater_comedy">theater_comedy</span>
+</span>
+</div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-lg text-headline-lg text-white font-bold tracking-tight">7</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">produtoras</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Volume previsto <span class="text-white font-mono font-medium">R$ 14.8M</span>
+</p>
+</div>
+<!-- Metric 3 -->
+<div class="p-5 rounded-xl bg-[#0A0A0A] border border-white/[0.08] hover:border-white/[0.18] transition-colors relative overflow-hidden group">
+<div class="flex justify-between items-start mb-3">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Fornecedores Técnicos</span>
+<span class="p-2 rounded bg-white/[0.04] text-white">
+<span class="material-symbols-outlined text-[20px]" data-icon="memory">memory</span>
+</span>
+</div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-lg text-headline-lg text-white font-bold tracking-tight">5</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">empresas</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Validação de <span class="text-white">API &amp; Hardware</span>
+</p>
+</div>
+<!-- Metric 4 -->
+<div class="p-5 rounded-xl bg-[#0A0A0A] border border-white/[0.08] hover:border-white/[0.18] transition-colors relative overflow-hidden group">
+<div class="flex justify-between items-start mb-3">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Taxa de Aprovação Média</span>
+<span class="p-2 rounded bg-white/[0.04] text-white">
+<span class="material-symbols-outlined text-[20px]" data-icon="verified_user">verified_user</span>
+</span>
+</div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-lg text-headline-lg text-white font-bold tracking-tight font-mono">84.2%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">em 30 dias</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          SLA de triagem: <span class="text-white font-mono">4.2 horas</span>
+</p>
+</div>
+</section>
+<!-- FILTER & SEARCH BAR -->
+<section class="space-y-4">
+<!-- Nav Filter Tabs -->
+<div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-1">
+<div class="flex items-center space-x-1 sm:space-x-4 overflow-x-auto py-1">
+<button class="px-3.5 py-2 font-label-md text-label-md text-white border-b-2 border-white font-semibold transition-all" type="button">
+            Todas as Requisições (12)
+          </button>
+<button class="px-3.5 py-2 font-label-md text-label-md text-on-surface-variant hover:text-white border-b-2 border-transparent transition-all" type="button">
+            Organizadores (7)
+          </button>
+<button class="px-3.5 py-2 font-label-md text-label-md text-on-surface-variant hover:text-white border-b-2 border-transparent transition-all" type="button">
+            Fornecedores (5)
+          </button>
+<button class="px-3.5 py-2 font-label-md text-label-md text-on-surface-variant hover:text-white border-b-2 border-transparent transition-all flex items-center gap-1.5" type="button">
+<span>Documentação Pendente</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20">2</span>
+</button>
+</div>
+<!-- Order / Sort Select -->
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ordenar por:</span>
+<div class="relative inline-block">
+<select class="appearance-none bg-[#0A0A0A] border border-white/10 rounded-lg pl-3 pr-8 py-1.5 text-xs text-on-surface font-medium focus:border-white focus:outline-none cursor-pointer">
+<option>Prioridade Alta</option>
+<option>Mais Recentes</option>
+<option>Volume Estimado</option>
+<option>Score de Risco</option>
+</select>
+<span class="material-symbols-outlined text-[14px] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Integrated Search Input & Status Selectors -->
+<div class="flex flex-col sm:flex-row items-center gap-3">
+<div class="relative w-full flex-1">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full h-12 pl-11 pr-4 bg-[#0A0A0A] border border-white/10 rounded-lg text-body-md text-white placeholder:text-[#71717A] focus:border-white focus:ring-0 focus:outline-none font-body-md transition-colors" placeholder="Buscar por Razão Social, CNPJ, responsável ou protocolo..." type="text"/>
+</div>
+<div class="flex items-center gap-2 w-full sm:w-auto">
+<div class="relative flex-1 sm:w-44">
+<select class="w-full h-12 appearance-none bg-[#0A0A0A] border border-white/10 rounded-lg px-3 py-2 text-body-sm text-on-surface font-medium focus:border-white focus:outline-none cursor-pointer">
+<option value="">Status do KYC (Todos)</option>
+<option value="verified">Validado JUCESP/Receita</option>
+<option value="pending">Aguardando Dossiê</option>
+<option value="review">Em Auditoria Externa</option>
+</select>
+<span class="material-symbols-outlined text-[16px] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" data-icon="filter_list">filter_list</span>
+</div>
+<button class="h-12 px-4 rounded-lg bg-surface-container-high border border-white/10 hover:border-white/20 text-on-surface font-label-md text-label-md flex items-center gap-2 shrink-0 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+<span class="hidden md:inline">Mais Filtros</span>
+</button>
+</div>
+</div>
+</section>
+<!-- REQUEST CARDS QUEUE (Detailed Cards with Dark Luxury Aesthetic) -->
+<section class="space-y-4">
+<!-- CARD 1: Time For Fun (Organizador) -->
+<article class="rounded-xl bg-[#0A0A0A] border border-white/[0.08] hover:border-white/[0.2] transition-all duration-200 overflow-hidden">
+<div class="p-6 space-y-5">
+<!-- Card Header / Meta Bar -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/[0.06]">
+<div class="flex items-center gap-2.5 flex-wrap">
+<span class="px-2.5 py-1 rounded text-label-sm font-label-sm bg-white/10 text-white border border-white/15">
+                Organizador de Eventos
+              </span>
+<span class="px-2.5 py-1 rounded text-label-sm font-label-sm bg-amber-500/10 text-amber-400 border border-amber-500/25 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                Prioridade Alta
+              </span>
+<span class="font-code-numeric text-code-numeric text-on-surface-variant">Protocolo #REQ-9082</span>
+</div>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span>
+<span>Enviado há 2 horas</span>
+</div>
+</div>
+<!-- Entity Primary Info -->
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-white font-semibold tracking-tight">
+                Time For Fun Entretenimento S.A. (T4F Brasil)
+              </h2>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="font-code-numeric text-code-numeric">CNPJ: 03.225.148/0001-92</span>
+<span class="text-white/20">•</span>
+<span>Responsável Legal: <strong class="text-on-surface font-medium">Roberto Medina de Souza</strong></span>
+<span class="text-white/20">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                  São Paulo, SP
+                </span>
+</div>
+</div>
+<!-- Trust Score Tag -->
+<div class="px-3.5 py-1.5 rounded-lg bg-surface-container-low border border-white/10 flex items-center gap-3 shrink-0 self-start">
+<div class="text-right">
+<div class="text-[10px] uppercase font-label-sm text-on-surface-variant">Score de Risco</div>
+<div class="font-headline-sm text-headline-sm font-bold text-tertiary-fixed font-mono">96/100</div>
+</div>
+<span class="w-2 h-8 rounded-full bg-tertiary-fixed/30 p-0.5 flex flex-col justify-end">
+<span class="w-full h-5/6 rounded-full bg-tertiary-fixed"></span>
+</span>
+</div>
+</div>
+<!-- Description -->
+<p class="font-body-md text-body-md text-on-surface-variant/90 leading-relaxed bg-black/40 p-3.5 rounded-lg border border-white/[0.04]">
+            Produtora líder de festivais musicais de grande escala e turnês internacionais no Brasil há mais de 20 anos. Solicitação de homologação na TrocaTicket para custódia fiduciária de bilheterias oficiais e integração de repasses automáticos P2P para a temporada 2025/2026.
+          </p>
+<!-- Compliance & Audit Matrix -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">KYC / Contrato Social</div>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-tertiary-fixed">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-medium">Verificado (JUCESP)</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">Histórico Financeiro</div>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim" data-icon="verified">verified</span>
+<span>Sem restrições / Risco Baixo</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">Eventos Previstos</div>
+<div class="text-body-sm font-body-sm text-on-surface font-medium">
+                8 festivais (320.000 ingr.)
+              </div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">Conta Escrow Vinculada</div>
+<div class="font-code-numeric text-code-numeric text-on-surface truncate">
+                Banco Itaú Corp (Ag 0921 C/C 44920-1)
+              </div>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="px-6 py-4 bg-surface-container-low/60 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3">
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/12 text-on-surface hover:bg-white/[0.05] hover:text-white hover:border-white/25 transition-all text-body-sm font-medium" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="folder_open">folder_open</span>
+<span>Visualizar Dossiê &amp; Documentos</span>
+</button>
+<div class="flex items-center gap-2.5">
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-error-container/20 border border-error-container/40 text-[#ffb4ab] hover:bg-error-container/30 transition-colors text-body-sm font-medium" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="cancel">cancel</span>
+<span>Negar Cadastro</span>
+</button>
+<button class="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white text-black font-semibold hover:bg-white/90 shadow-[0_0_16px_rgba(255,255,255,0.15)] transition-all text-body-sm" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aceitar e Homologar Cadastro</span>
+</button>
+</div>
+</div>
+</article>
+<!-- CARD 2: Turnstile Tech (Fornecedor) -->
+<article class="rounded-xl bg-[#0A0A0A] border border-white/[0.08] hover:border-white/[0.2] transition-all duration-200 overflow-hidden">
+<div class="p-6 space-y-5">
+<!-- Card Header / Meta Bar -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/[0.06]">
+<div class="flex items-center gap-2.5 flex-wrap">
+<span class="px-2.5 py-1 rounded text-label-sm font-label-sm bg-white/10 text-white border border-white/15">
+                Fornecedor de Infraestrutura
+              </span>
+<span class="px-2.5 py-1 rounded text-label-sm font-label-sm bg-surface-container-high text-on-surface-variant border border-white/10">
+                Hardware &amp; Firmware
+              </span>
+<span class="font-code-numeric text-code-numeric text-on-surface-variant">Protocolo #REQ-9079</span>
+</div>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span>
+<span>Enviado há 5 horas</span>
+</div>
+</div>
+<!-- Entity Primary Info -->
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-white font-semibold tracking-tight">
+                Turnstile Tech &amp; Smart Access Soluções de Catracas
+              </h2>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="font-code-numeric text-code-numeric">CNPJ: 28.910.442/0001-15</span>
+<span class="text-white/20">•</span>
+<span>Responsável: <strong class="text-on-surface font-medium">Mariana Duarte Prado</strong></span>
+<span class="text-white/20">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                  Florianópolis, SC
+                </span>
+</div>
+</div>
+<!-- API Status Chip -->
+<div class="px-3.5 py-1.5 rounded-lg bg-surface-container-low border border-white/10 flex items-center gap-2 shrink-0">
+<span class="material-symbols-outlined text-tertiary-fixed text-[18px]" data-icon="terminal">terminal</span>
+<span class="font-label-sm text-label-sm text-on-surface">Webhook v2 Testado</span>
+</div>
+</div>
+<!-- Description -->
+<p class="font-body-md text-body-md text-on-surface-variant/90 leading-relaxed bg-black/40 p-3.5 rounded-lg border border-white/[0.04]">
+            Fabricante e operadora de totens de leitura biométrica facial e leitores dinâmicos de QR Code com firmware criptografado antifraude. Requisita credenciamento como Fornecedora Oficial para integração via API Webhook TrocaTicket e repasse por validação de acesso em portarias de estádios.
+          </p>
+<!-- Technical Compliance Specs -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">Certificação de Hardware</div>
+<div class="text-body-sm font-body-sm text-on-surface font-medium flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed" data-icon="lock" data-weight="fill" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span>Anatel &amp; Cripto RSA-4096</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">SLA Técnico Garantido</div>
+<div class="text-body-sm font-body-sm text-tertiary-fixed font-mono font-medium flex items-center gap-1">
+<span>99.99% de uptime sob estresse</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">Taxa Proposta de Repasse</div>
+<div class="text-body-sm font-body-sm text-on-surface font-mono font-medium">
+                R$ 0,45 <span class="text-on-surface-variant text-[11px]">/ validação catraca</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="px-6 py-4 bg-surface-container-low/60 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3">
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/12 text-on-surface hover:bg-white/[0.05] hover:text-white hover:border-white/25 transition-all text-body-sm font-medium" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="settings_ethernet">settings_ethernet</span>
+<span>Visualizar Dossiê Técnico</span>
+</button>
+<div class="flex items-center gap-2.5">
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-error-container/20 border border-error-container/40 text-[#ffb4ab] hover:bg-error-container/30 transition-colors text-body-sm font-medium" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="cancel">cancel</span>
+<span>Negar Cadastro</span>
+</button>
+<button class="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white text-black font-semibold hover:bg-white/90 shadow-[0_0_16px_rgba(255,255,255,0.15)] transition-all text-body-sm" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aceitar e Homologar Cadastro</span>
+</button>
+</div>
+</div>
+</article>
+<!-- CARD 3: Nexus Live (Organizador) -->
+<article class="rounded-xl bg-[#0A0A0A] border border-white/[0.08] hover:border-white/[0.2] transition-all duration-200 overflow-hidden">
+<div class="p-6 space-y-5">
+<!-- Card Header / Meta Bar -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/[0.06]">
+<div class="flex items-center gap-2.5 flex-wrap">
+<span class="px-2.5 py-1 rounded text-label-sm font-label-sm bg-white/10 text-white border border-white/15">
+                Organizador de Eventos
+              </span>
+<span class="px-2.5 py-1 rounded text-label-sm font-label-sm bg-surface-container-high text-on-surface-variant border border-white/10">
+                Teatro &amp; Exposições
+              </span>
+<span class="font-code-numeric text-code-numeric text-on-surface-variant">Protocolo #REQ-9075</span>
+</div>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span>
+<span>Enviado há 1 dia</span>
+</div>
+</div>
+<!-- Entity Primary Info -->
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-white font-semibold tracking-tight">
+                Nexus Live Produções Culturais &amp; Teatrais LTDA
+              </h2>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="font-code-numeric text-code-numeric">CNPJ: 41.870.293/0001-80</span>
+<span class="text-white/20">•</span>
+<span>Responsável: <strong class="text-on-surface font-medium">Carlos Eduardo Nogueira</strong></span>
+<span class="text-white/20">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                  Rio de Janeiro, RJ
+                </span>
+</div>
+</div>
+<!-- KYC Tag -->
+<div class="px-3.5 py-1.5 rounded-lg bg-surface-container-low border border-white/10 flex items-center gap-2 shrink-0">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[18px]" data-icon="verified_user">verified_user</span>
+<span class="font-label-sm text-label-sm text-on-surface">Sócios Auditados</span>
+</div>
+</div>
+<!-- Description -->
+<p class="font-body-md text-body-md text-on-surface-variant/90 leading-relaxed bg-black/40 p-3.5 rounded-lg border border-white/[0.04]">
+            Organização de circuitos teatrais, espetáculos orquestrais e exposições imersivas. Busca credenciamento para gestão de assentos marcados e lote de meia-entrada digital com validação automática de carteirinhas de estudante.
+          </p>
+<!-- Compliance Matrix -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">Status de KYC</div>
+<div class="text-body-sm font-body-sm text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed" data-icon="check">check</span>
+<span>Documento dos sócios validado, sede física auditada</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">Conta Bancária de Repasse</div>
+<div class="text-body-sm font-body-sm text-on-surface font-code-numeric flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed" data-icon="account_balance">account_balance</span>
+<span>Bradesco PJ verificado e ativo</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="px-6 py-4 bg-surface-container-low/60 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3">
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/12 text-on-surface hover:bg-white/[0.05] hover:text-white hover:border-white/25 transition-all text-body-sm font-medium" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="folder_open">folder_open</span>
+<span>Visualizar Dossiê &amp; Documentos</span>
+</button>
+<div class="flex items-center gap-2.5">
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-error-container/20 border border-error-container/40 text-[#ffb4ab] hover:bg-error-container/30 transition-colors text-body-sm font-medium" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="cancel">cancel</span>
+<span>Negar Cadastro</span>
+</button>
+<button class="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white text-black font-semibold hover:bg-white/90 shadow-[0_0_16px_rgba(255,255,255,0.15)] transition-all text-body-sm" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aceitar e Homologar Cadastro</span>
+</button>
+</div>
+</div>
+</article>
+<!-- CARD 4: Liveness Vision (Fornecedor Biometria) -->
+<article class="rounded-xl bg-[#0A0A0A] border border-white/[0.08] hover:border-white/[0.2] transition-all duration-200 overflow-hidden">
+<div class="p-6 space-y-5">
+<!-- Card Header / Meta Bar -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/[0.06]">
+<div class="flex items-center gap-2.5 flex-wrap">
+<span class="px-2.5 py-1 rounded text-label-sm font-label-sm bg-white/10 text-white border border-white/15">
+                Fornecedor de Biometria &amp; KYC
+              </span>
+<span class="px-2.5 py-1 rounded text-label-sm font-label-sm bg-surface-container-high text-on-surface-variant border border-white/10">
+                IA &amp; Antifraude
+              </span>
+<span class="font-code-numeric text-code-numeric text-on-surface-variant">Protocolo #REQ-9068</span>
+</div>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span>
+<span>Enviado há 1 dia</span>
+</div>
+</div>
+<!-- Entity Primary Info -->
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-white font-semibold tracking-tight">
+                Liveness Vision Inteligência de Identidade Digital
+              </h2>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="font-code-numeric text-code-numeric">CNPJ: 33.150.887/0001-04</span>
+<span class="text-white/20">•</span>
+<span>Responsável: <strong class="text-on-surface font-medium">Felipe Fontana</strong></span>
+<span class="text-white/20">•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                  Belo Horizonte, MG
+                </span>
+</div>
+</div>
+<!-- Precision Chip -->
+<div class="px-3.5 py-1.5 rounded-lg bg-surface-container-low border border-white/10 flex items-center gap-2 shrink-0">
+<span class="material-symbols-outlined text-tertiary-fixed text-[18px]" data-icon="face">face</span>
+<span class="font-label-sm text-label-sm text-on-surface font-mono">99.98% Precisão</span>
+</div>
+</div>
+<!-- Description -->
+<p class="font-body-md text-body-md text-on-surface-variant/90 leading-relaxed bg-black/40 p-3.5 rounded-lg border border-white/[0.04]">
+            Motor de conferência de prova de vida em 3D e detecção de deepfakes para portarias de acesso e validação na revenda P2P de ingressos nominais.
+          </p>
+<!-- Technical Specs -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">Teste de Colisão Antifraude</div>
+<div class="text-body-sm font-body-sm text-tertiary-fixed font-mono font-medium flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="fingerprint">fingerprint</span>
+<span>99.98% de precisão (Zero falsos positivos em lab)</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/[0.05]">
+<div class="text-[11px] font-label-sm text-on-surface-variant uppercase mb-1">Integração Sandbox</div>
+<div class="text-body-sm font-body-sm text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed" data-icon="api">api</span>
+<span>Homologação de API concluída com sucesso</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="px-6 py-4 bg-surface-container-low/60 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3">
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/12 text-on-surface hover:bg-white/[0.05] hover:text-white hover:border-white/25 transition-all text-body-sm font-medium" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="biometrics">csv</span>
+<span>Visualizar Dossiê Técnico</span>
+</button>
+<div class="flex items-center gap-2.5">
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-error-container/20 border border-error-container/40 text-[#ffb4ab] hover:bg-error-container/30 transition-colors text-body-sm font-medium" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="cancel">cancel</span>
+<span>Negar Cadastro</span>
+</button>
+<button class="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white text-black font-semibold hover:bg-white/90 shadow-[0_0_16px_rgba(255,255,255,0.15)] transition-all text-body-sm" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Aceitar e Homologar Cadastro</span>
+</button>
+</div>
+</div>
+</article>
+</section>
+<!-- PAGINATION BAR -->
+<nav aria-label="Paginação" class="pt-4 pb-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/[0.08]">
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+        Exibindo <span class="font-mono text-white font-medium">4</span> de <span class="font-mono text-white font-medium">12</span> requisições em fila ativa
+      </div>
+<div class="flex items-center gap-1.5">
+<button class="px-3 py-1.5 rounded-lg border border-white/10 text-on-surface-variant opacity-40 cursor-not-allowed text-body-sm flex items-center gap-1" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_left">chevron_left</span>
+<span>Anterior</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-white text-black font-semibold text-body-sm flex items-center justify-center" type="button">
+          1
+        </button>
+<button class="w-8 h-8 rounded-lg border border-white/10 text-on-surface-variant hover:text-white hover:border-white/20 text-body-sm flex items-center justify-center transition-colors" type="button">
+          2
+        </button>
+<button class="w-8 h-8 rounded-lg border border-white/10 text-on-surface-variant hover:text-white hover:border-white/20 text-body-sm flex items-center justify-center transition-colors" type="button">
+          3
+        </button>
+<button class="px-3 py-1.5 rounded-lg border border-white/10 text-on-surface hover:text-white hover:border-white/20 text-body-sm flex items-center gap-1 transition-colors" type="button">
+<span>Próxima</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</nav>
+</main>
+<!-- FOOTER (Shared Components Exact Execution) -->
+<footer class="w-full bg-surface dark:bg-inverse-surface border-t border-outline dark:border-outline-variant">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-6 md:px-12 py-6 max-w-7xl mx-auto gap-4">
+<div class="font-body-sm text-body-sm text-on-surface-variant dark:text-secondary-fixed">
+        © 2025 TrocaTicket Inc. Moderação &amp; Custódia Segura. Todos os direitos reservados.
+      </div>
+<div class="flex flex-wrap items-center gap-6">
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150 active:opacity-80" href="#">
+          Termos de Conformidade
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150 active:opacity-80" href="#">
+          Políticas de Prevenção a Fraude
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150 active:opacity-80" href="#">
+          Auditoria do Sistema
+        </a>
+<a class="text-on-surface-variant dark:text-secondary-fixed font-label-sm text-label-sm hover:text-primary dark:hover:text-surface-bright transition-colors duration-150 active:opacity-80" href="#">
+          Suporte Técnico
+        </a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>TrocaTicket — O novo padrão para revenda e troca de ingressos</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-container": "#e2e2e2",
+            "surface": "#131313",
+            "secondary-fixed-dim": "#c6c6cf",
+            "inverse-surface": "#e2e2e2",
+            "surface-tint": "#c6c6c7",
+            "tertiary-container": "#6bff8f",
+            "primary-fixed": "#e2e2e2",
+            "on-surface-variant": "#c4c7c8",
+            "on-error-container": "#ffdad6",
+            "on-background": "#e2e2e2",
+            "tertiary": "#ffffff",
+            "on-tertiary-container": "#007432",
+            "inverse-on-surface": "#303030",
+            "primary-fixed-dim": "#c6c6c7",
+            "secondary-fixed": "#e2e1eb",
+            "error-container": "#93000a",
+            "outline": "#8e9192",
+            "tertiary-fixed-dim": "#4ae176",
+            "surface-container-low": "#1b1b1b",
+            "on-error": "#690005",
+            "surface-container-high": "#2a2a2a",
+            "tertiary-fixed": "#6bff8f",
+            "on-tertiary-fixed-variant": "#005321",
+            "on-secondary-fixed-variant": "#45464e",
+            "outline-variant": "#444748",
+            "secondary": "#c6c6cf",
+            "on-primary": "#2f3131",
+            "surface-container-lowest": "#0e0e0e",
+            "primary": "#ffffff",
+            "on-surface": "#e2e2e2",
+            "on-secondary-container": "#b4b4bd",
+            "inverse-primary": "#5d5f5f",
+            "on-primary-container": "#636565",
+            "on-secondary-fixed": "#1a1b22",
+            "on-primary-fixed-variant": "#454747",
+            "secondary-container": "#45464e",
+            "on-secondary": "#2f3037",
+            "on-primary-fixed": "#1a1c1c",
+            "error": "#ffb4ab",
+            "surface-variant": "#353535",
+            "surface-container-highest": "#353535",
+            "on-tertiary-fixed": "#002109",
+            "surface-bright": "#393939",
+            "surface-container": "#1f1f1f",
+            "surface-dim": "#131313",
+            "on-tertiary": "#003915",
+            "background": "#131313"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-3xs": "0.125rem",
+            "space-4xl": "6rem",
+            "margin-desktop": "3rem",
+            "gutter-mobile": "1rem",
+            "space-3xl": "4.5rem",
+            "space-lg": "1.5rem",
+            "space-md": "1rem",
+            "space-xs": "0.5rem",
+            "space-2xl": "3rem",
+            "margin-mobile": "1.25rem",
+            "space-2xs": "0.25rem",
+            "gutter-desktop": "1.5rem",
+            "space-sm": "0.75rem",
+            "space-xl": "2rem"
+          },
+          "fontFamily": {
+            "label-md": ["Inter"],
+            "code-numeric": ["Inter"],
+            "display-hero": ["Inter"],
+            "headline-sm": ["Inter"],
+            "headline-xl": ["Inter"],
+            "headline-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "display-hero-mobile": ["Inter"],
+            "headline-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-xl-mobile": ["Inter"]
+          },
+          "fontSize": {
+            "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "code-numeric": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "display-hero": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-lg": ["17px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-hero-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }],
+            "body-md": ["15px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #000000;
+      color: #FAFAFA;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      selection-background-color: #FFFFFF;
+      selection-color: #000000;
+    }
+    ::selection {
+      background: #FFFFFF;
+      color: #000000;
+    }
+    .card-base {
+      background-color: #0A0A0A;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-base:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+    .card-interactive {
+      background-color: #121212;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-interactive:hover {
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+    .subtle-grid {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .pulse-glow {
+      animation: pulse-ring 2.5s infinite;
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+  </style>
+</head>
+<body class="bg-black text-[#FAFAFA] antialiased">
+<!-- TOP NAVBAR -->
+<header class="docked full-width top-0 fixed z-50 w-full bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto h-16">
+<!-- Brand Logo -->
+<a class="text-headline-sm font-headline-sm tracking-tight text-primary dark:text-primary flex items-center gap-space-xs group" href="#">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high border border-white/10 flex items-center justify-center transition-transform duration-150 group-hover:scale-105">
+<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: &quot;FILL&quot; 1;">confirmation_number</span>
+</div>
+<span class="font-bold tracking-tight text-primary">TrocaTicket</span>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-space-xl">
+<a class="text-body-md font-body-md text-primary dark:text-primary font-medium hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#como-funciona">Como Funciona</a>
+<a class="text-body-md font-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#seguranca">Segurança</a>
+<a class="text-body-md font-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#nossa-historia">Parceiros</a>
+<a class="text-body-md font-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#avaliacoes">Avaliações</a>
+</nav>
+<!-- Auth Actions -->
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-space-xs text-body-md font-body-md text-[#FAFAFA] rounded-lg border border-white/12 hover:bg-white/5 hover:border-white/25 active:scale-[0.99] transition-all duration-150">
+          Entrar
+        </button>
+<button class="px-space-lg py-space-xs text-body-md font-body-md font-semibold text-black bg-white rounded-lg hover:opacity-90 active:scale-[0.99] transition-all duration-150 shadow-sm">
+          Criar Conta
+        </button>
+</div>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main class="w-full pt-28 pb-space-4xl max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+<!-- HERO / NARRATIVE HEADER -->
+<section class="w-full py-space-2xl md:py-space-3xl flex flex-col items-start relative">
+<div class="absolute -top-12 -left-16 w-96 h-96 bg-white/[0.02] rounded-full blur-3xl pointer-events-none"></div>
+<!-- Security Status Pill -->
+<div class="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-[#0A0A0A] border border-white/10 mb-space-lg">
+<span class="w-2 h-2 rounded-full bg-[#22C55E] pulse-glow"></span>
+<span class="text-label-sm font-label-sm text-[#22C55E] tracking-wider uppercase font-semibold">Custódia Protegida &amp; Transferências 100% Verificadas</span>
+</div>
+<!-- Hero Statement -->
+<h1 class="text-display-hero-mobile md:text-display-hero font-display-hero text-[#FAFAFA] max-w-4xl tracking-tight leading-tight mb-space-md">
+        O novo padrão para revenda e troca de ingressos.
+      </h1>
+<p class="text-body-lg font-body-lg text-secondary max-w-2xl leading-relaxed mb-space-xl">
+        Eliminamos cambistas ilegais, fraudes e incertezas. Uma infraestrutura de liquidação onde o pagamento permanece sob custódia inviolável até a validação na catraca do evento.
+      </p>
+<!-- Key Value Quick Row -->
+<div class="flex flex-wrap items-center gap-space-lg text-body-sm font-body-sm text-secondary pt-space-xs border-t border-white/10 w-full">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[#22C55E] text-lg" style="font-variation-settings: &quot;FILL&quot; 1;">verified_user</span>
+<span class="">Transferência Nominal Automática</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: &quot;FILL&quot; 1;">lock</span>
+<span class="">Escrow de Pagamento Seguro</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: &quot;FILL&quot; 1;">price_check</span>
+<span class="">Teto Máximo Anti-Ágio</span>
+</div>
+</div>
+</section>
+<!-- NARRATIVE BENTO GRID (01 - 04) -->
+<section class="w-full grid grid-cols-1 gap-space-lg my-space-xl"><!-- CARD 01: INTRODUÇÃO & MOCKUP DO INGRESSO -->
+<article class="w-full card-base rounded-xl p-space-xl flex flex-col lg:flex-row lg:items-center gap-space-xl relative overflow-hidden group">
+  <div class="flex flex-col flex-1">
+    <div class="flex items-center justify-between mb-space-sm">
+      
+      <span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-white/5 text-[#c4c7c8] border border-white/10">Troca Garantida</span>
+    </div>
+    <h2 class="text-headline-lg font-headline-lg text-[#FAFAFA] tracking-tight mb-space-xs">
+      O que é o TrocaTicket
+    </h2>
+    <p class="text-body-md font-body-md text-[#A1A1AA] leading-relaxed">
+      Uma plataforma de custódia inteligente concebida para que fãs transacionem ingressos nominais com blindagem completa. O valor pago só é creditado ao vendedor após a leitura na catraca do evento.
+    </p>
+  </div>
+  <!-- Interactive Ticket Visual Spec -->
+  <div class="w-full lg:max-w-xl bg-[#050505] rounded-lg border border-white/10 p-space-md shadow-2xl relative shrink-0">
+    <div class="flex items-start justify-between border-b border-white/10 pb-space-sm mb-space-sm">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E]">100% Autenticado</span>
+          <span class="text-[11px] text-[#71717A] font-mono">HASH #8820-TK</span>
+        </div>
+        <p class="text-headline-sm font-headline-sm text-white mt-1">Primavera Sound — Passaporte 2 Dias</p>
+        <p class="text-body-sm font-body-sm text-[#A1A1AA]">Autódromo de Interlagos, São Paulo</p>
+      </div>
+      <div class="text-right">
+        <span class="text-label-sm font-label-sm text-[#71717A] block">Preço Face Value</span>
+        <span class="text-code-numeric font-code-numeric text-white text-base">R$ 780,00</span>
+      </div>
+    </div>
+    <!-- Ticket Stub Details -->
+    <div class="grid grid-cols-3 gap-space-xs py-space-xs text-body-sm font-body-sm border-b border-dashed border-white/15 my-2">
+      <div>
+        <span class="text-[10px] text-[#71717A] block uppercase">Setor</span>
+        <span class="text-[#FAFAFA] font-medium text-xs">Pista Premium</span>
+      </div>
+      <div>
+        <span class="text-[10px] text-[#71717A] block uppercase">Titular Atual</span>
+        <span class="text-[#FAFAFA] font-medium text-xs">Felipe M. (Validado)</span>
+      </div>
+      <div>
+        <span class="text-[10px] text-[#71717A] block uppercase">Status da Custódia</span>
+        <span class="text-[#22C55E] font-medium text-xs flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#22C55E]"></span> Retido Seguro
+        </span>
+      </div>
+    </div>
+    <!-- Bottom Action Simulator -->
+    <div class="flex items-center justify-between pt-space-xs">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-white text-base" style="font-variation-settings: &quot;FILL&quot; 1;">qr_code_2</span>
+        </div>
+        <span class="text-body-sm font-body-sm text-[#71717A]">Token criptográfico re-emitido no nome do comprador</span>
+      </div>
+      <span class="text-label-sm font-label-sm text-[#FAFAFA] border-b border-white/40 cursor-pointer hover:border-white">Ver detalhes</span>
+    </div>
+  </div>
+</article>
+
+<!-- CARD 02: HISTÓRIA & MÉTRICAS -->
+<article class="w-full card-base rounded-xl p-space-xl flex flex-col lg:flex-row lg:items-center justify-between gap-space-xl relative overflow-hidden group">
+  <div class="flex-1">
+    <div class="flex items-center justify-between mb-space-sm">
+      
+      
+    </div>
+    <h2 class="text-headline-lg font-headline-lg text-[#FAFAFA] tracking-tight mb-space-xs">
+      Nascemos em 2021 para acabar com o golpe do ingresso
+    </h2>
+    <p class="text-body-md font-body-md text-[#A1A1AA] leading-relaxed">
+      Criado por programadores e entusiastas de música após testemunharem amigos barrados em festivais lotados com ingressos duplicados. Substituímos a confiança cega em desconhecidos por código inviolável.
+    </p>
+  </div>
+  <!-- Metrics Display -->
+  <div class="w-full lg:w-96 border-t lg:border-t-0 lg:border-l border-white/10 pt-space-md lg:pt-0 lg:pl-space-xl grid grid-cols-1 gap-space-md shrink-0">
+    <div class="flex items-baseline justify-between border-b border-white/5 pb-space-xs">
+      <span class="text-body-sm font-body-sm text-[#A1A1AA]">Ingressos Validados</span>
+      <span class="text-headline-md font-headline-md text-white font-bold tracking-tight">+450.000</span>
+    </div>
+    <div class="flex items-baseline justify-between border-b border-white/5 pb-space-xs">
+      <span class="text-body-sm font-body-sm text-[#A1A1AA]">Prejuízo de Usuários</span>
+      <span class="text-headline-md font-headline-md text-[#22C55E] font-bold tracking-tight">R$ 0,00</span>
+    </div>
+    <div class="flex items-baseline justify-between">
+      <span class="text-body-sm font-body-sm text-[#A1A1AA]">Taxa de Satisfação Real</span>
+      <span class="text-headline-md font-headline-md text-white font-bold tracking-tight">99.8%</span>
+    </div>
+  </div>
+</article>
+
+<!-- CARD 03: AVALIAÇÕES DA COMUNIDADE -->
+<article class="w-full card-base rounded-xl p-space-xl flex flex-col justify-between group">
+  <div>
+    <div class="flex items-center justify-between mb-space-sm">
+      
+      <div class="flex items-center gap-1 text-[#F59E0B]">
+        <span class="material-symbols-outlined text-sm" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+        <span class="text-code-numeric font-code-numeric text-white text-xs font-semibold">4.9 / 5.0</span>
+      </div>
+    </div>
+    <h2 class="text-headline-lg font-headline-lg text-[#FAFAFA] tracking-tight mb-space-xs">
+      O que diz quem já trocou e comprou
+    </h2>
+    <p class="text-body-md font-body-md text-[#A1A1AA] leading-relaxed mb-space-lg">
+      Transparência radical auditada por milhares de compradores reais em todo o Brasil.
+    </p>
+    <!-- Reviews Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
+      <!-- Review 1 -->
+      <div class="bg-[#121212] border border-white/5 rounded-lg p-space-md hover:border-white/15 transition-all">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-xs font-semibold text-white">
+              MB
+            </div>
+            <div>
+              <h4 class="text-body-sm font-body-sm font-semibold text-white">Marina Brandão</h4>
+              <span class="text-[11px] text-[#71717A]">Comprou para The Town</span>
+            </div>
+          </div>
+          <div class="flex text-[#22C55E] text-xs">
+            <span class="material-symbols-outlined text-sm" style="font-variation-settings: &quot;FILL&quot; 1;">verified</span>
+          </div>
+        </div>
+        <p class="text-body-sm font-body-sm text-[#c4c7c8]">
+          "Consegui meu ingresso de pista no dia anterior ao show. O dinheiro só saiu da custódia depois que eu entrei na catraca. Nunca mais compro por rede social."
+        </p>
+      </div>
+      <!-- Review 2 -->
+      <div class="bg-[#121212] border border-white/5 rounded-lg p-space-md hover:border-white/15 transition-all">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-xs font-semibold text-white">
+              RA
+            </div>
+            <div>
+              <h4 class="text-body-sm font-body-sm font-semibold text-white">Rodrigo Antunes</h4>
+              <span class="text-[11px] text-[#71717A]">Vendeu para Coldplay</span>
+            </div>
+          </div>
+          <div class="flex text-[#22C55E] text-xs">
+            <span class="material-symbols-outlined text-sm" style="font-variation-settings: &quot;FILL&quot; 1;">verified</span>
+          </div>
+        </div>
+        <p class="text-body-sm font-body-sm text-[#c4c7c8]">
+          "Tive um imprevisto e precisei repassar meu par de ingressos pelo valor original. O processo de renomeação foi imediato e o PIX caiu 2h após o início da apresentação."
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="pt-space-md mt-space-lg border-t border-white/10 flex items-center justify-between text-body-sm font-body-sm text-[#71717A]">
+    <span class="">+12.400 depoimentos públicos</span>
+    <span class="text-white hover:underline cursor-pointer">Ver todos os relatos →</span>
+  </div>
+</article>
+
+<!-- CARD 04: PARCERIAS & INTEGRAÇÕES -->
+<article class="w-full card-base rounded-xl p-space-xl flex flex-col justify-between group">
+  <div>
+    <div class="flex items-center justify-between mb-space-sm">
+      
+      <span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E]">APIs Ativas</span>
+    </div>
+    <h2 class="text-headline-lg font-headline-lg text-[#FAFAFA] tracking-tight mb-space-xs">
+      Conectado aos maiores ecossistemas de eventos
+    </h2>
+    <p class="text-body-md font-body-md text-[#A1A1AA] leading-relaxed mb-space-lg">
+      Nossa plataforma não atua na clandestinidade. Operamos com chaves de validação criptográfica autorizadas para sincronizar renomeações e transferências de lote sem intermediários manuais.
+    </p>
+    <!-- Integration Feature Pills -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-space-sm mb-space-md">
+      <div class="p-space-sm rounded-lg bg-[#141414] border border-white/10">
+        <div class="flex items-center gap-2 mb-1 text-white font-medium text-body-sm">
+          <span class="material-symbols-outlined text-base text-primary">sync_saved_locally</span>
+          Sincronização Direta
+        </div>
+        <p class="text-[12px] text-[#A1A1AA]">Invalidação automática do QR Code antigo do vendedor.</p>
+      </div>
+      <div class="p-space-sm rounded-lg bg-[#141414] border border-white/10">
+        <div class="flex items-center gap-2 mb-1 text-white font-medium text-body-sm">
+          <span class="material-symbols-outlined text-base text-primary">security</span>
+          PCI-DSS Compliance
+        </div>
+        <p class="text-[12px] text-[#A1A1AA]">Armazenamento e custódia em padrão bancário rigoroso.</p>
+      </div>
+      <div class="p-space-sm rounded-lg bg-[#141414] border border-white/10">
+        <div class="flex items-center gap-2 mb-1 text-white font-medium text-body-sm">
+          <span class="material-symbols-outlined text-base text-primary">account_balance</span>
+          Open Finance / BACEN
+        </div>
+        <p class="text-[12px] text-[#A1A1AA]">Liquidação instantânea vinculada a conta escrow certificada.</p>
+      </div>
+      <div class="p-space-sm rounded-lg bg-[#141414] border border-white/10">
+        <div class="flex items-center gap-2 mb-1 text-white font-medium text-body-sm">
+          <span class="material-symbols-outlined text-base text-primary">verified</span>
+          Antifraude Comportamental
+        </div>
+        <p class="text-[12px] text-[#A1A1AA]">Bloqueio de bots e verificação biométrica de CPF.</p>
+      </div>
+    </div>
+  </div>
+  <div class="pt-space-md border-t border-white/10 flex items-center justify-between text-body-sm font-body-sm text-[#71717A]">
+    <span class="">Garantia de 100% de ressarcimento</span>
+    <span class="text-white hover:underline cursor-pointer">Protocolo de Segurança →</span>
+  </div>
+</article></section>
+<!-- CALL TO ACTION STRIP -->
+<section class="w-full card-interactive rounded-xl p-space-2xl my-space-2xl text-center flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-white/[0.04] to-transparent pointer-events-none"></div>
+<span class="text-label-sm font-label-sm text-[#71717A] tracking-wider uppercase mb-space-xs">Liquidez Imediata &amp; Segura</span>
+<h3 class="text-headline-xl font-headline-xl text-white tracking-tight mb-space-sm">
+        Tem um ingresso sobrando ou procura para um show esgotado?
+      </h3>
+<p class="text-body-md font-body-md text-secondary max-w-xl mb-space-lg">
+        Junte-se a mais de 450 mil fãs que não aceitam mais correr riscos no mercado paralelo.
+      </p>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-xl py-3 text-body-md font-body-md font-semibold text-black bg-white rounded-lg hover:opacity-90 active:scale-[0.99] transition-all shadow-md">
+          Criar Conta Gratuita
+        </button>
+<button class="px-space-xl py-3 text-body-md font-body-md font-medium text-white border border-white/15 rounded-lg hover:bg-white/5 active:scale-[0.99] transition-all">
+          Buscar Eventos
+        </button>
+</div>
+</section>
+<!-- OFFICIAL PARTNERS MONOCHROME LOGOS -->
+<section class="w-full py-space-xl border-t border-white/10">
+<div class="text-center mb-space-lg">
+<span class="text-label-sm font-label-sm text-[#71717A] tracking-wider uppercase">Integrado aos Maiores Hubs de Entretenimento</span>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-space-lg items-center justify-items-center opacity-60 hover:opacity-90 transition-opacity">
+<div class="text-center text-body-sm font-body-sm font-semibold tracking-wider text-[#A1A1AA]">SYMPLA</div>
+<div class="text-center text-body-sm font-body-sm font-semibold tracking-wider text-[#A1A1AA]">EVENTIM</div>
+<div class="text-center text-body-sm font-body-sm font-semibold tracking-wider text-[#A1A1AA]">TICKETMASTER</div>
+<div class="text-center text-body-sm font-body-sm font-semibold tracking-wider text-[#A1A1AA]">LIVE NATION</div>
+<div class="text-center text-body-sm font-body-sm font-semibold tracking-wider text-[#A1A1AA]">ALLIANZ PARQUE</div>
+<div class="text-center text-body-sm font-body-sm font-semibold tracking-wider text-[#A1A1AA]">OPUS ENT.</div>
+</div>
+</section>
+</main>
+<!-- FOOTER -->
+<footer class="docked full-width bottom bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant/20">
+<div class="w-full px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto py-space-3xl flex flex-col gap-space-2xl">
+<!-- Top Row -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-space-lg">
+<div class="flex flex-col gap-1">
+<div class="text-headline-sm font-headline-sm text-primary dark:text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: &quot;FILL&quot; 1;">confirmation_number</span>
+<span class="font-bold">TrocaTicket</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant max-w-md">
+            Infraestrutura institucional de liquidação, custódia e troca de ingressos nominais.
+          </p>
+</div>
+<div class="flex items-center gap-space-xs px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+<span class="w-2 h-2 rounded-full bg-[#22C55E]"></span>
+<span class="text-label-sm font-label-sm text-[#FAFAFA]">Sistemas Operacionais 99.98%</span>
+</div>
+</div>
+<!-- Links Row -->
+<div class="flex flex-wrap gap-x-space-xl gap-y-space-sm border-t border-white/5 pt-space-xl text-body-sm font-body-sm text-on-surface-variant dark:text-on-surface-variant">
+<a class="hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#">Termos de Uso</a>
+<a class="hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#">Política de Privacidade</a>
+<a class="hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#">Garantia Antifraude</a>
+<a class="hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#">Status da Plataforma</a>
+<a class="hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#">Central de Ajuda</a>
+<a class="hover:text-primary dark:hover:text-primary transition-colors duration-150" href="#">API de Parceiros</a>
+</div>
+<!-- Copyright Bottom Bar -->
+<div class="border-t border-white/5 pt-space-md text-label-sm font-label-sm text-[#71717A]">
+        © 2025 TrocaTicket Tecnologias S.A. Todos os direitos reservados. Custódia protegida e transferências 100% verificadas.
+      </div>
+</div>
+</footer>
+
+
+</body></html>
