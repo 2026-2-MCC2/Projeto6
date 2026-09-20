@@ -33,78 +33,45 @@ Meu projeto ajuda estudantes FECAP a configurarem seus githubs.
 May the force be with you!
 <br><br>
 
+
 ## 🛠 Estrutura de pastas
 
--Raiz<br>
-|<br>
-|-->documentos<br>
-  &emsp;|-->antigos<br>
-  &emsp;|Documentação.docx<br>
-|-->executáveis<br>
-  &emsp;|-->windows<br>
-  &emsp;|-->android<br>
-  &emsp;|-->HTML<br>
-|-->imagens<br>
-|-->src<br>
-  &emsp;|-->Backend<br>
-  &emsp;|-->Frontend<br>
-|readme.md<br>
+|-->Entrega1<br>
+&emsp;|-->Cálculo<br>
+&emsp;&emsp;|Taylor_TrocaTicket_Grupo_Ticketudo.docx<br>
+&emsp;|-->DesenvolvimentoWebFullstack<br>
+&emsp;&emsp;|-->front-end<br>
+&emsp;&emsp;&emsp;|-->src<br>
+&emsp;&emsp;&emsp;&emsp;|-->ticketudo <i>(app React + Vite)</i><br>
+&emsp;&emsp;&emsp;&emsp;&emsp;|-->public<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;|-->src<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|-->admin<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|-->organizer<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|-->supplier<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|-->assets<br>
+&emsp;|-->GestãoEmpresarial<br>
+&emsp;&emsp;|Entrega Gestão Empresarial Grupo Ticketudo.docx<br>
+&emsp;&emsp;|TrocaTicket_Individual_Caio_Moraes.docx<br>
+&emsp;&emsp;|TrocaTicket_Individual_GM.docx<br>
+&emsp;&emsp;|TrocaTicket_Individual_Gabriel_Visao.docx<br>
+&emsp;&emsp;|TrocaTicket_Individual_Otavio_Sanches.docx<br>
+&emsp;|-->PI<br>
+&emsp;&emsp;|Figma Projeto Ticketudo.fig<br>
+&emsp;&emsp;|Figma Projeto Ticketudo.pdf<br>
+&emsp;&emsp;|README.md<br>
+|.gitignore<br>
+|README.md<br>
 
-A pasta raiz contem dois arquivos que devem ser alterados:
+A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do projeto, o mesmo que você está lendo agora) e a pasta <b>Entrega1</b>, que reúne as entregas do projeto organizadas por disciplina:
 
-<b>README.MD</b>: Arquivo que serve como guia e explicação geral sobre seu projeto. O mesmo que você está lendo agora.
+<b>Entrega1/Cálculo</b>: Entrega da disciplina de Cálculo (documento sobre Séries de Taylor aplicado ao projeto).
 
-Há também 4 pastas que seguem da seguinte forma:
+<b>Entrega1/DesenvolvimentoWebFullstack</b>: Código-fonte do front-end (`front-end/src/ticketudo`), uma aplicação React criada com Vite, contendo as telas de admin, organizador e fornecedor.
 
-<b>documentos</b>: Toda a documentação estará nesta pasta.
+<b>Entrega1/GestãoEmpresarial</b>: Entregas da disciplina de Gestão Empresarial, incluindo o documento do grupo e as análises individuais de cada integrante.
 
-<b>executáveis</b>: Binários e executáveis do projeto devem estar nesta pasta.
+<b>Entrega1/PI</b>: Artefatos de Projeto Integrador, com o design do Figma (`.fig`/`.pdf`) e um README próprio da entrega.
 
-<b>imagens</b>: Imagens do sistema
-
-<b>src</b>: Pasta que contém o código fonte.
-
-## 🛠 Instalação
-
-<b>Android:</b>
-
-Faça o Download do JOGO.apk no seu celular.
-Execute o APK e siga as instruções de seu telefone.
-
-```sh
-Coloque código do prompt de comnando se for necessário
-```
-
-<b>Windows:</b>
-
-Não há instalação! Apenas executável!
-Encontre o JOGO.exe na pasta executáveis e execute-o como qualquer outro programa.
-
-```sh
-Coloque código do prompt de comnando se for necessário
-```
-
-<b>HTML:</b>
-
-Não há instalação!
-Encontre o index.html na pasta executáveis e execute-o como uma página WEB (através de algum browser).
-
-## 💻 Configuração para Desenvolvimento
-
-Descreva como instalar todas as dependências para desenvolvimento e como rodar um test-suite automatizado de algum tipo. Se necessário, faça isso para múltiplas plataformas.
-
-Para abrir este projeto você necessita das seguintes ferramentas:
-
--<a href="https://godotengine.org/download">GODOT</a>
-
-```sh
-make install
-npm test
-Coloque código do prompt de comnando se for necessário
-```
-
-## 📋 Licença/License
-Utilize o link <https://chooser-beta.creativecommons.org/> para fazer uma licença CC BY 4.0.
 
 ## 🎓 Referências
 
@@ -112,7 +79,4 @@ Aqui estão as referências usadas no projeto.
 
 1. <https://github.com/iuricode/readme-template>
 2. <https://github.com/gabrieldejesus/readme-model>
-3. <https://chooser-beta.creativecommons.org/>
-4. <https://freesound.org/>
 5. <https://www.toptal.com/developers/gitignore>
-6. Músicas por: <a href="https://freesound.org/people/DaveJf/sounds/616544/"> DaveJf </a> e <a href="https://freesound.org/people/DRFX/sounds/338986/"> DRFX </a> ambas com Licença CC 0.
