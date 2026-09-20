@@ -1,5 +1,7 @@
 
 
+
+
 ```sh
 Utilize o site <https://www.toptal.com/developers/gitignore> para gerar seu arquivo gitignore e apague este campo.
 
@@ -23,7 +25,7 @@ Vide tutoriais do PI.
 ## Descrição
 
 <p align="center">
-<video src="https://github.com/user-attachments/assets/439f5745-c85f-41ca-a5da-73148835adb7" controls width="600"></video>
+<video src="https://github.com/user-attachments/assets/82fa11c0-fb66-4d0a-b22c-8db80dfd8851" autoplay muted loop playsinline width="600"></video>
 </p>
 
 
