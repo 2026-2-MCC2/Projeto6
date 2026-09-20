@@ -1,13 +1,4 @@
 
-
-
-
-```sh
-Utilize o site <https://www.toptal.com/developers/gitignore> para gerar seu arquivo gitignore e apague este campo.
-
-Vide tutoriais do PI.
-```
-
 # FECAP - Fundação de Comércio Álvares Penteado
 
 <p align="center">
@@ -28,12 +19,11 @@ Vide tutoriais do PI.
 <video src="https://github.com/user-attachments/assets/82fa11c0-fb66-4d0a-b22c-8db80dfd8851" autoplay muted loop playsinline width="600"></video>
 </p>
 
-
-De um a dois parágrafos sobre o que é seu projeto e o que ele faz.
+O **TrocaTicket** é uma plataforma web que conecta organizadores de eventos a fornecedores de serviços, simplificando tudo desde o primeiro briefing até o dia do evento.
 <br><br>
-Meu projeto ajuda estudantes FECAP a configurarem seus githubs.
+Cada usuário acessa um workspace de acordo com o seu perfil: **organizadores** criam e acompanham seus eventos, recebem e avaliam propostas de fornecedores; **fornecedores** descobrem oportunidades, enviam propostas e conversam diretamente com os organizadores pelo chat integrado; e **administradores** supervisionam a plataforma, aprovando novos perfis, acompanhando a receita e mediando denúncias.
 <br><br>
-May the force be with you!
+Com notificações, mensagens diretas e um painel de aprovações centralizado, o TrocaTicket reduz a fricção de encontrar o parceiro certo para cada evento.
 <br><br>
 
 
