@@ -1,0 +1,173 @@
+.login {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.login-art {
+  position: relative;
+  padding: 46px 8%;
+  background: var(--blue);
+  color: #fff;
+}
+
+.login-art .brand {
+  color: #fff;
+}
+
+.login-art .brand b {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.login-art-copy {
+  position: absolute;
+  top: 28%;
+}
+
+.login-art h1 {
+  font-family: var(--font-serif);
+  font-size: 65px;
+  line-height: 1.03;
+  letter-spacing: -2px;
+}
+
+.login-art h1 i {
+  color: #f5c879;
+}
+
+.login-art p {
+  max-width: 330px;
+  color: #b7ced0;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 435px;
+  margin: auto;
+  padding: 9vh 7%;
+  color: var(--text);
+}
+
+.login-form h2 {
+  margin: 12px 0 6px;
+  color: #fff;
+  font-family: var(--font-serif);
+  font-size: 32px;
+}
+
+.login-form > p {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.login-form .field input {
+  font-size: 12px;
+}
+
+.tabs {
+  display: flex;
+  gap: 22px;
+  margin: 34px 0 25px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabs button {
+  padding: 0 5px 12px;
+  border: 0;
+  background: none;
+  color: #8e9aaa;
+  font-size: 12px;
+}
+
+.tabs .is-selected {
+  border-bottom: 2px solid var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2px 0 22px;
+}
+
+.form-row label {
+  color: #647376;
+  font-size: 10px;
+}
+
+.login-divider {
+  margin: 25px 0 16px;
+  color: var(--text-dim);
+  font-size: 10px;
+  text-align: center;
+}
+
+.role-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.role-options button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 5px;
+  background: var(--surface);
+  border: 1px solid #26384c;
+  border-radius: 5px;
+  color: var(--text);
+}
+
+.role-options button:hover {
+  background: var(--blue-soft);
+  border-color: var(--blue);
+}
+
+.role-options b {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+.role-options strong {
+  font-size: 10px;
+}
+
+.role-options small {
+  color: #9aa5a5;
+  font-size: 8px;
+}
+
+.role-admin {
+  background: #e8e2f3;
+  color: #8066a1;
+}
+
+.role-supplier {
+  background: #fff0d9;
+  color: #d2934f;
+}
+
+.role-organizer {
+  background: #dceee3;
+  color: #579174;
+}
+
+.login-legal {
+  display: block;
+  margin-top: 25px;
+  color: var(--text-dim);
+  font-size: 9px;
+  line-height: 1.6;
+  text-align: center;
+}

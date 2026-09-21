@@ -1,0 +1,103 @@
+@media (max-width: 900px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .page {
+    padding: 35px 25px;
+  }
+
+  .login-art h1 {
+    font-size: 52px;
+  }
+}
+
+@media (max-width: 680px) {
+  .sidebar {
+    display: none;
+  }
+
+  .mobile-logo {
+    display: block;
+  }
+
+  .topbar {
+    height: 64px;
+    padding: 0 18px;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+
+  .topbar-actions .avatar {
+    padding-left: 8px;
+  }
+
+  .page {
+    padding: 28px 16px 50px;
+  }
+
+  .page-heading {
+    display: block;
+    margin-bottom: 25px;
+  }
+
+  .page-heading-actions {
+    margin-top: 18px;
+  }
+
+  .stats,
+  .partner-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .banner {
+    display: block;
+    padding: 25px 20px;
+  }
+
+  .banner-stat {
+    display: block;
+    margin-top: 20px;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .event-card {
+    grid-template-columns: 80px 1fr 20px;
+  }
+
+  .login {
+    display: block;
+  }
+
+  .login-art {
+    min-height: 205px;
+    padding: 25px 24px;
+  }
+
+  .login-art-copy {
+    top: 82px;
+  }
+
+  .login-art h1 {
+    margin: 8px 0;
+    font-size: 31px;
+  }
+
+  .login-art p {
+    display: none;
+  }
+
+  .login-form {
+    padding: 33px 24px 40px;
+  }
+
+  .panel {
+    width: 100%;
+  }
+}

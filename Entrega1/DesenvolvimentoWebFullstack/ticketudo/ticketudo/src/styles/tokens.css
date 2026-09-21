@@ -1,0 +1,33 @@
+:root {
+  --bg: #05070b;
+  --surface: #0b111a;
+  --surface-raised: #0f1925;
+  --surface-hover: #132945;
+  --field-bg: #080d15;
+
+  --border: #202c3b;
+  --border-soft: #1d2a38;
+  --border-strong: #2a3b50;
+
+  --text: #f5f7fb;
+  --text-muted: #9ba8b7;
+  --text-dim: #8492a2;
+  --text-faint: #a1aaab;
+
+  --accent: #ffd43b;
+  --accent-bg: #332d0e;
+
+  --blue: #2d8cff;
+  --blue-light: #63aeff;
+  --blue-deep: #0d3d70;
+  --blue-soft: #10233a;
+
+  --positive: #4b9170;
+  --positive-bg: #e4f1e7;
+
+  --radius: 8px;
+  --shadow: 0 10px 30px #0008;
+
+  --font-sans: 'DM Sans', 'Segoe UI', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+}

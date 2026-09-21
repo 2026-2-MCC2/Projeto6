@@ -1,0 +1,89 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.35px;
+  text-transform: uppercase;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-light,
+.btn-approve {
+  padding: 12px 17px;
+  border: 0;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 5px 18px #ffd43b33;
+}
+
+.btn-secondary {
+  background: var(--surface-raised);
+  border: 1px solid #28435e;
+  color: #71b2ff;
+}
+
+.btn-light {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.btn-approve {
+  padding: 8px 12px;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.btn-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--blue-light);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-soft {
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: #122844;
+  color: var(--blue-light);
+  font-size: 10px;
+}

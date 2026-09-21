@@ -1,0 +1,143 @@
+.app {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 238px;
+  padding: 30px 18px 20px;
+  background: var(--surface);
+  border-right: 1px solid #1d2b3b;
+}
+
+.sidebar hr {
+  width: 100%;
+  margin: 34px 0 27px;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 3px 0;
+  padding: 12px;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  color: #8d9aaa;
+  font-size: 13px;
+  text-align: left;
+}
+
+.nav:hover,
+.nav.is-active {
+  background: var(--surface-hover);
+  color: #fff;
+  font-weight: 600;
+}
+
+.nav svg {
+  flex-shrink: 0;
+}
+
+.nav.is-active svg,
+.nav-logout {
+  color: var(--accent);
+}
+
+.nav-badge {
+  margin-left: auto;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 10px;
+  font-style: normal;
+}
+
+.nav-dot {
+  width: 6px;
+  height: 6px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: #5fc28c;
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 20px;
+  padding: 18px 4px 0;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-user strong {
+  display: block;
+  font-size: 12px;
+}
+
+.sidebar-user small {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-faint);
+  font-size: 10px;
+}
+
+.workspace {
+  flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  height: 77px;
+  padding: 0 45px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-left: auto;
+}
+
+.topbar-actions button {
+  display: flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #7b898d;
+}
+
+.topbar-actions .avatar {
+  padding-left: 20px;
+  border-left: 1px solid var(--border);
+  border-radius: 0;
+  background: none;
+}
+
+.mobile-logo {
+  display: none;
+}
+
+.page {
+  max-width: 1220px;
+  margin: auto;
+  padding: 48px 52px 80px;
+}

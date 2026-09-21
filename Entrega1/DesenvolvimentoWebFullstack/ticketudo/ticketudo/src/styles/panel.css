@@ -1,0 +1,99 @@
+.panel-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: flex-end;
+  background: #17252b38;
+}
+
+.panel {
+  width: 390px;
+  max-width: 100%;
+  height: 100%;
+  padding: 31px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: -5px 0 25px #00000014;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 23px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-header h2 {
+  margin: 7px 0;
+  font-family: var(--font-serif);
+  font-size: 25px;
+}
+
+.panel-header button {
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font-size: 26px;
+}
+
+.panel-contact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.panel-contact strong {
+  display: block;
+  font-size: 12px;
+}
+
+.panel-contact small {
+  display: block;
+  color: #5cab82;
+  font-size: 10px;
+}
+
+.panel-messages {
+  height: calc(100vh - 230px);
+  padding: 20px 0;
+}
+
+.panel-messages p {
+  max-width: 80%;
+  padding: 12px;
+  background: #142131;
+  border-radius: 5px;
+  font-size: 11px;
+}
+
+.panel-messages .is-mine {
+  margin-left: auto;
+  background: #173b6a;
+}
+
+.panel-composer {
+  width: 100%;
+  padding: 12px;
+  background: var(--field-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  color: var(--text);
+}
+
+.panel-form {
+  margin-top: 22px;
+}
+
+.panel-form > p {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.panel-list {
+  margin-top: 15px;
+}
