@@ -79,16 +79,6 @@ A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do pr
 
 <b>Entrega1/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados, com o diagrama entidade-relacionamento (DER) do projeto.
 
-A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do projeto, o mesmo que você está lendo agora) e a pasta <b>Entrega1</b>, que reúne as entregas do projeto organizadas por disciplina:
-
-<b>Entrega1/Cálculo</b>: Entrega da disciplina de Cálculo (documento sobre Séries de Taylor aplicado ao projeto).
-
-<b>Entrega1/DesenvolvimentoWebFullstack</b>: Código-fonte do front-end (`front-end/src/ticketudo`), uma aplicação React criada com Vite, contendo as telas de admin, organizador e fornecedor.
-
-<b>Entrega1/GestãoEmpresarial</b>: Entregas da disciplina de Gestão Empresarial, incluindo o documento do grupo e as análises individuais de cada integrante.
-
-<b>Entrega1/PI</b>: Artefatos de Projeto Integrador, com o design do Figma (`.fig`/`.pdf`) e um README próprio da entrega.
-
 
 ## 🎓 Referências
 
