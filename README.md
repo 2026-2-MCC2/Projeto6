@@ -33,15 +33,25 @@ Com notificações, mensagens diretas e um painel de aprovações centralizado, 
 &emsp;|-->Cálculo<br>
 &emsp;&emsp;|Taylor_TrocaTicket_Grupo_Ticketudo.docx<br>
 &emsp;|-->DesenvolvimentoWebFullstack<br>
-&emsp;&emsp;|-->front-end<br>
+&emsp;&emsp;|-->ticketudo <i>(app React + Vite)</i><br>
+&emsp;&emsp;&emsp;|-->public<br>
 &emsp;&emsp;&emsp;|-->src<br>
-&emsp;&emsp;&emsp;&emsp;|-->ticketudo <i>(app React + Vite)</i><br>
-&emsp;&emsp;&emsp;&emsp;&emsp;|-->public<br>
-&emsp;&emsp;&emsp;&emsp;&emsp;|-->src<br>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|-->admin<br>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|-->organizer<br>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|-->supplier<br>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;|-->assets<br>
+&emsp;&emsp;&emsp;&emsp;|-->assets<br>
+&emsp;&emsp;&emsp;&emsp;|-->components <i>(peças reutilizáveis de interface)</i><br>
+&emsp;&emsp;&emsp;&emsp;&emsp;|-->panels<br>
+&emsp;&emsp;&emsp;&emsp;|-->data <i>(dados de exemplo)</i><br>
+&emsp;&emsp;&emsp;&emsp;|-->layout <i>(barra lateral, barra superior e workspace)</i><br>
+&emsp;&emsp;&emsp;&emsp;|-->pages <i>(telas por perfil)</i><br>
+&emsp;&emsp;&emsp;&emsp;&emsp;|-->admin<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;|-->organizer<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;|-->supplier<br>
+&emsp;&emsp;&emsp;&emsp;|-->styles <i>(CSS organizado por camada)</i><br>
+&emsp;&emsp;&emsp;&emsp;|-->utils<br>
+&emsp;&emsp;&emsp;&emsp;|App.jsx<br>
+&emsp;&emsp;&emsp;&emsp;|main.jsx<br>
+&emsp;&emsp;&emsp;|index.html<br>
+&emsp;&emsp;&emsp;|package.json<br>
+&emsp;&emsp;&emsp;|vite.config.js<br>
 &emsp;|-->GestãoEmpresarial<br>
 &emsp;&emsp;|Entrega Gestão Empresarial Grupo Ticketudo.docx<br>
 &emsp;&emsp;|TrocaTicket_Individual_Caio_Moraes.docx<br>
@@ -52,8 +62,22 @@ Com notificações, mensagens diretas e um painel de aprovações centralizado, 
 &emsp;&emsp;|Figma Projeto Ticketudo.fig<br>
 &emsp;&emsp;|Figma Projeto Ticketudo.pdf<br>
 &emsp;&emsp;|README.md<br>
+&emsp;|-->Proj.BancodeDados<br>
+&emsp;&emsp;|DER_TT.pdf<br>
 |.gitignore<br>
 |README.md<br>
+
+A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do projeto, o mesmo que você está lendo agora) e a pasta <b>Entrega1</b>, que reúne as entregas do projeto organizadas por disciplina:
+
+<b>Entrega1/Cálculo</b>: Entrega da disciplina de Cálculo (documento sobre Séries de Taylor aplicado ao projeto).
+
+<b>Entrega1/DesenvolvimentoWebFullstack</b>: Código-fonte do front-end em `ticketudo`, uma aplicação React criada com Vite. Dentro de `src` o código é separado em camadas: `components` (peças reutilizáveis de interface), `layout` (barra lateral, barra superior e a estrutura do workspace), `pages` (telas divididas por perfil — admin, organizer e supplier), `data` (dados de exemplo), `styles` (CSS por camada) e `utils` (funções auxiliares).
+
+<b>Entrega1/GestãoEmpresarial</b>: Entregas da disciplina de Gestão Empresarial, incluindo o documento do grupo e as análises individuais de cada integrante.
+
+<b>Entrega1/PI</b>: Artefatos de Projeto Integrador, com o design do Figma (`.fig`/`.pdf`) e um README próprio da entrega.
+
+<b>Entrega1/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados, com o diagrama entidade-relacionamento (DER) do projeto.
 
 A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do projeto, o mesmo que você está lendo agora) e a pasta <b>Entrega1</b>, que reúne as entregas do projeto organizadas por disciplina:
 
