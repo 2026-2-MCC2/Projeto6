@@ -97,3 +97,31 @@
 .panel-list {
   margin-top: 15px;
 }
+
+.panel-composer {
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.panel-composer input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  background: var(--field-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  color: var(--text);
+}
+
+.panel-composer button {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--bg);
+}

@@ -42,3 +42,25 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
+
+.field-error,
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 10.5px;
+  font-weight: 400;
+}
+
+.field-error {
+  color: #f48fa4;
+}
+
+.field-hint {
+  color: var(--text-dim);
+}
+
+.field.has-error input,
+.field.has-error textarea,
+.field.has-error select {
+  border-color: #7b3347;
+}

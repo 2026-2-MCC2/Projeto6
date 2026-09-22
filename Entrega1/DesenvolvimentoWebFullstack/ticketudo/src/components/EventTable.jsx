@@ -1,7 +1,10 @@
-import { events } from '../data/platform'
+import StatusBadge from './StatusBadge'
 import { formatCurrency } from '../utils/format'
+import { useApp } from '../state/useApp'
 
 export default function EventTable({ title, description }) {
+  const { state } = useApp()
+
   return (
     <section className="card table-card">
       <div className="card-head">
@@ -15,19 +18,22 @@ export default function EventTable({ title, description }) {
           <span>Evento</span>
           <span>Data</span>
           <span>Local</span>
-          <span>Valor</span>
-          <span>Status</span>
+          <span>Em custódia</span>
+          <span>Lote</span>
         </div>
-        {events.map((event) => (
-          <div className="table-row event-row" key={event.name}>
+        {state.events.map((event) => (
+          <div className="table-row event-row" key={event.id}>
             <span className="event-name">
               <b className={`event-cover cover-${event.cover}`} />
-              <strong>{event.name}</strong>
+              <span>
+                <strong>{event.name}</strong>
+                <small>{event.category}</small>
+              </span>
             </span>
             <span>{event.date}</span>
             <span>{event.city}</span>
-            <span>{formatCurrency(event.revenue)}</span>
-            <em className={event.status === 'Em alta' ? 'badge badge-hot' : 'badge'}>{event.status}</em>
+            <span>{formatCurrency(event.custody)}</span>
+            <StatusBadge status={event.status === 'Lotes fechados' ? 'Concluído' : 'Ativo'} />
           </div>
         ))}
       </div>

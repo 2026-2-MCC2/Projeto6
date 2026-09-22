@@ -1,14 +1,13 @@
-import NewProposal from './NewProposal'
+import Contracts from './Contracts'
+import Homologation from './Homologation'
 import Overview from './Overview'
 import Profile from './Profile'
-import Proposals from './Proposals'
-import Registration from './Registration'
+import Requests from './Requests'
 
 export const supplierPages = {
   home: Overview,
-  events: Overview,
-  register: Registration,
-  proposals: Proposals,
-  'proposal-new': NewProposal,
+  requests: Requests,
+  contracts: Contracts,
+  homologation: Homologation,
   profile: Profile,
 }
