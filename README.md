@@ -59,8 +59,6 @@ Com notificações, mensagens diretas e um painel de aprovações centralizado, 
 &emsp;&emsp;|TrocaTicket_Individual_Gabriel_Visao.docx<br>
 &emsp;&emsp;|TrocaTicket_Individual_Otavio_Sanches.docx<br>
 &emsp;|-->PI<br>
-&emsp;&emsp;|Figma Projeto Ticketudo.fig<br>
-&emsp;&emsp;|Figma Projeto Ticketudo.pdf<br>
 &emsp;&emsp;|README.md<br>
 &emsp;|-->Proj.BancodeDados<br>
 &emsp;&emsp;|DER_TT.pdf<br>
@@ -75,7 +73,7 @@ A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do pr
 
 <b>Entrega1/GestãoEmpresarial</b>: Entregas da disciplina de Gestão Empresarial, incluindo o documento do grupo e as análises individuais de cada integrante.
 
-<b>Entrega1/PI</b>: Artefatos de Projeto Integrador, com o design do Figma (`.fig`/`.pdf`) e um README próprio da entrega.
+<b>Entrega1/PI</b>: Entregas da Materia de PI, com o design do Figma
 
 <b>Entrega1/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados, com o diagrama entidade-relacionamento (DER) do projeto.
 
