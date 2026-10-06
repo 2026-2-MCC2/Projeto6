@@ -4,7 +4,7 @@
   z-index: 5;
   display: flex;
   justify-content: flex-end;
-  background: #17252b38;
+  background: #00000066;
 }
 
 .panel {
@@ -53,7 +53,7 @@
 
 .panel-contact small {
   display: block;
-  color: #5cab82;
+  color: var(--accent);
   font-size: 10px;
 }
 
@@ -65,14 +65,14 @@
 .panel-messages p {
   max-width: 80%;
   padding: 12px;
-  background: #142131;
+  background: var(--surface-raised);
   border-radius: 5px;
   font-size: 11px;
 }
 
 .panel-messages .is-mine {
   margin-left: auto;
-  background: #173b6a;
+  background: var(--accent-bg);
 }
 
 .panel-composer {

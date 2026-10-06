@@ -1,80 +1,108 @@
+import { useState } from 'react'
+import Carregando from '../../components/Carregando'
 import EmptyState from '../../components/EmptyState'
 import PageHeading from '../../components/PageHeading'
 import StatusBadge from '../../components/StatusBadge'
+import Tabs from '../../components/Tabs'
+import { admin } from '../../api'
+import { useRecurso } from '../../hooks/useRecurso'
+import { dataHora, rotulo } from '../../utils/format'
 import { useApp } from '../../state/useApp'
 
-export default function Requests({ profile }) {
-  const { state, dispatch } = useApp()
+const abas = [
+  { id: 'em_analise', label: 'Em análise' },
+  { id: 'aprovado', label: 'Aprovados' },
+  { id: 'recusado', label: 'Recusados' },
+]
 
-  function decide(id, approved) {
-    dispatch({ type: 'credential/decide', id, approved })
+export default function Requests({ profile, onMudou }) {
+  const { dispatch } = useApp()
+  const [aba, setAba] = useState('em_analise')
+  const { dados, carregando, erro, recarregar } = useRecurso(
+    () => admin.credenciamentos(aba), aba)
+
+  async function decidir(pedido, aprovar) {
+    try {
+      if (aprovar) {
+        await admin.aprovarCredenciamento(pedido.id_credenciamento)
+      } else {
+        const motivo = window.prompt('Por que está recusando?')
+        if (!motivo) return
+        await admin.recusarCredenciamento(pedido.id_credenciamento, motivo)
+      }
+      dispatch({
+        type: 'aviso',
+        texto: `${pedido.nome_empresa} ${aprovar ? 'credenciada' : 'recusada'}.`,
+      })
+      recarregar()
+      onMudou?.()
+    } catch (e) {
+      dispatch({ type: 'aviso', texto: e.message })
+    }
   }
 
   return (
     <>
       <PageHeading
         eyebrow={profile.tagline}
-        title="Requisições de cadastro"
-        description="Valide KYC, conta de repasse e histórico antes de liberar a empresa na vitrine."
+        title="Credenciamentos"
+        description="Confira CNPJ e serviços antes de liberar a empresa na vitrine dos organizadores."
       />
 
-      {state.credentialRequests.length === 0 ? (
+      <Tabs options={abas} value={aba} onChange={setAba} />
+
+      {carregando || erro ? (
+        <Carregando erro={erro} aoTentarDeNovo={recarregar} />
+      ) : dados.length === 0 ? (
         <EmptyState
-          title="Nenhuma requisição na fila"
-          description="Assim que uma produtora ou fornecedor enviar documentação, a solicitação aparece aqui."
+          title="Nada nessa aba"
+          description="Quando um fornecedor pedir credenciamento, ele aparece aqui."
         />
       ) : (
         <div className="request-grid">
-          {state.credentialRequests.map((request) => (
-            <article className="request-card" key={request.id}>
+          {dados.map((pedido) => (
+            <article className="request-card" key={pedido.id_credenciamento}>
               <header>
                 <div>
-                  <small className="eyebrow">
-                    {request.kind} · protocolo {request.protocol}
-                  </small>
-                  <h3>{request.company}</h3>
-                  <p>
-                    {request.specialty} · {request.document}
-                  </p>
+                  <small className="eyebrow">Protocolo {pedido.id_credenciamento}</small>
+                  <h3>{pedido.nome_empresa}</h3>
+                  <p>CNPJ {pedido.cnpj}</p>
                 </div>
-                <StatusBadge status={request.status} />
+                <StatusBadge status={rotulo(pedido.status)} />
               </header>
 
               <dl className="request-facts">
                 <div>
                   <dt>Responsável</dt>
-                  <dd>{request.owner}</dd>
+                  <dd>{pedido.nome}</dd>
                 </div>
                 <div>
-                  <dt>Status de KYC</dt>
-                  <dd>{request.kyc}</dd>
+                  <dt>E-mail</dt>
+                  <dd>{pedido.email}</dd>
                 </div>
                 <div>
-                  <dt>Conta de repasse</dt>
-                  <dd>{request.escrow}</dd>
-                </div>
-                <div>
-                  <dt>Eventos previstos</dt>
-                  <dd>{request.forecast}</dd>
-                </div>
-                <div>
-                  <dt>Taxa proposta</dt>
-                  <dd>{request.fee}</dd>
+                  <dt>Serviços cadastrados</dt>
+                  <dd>{pedido.total_servicos}</dd>
                 </div>
                 <div>
                   <dt>Enviado</dt>
-                  <dd>{request.submitted}</dd>
+                  <dd>{dataHora(pedido.solicitado_em)}</dd>
                 </div>
               </dl>
 
-              <footer>
-                <button className="btn-secondary" onClick={() => decide(request.id, false)}>
-                  Recusar
-                </button>
-                <button className="btn-approve" onClick={() => decide(request.id, true)}>
-                  Credenciar
-                </button>
-              </footer>
+              {pedido.descricao ? <p className="request-descricao">{pedido.descricao}</p> : null}
+              {pedido.observacao ? <p className="request-descricao">Parecer: {pedido.observacao}</p> : null}
+
+              {pedido.status === 'em_analise' ? (
+                <footer>
+                  <button className="btn-secondary" onClick={() => decidir(pedido, false)}>
+                    Recusar
+                  </button>
+                  <button className="btn-approve" onClick={() => decidir(pedido, true)}>
+                    Credenciar
+                  </button>
+                </footer>
+              ) : null}
             </article>
           ))}
         </div>

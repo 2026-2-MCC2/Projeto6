@@ -10,8 +10,9 @@
   flex-shrink: 0;
   width: 238px;
   padding: 30px 18px 20px;
-  background: var(--surface);
-  border-right: 1px solid #1d2b3b;
+  background: linear-gradient(180deg, #151515, #0d0d0d);
+  border-right: 1px solid var(--border);
+  box-shadow: 1px 0 0 #00000080, 8px 0 24px -8px #000000a6;
 }
 
 .sidebar hr {
@@ -35,7 +36,7 @@
   border: 0;
   border-radius: var(--radius);
   background: none;
-  color: #8d9aaa;
+  color: #9c9c9c;
   font-size: 13px;
   text-align: left;
 }
@@ -71,7 +72,7 @@
   height: 6px;
   margin-left: auto;
   border-radius: 50%;
-  background: #5fc28c;
+  background: var(--accent);
 }
 
 .sidebar-user {
@@ -104,10 +105,15 @@
 .topbar {
   display: flex;
   align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 5;
   height: 77px;
   padding: 0 45px;
-  background: var(--surface);
+  background: #0f0f0fd9;
+  backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 #ffffff08, 0 12px 28px -18px #000;
 }
 
 .topbar-actions {
@@ -122,7 +128,7 @@
   padding: 0;
   border: 0;
   background: none;
-  color: #7b898d;
+  color: #848484;
 }
 
 .topbar-actions .avatar {

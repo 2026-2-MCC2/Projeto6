@@ -27,8 +27,8 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #d6e7df;
-  color: #34565b;
+  background: #dedede;
+  color: #484848;
   font-size: 12px;
   font-style: normal;
   font-weight: 700;
@@ -117,11 +117,18 @@
 }
 
 .stat {
+  position: relative;
   padding: 20px 22px;
-  background: var(--surface);
+  background: linear-gradient(170deg, #181818, #0f0f0f 70%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--realce), var(--sombra);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.stat:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--realce-forte), var(--sombra-alta);
 }
 
 .stat-label {
@@ -137,8 +144,8 @@
   width: 29px;
   height: 29px;
   border-radius: 50%;
-  background: #deedf3;
-  color: #4a7e9a;
+  background: var(--surface-hover);
+  color: var(--text-muted);
 }
 
 .stat-value {
@@ -155,7 +162,7 @@
 }
 
 .stat-trend.is-down {
-  color: #dc9460;
+  color: var(--text-muted);
 }
 
 .stat-trend i {
@@ -187,7 +194,7 @@
 .table-head {
   min-height: 33px;
   border: 0;
-  color: #a5aeae;
+  color: #aaaaaa;
   font-size: 10px;
 }
 
@@ -215,15 +222,15 @@
 }
 
 .cover-coral {
-  background: linear-gradient(145deg, #f5b3a3, #da6c64);
+  background: linear-gradient(145deg, #3a3a3c, #1d1d1d);
 }
 
 .cover-navy {
-  background: linear-gradient(145deg, #83a4a8, #274f60);
+  background: linear-gradient(145deg, #3c3c3c, #1c1c1c);
 }
 
 .cover-yellow {
-  background: linear-gradient(145deg, #fae19b, #d99c4c);
+  background: linear-gradient(145deg, #3a3a3a, #1c1c1c);
 }
 
 .badge {
@@ -238,8 +245,8 @@
 }
 
 .badge-hot {
-  background: #fff0dc;
-  color: #d88a4e;
+  background: var(--accent-bg);
+  color: var(--accent);
 }
 
 .banner {
@@ -261,7 +268,7 @@
 
 .banner p {
   margin: 0;
-  color: #aabbd0;
+  color: #bdbdbd;
   font-size: 12px;
 }
 
@@ -321,7 +328,7 @@
 
 .event-card p {
   margin: 0 0 10px;
-  color: #8b9798;
+  color: #929292;
   font-size: 11px;
 }
 
@@ -331,7 +338,7 @@
 }
 
 .event-card > i {
-  color: #a0abad;
+  color: #a6a6a6;
   font-style: normal;
 }
 
@@ -362,8 +369,8 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #fff0df;
-  color: #db9051;
+  background: var(--surface-hover);
+  color: var(--text-muted);
 }
 
 .data-list span {
@@ -414,15 +421,15 @@
 }
 
 .cover-sand {
-  background: #e4d6c9;
+  background: #282828;
 }
 
 .cover-ice {
-  background: #c9dfe1;
+  background: #272727;
 }
 
 .cover-gold {
-  background: #f1d28b;
+  background: #2b2b2b;
 }
 
 .partner-card h3 {
@@ -433,7 +440,7 @@
 
 .partner-card p {
   margin: 0 0 0 17px;
-  color: #919e9f;
+  color: #989898;
   font-size: 10px;
 }
 
@@ -466,8 +473,8 @@
   width: 27px;
   height: 27px;
   border-radius: 50%;
-  background: #deedf3;
-  color: #4a7e9a;
+  background: var(--surface-hover);
+  color: var(--text-muted);
 }
 
 .activity-row span {
@@ -504,7 +511,7 @@
 
 .profile-cover {
   height: 130px;
-  background: linear-gradient(120deg, #d9e9df, #f2cc9f);
+  background: linear-gradient(120deg, #2a2a2a, #282828);
 }
 
 .profile-card .avatar {
@@ -523,7 +530,7 @@
 
 .profile-card > p {
   margin: 4px 0 0 30px;
-  color: #8c9999;
+  color: #929292;
   font-size: 11px;
 }
 

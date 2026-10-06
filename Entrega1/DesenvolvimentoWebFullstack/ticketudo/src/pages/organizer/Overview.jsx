@@ -1,91 +1,63 @@
+import Carregando from '../../components/Carregando'
 import PageHeading from '../../components/PageHeading'
 import StatCard from '../../components/StatCard'
-import { formatCurrency } from '../../utils/format'
-import { useApp } from '../../state/useApp'
+import StatusBadge from '../../components/StatusBadge'
+import { eventos, fornecedores } from '../../api'
+import { useRecurso } from '../../hooks/useRecurso'
+import { dataHora, rotulo } from '../../utils/format'
 
 export default function Overview({ profile, onNavigate }) {
-  const { state } = useApp()
-  const firstName = state.session.name.split(' ')[0]
-  const pending = state.proposals.filter((item) => item.status === 'Em análise')
-  const custody = state.events.reduce((total, event) => total + event.custody, 0)
+  const { dados, carregando, erro, recarregar } = useRecurso(async () => {
+    const [meus, vitrine] = await Promise.all([eventos.meus(), fornecedores.vitrine()])
+    return { meus, vitrine }
+  })
+
+  if (carregando || erro) return <Carregando erro={erro} aoTentarDeNovo={recarregar} />
+
+  const porStatus = (s) => dados.meus.filter((e) => e.status === s).length
 
   return (
     <>
       <PageHeading
         eyebrow={profile.tagline}
-        title={`Olá, ${firstName}.`}
-        description="Organize cada detalhe e faça acontecer."
-      />
-
-      <div className="banner banner-navy">
-        <div>
-          <small className="eyebrow">Seu próximo capítulo</small>
-          <h3>Qual história você vai criar?</h3>
-          <p>
-            Você tem {state.events.length} eventos ativos e {pending.length} propostas aguardando resposta.
-          </p>
-        </div>
-        <button className="btn-light" onClick={() => onNavigate('new')}>
-          Adicionar evento →
+        title="Visão geral"
+        description="Seus eventos e o que falta para eles entrarem à venda."
+      >
+        <button className="btn-primary" onClick={() => onNavigate('new')}>
+          Novo evento
         </button>
+      </PageHeading>
+
+      <div className="stat-grid">
+        <StatCard label="Rascunhos" value={porStatus('rascunho')} note="ainda não enviados" icon="file" />
+        <StatCard label="Em análise" value={porStatus('em_analise')} note="com o administrador" icon="check" />
+        <StatCard label="Aprovados" value={porStatus('aprovado')} note="ingressos à venda" icon="ticket" />
+        <StatCard
+          label="Fornecedores"
+          value={dados.vitrine.length}
+          note="credenciados na plataforma"
+          icon="users"
+        />
       </div>
 
-      <div className="stats">
-        <StatCard label="Retido em custódia" value={formatCurrency(custody)} note="liberação escalonada pós-evento" icon="wallet" />
-        <StatCard label="Propostas em análise" value={pending.length} note="aguardando sua decisão" icon="file" />
-        <StatCard label="Eventos publicados" value={state.events.length} note="com lote vigente" icon="calendar" />
-      </div>
-
-      <div className="section-title">
-        <h3>Seus eventos ativos</h3>
-        <button className="btn-link" onClick={() => onNavigate('events')}>
-          Ver todos →
-        </button>
-      </div>
-      <div className="event-cards">
-        {state.events.slice(0, 2).map((event) => (
-          <article className="event-card" key={event.id}>
-            <div className={`event-thumb cover-${event.cover}`}>
-              <b>{event.day}</b>
-            </div>
-            <span>
-              <em className="badge">{event.lot}</em>
-              <h3>{event.name}</h3>
-              <p>
-                {event.city} · {event.sold}% vendido
-              </p>
-              <progress value={event.sold} max="100" />
-            </span>
-          </article>
-        ))}
-      </div>
-
-      {pending.length > 0 ? (
-        <>
-          <div className="section-title">
-            <h3>O que precisa de atenção</h3>
-            <button className="btn-link" onClick={() => onNavigate('proposals')}>
-              Abrir propostas →
-            </button>
-          </div>
-          <section className="data-list">
-            {pending.slice(0, 3).map((proposal) => (
-              <div key={proposal.id}>
-                <span>
-                  <strong>{proposal.supplier}</strong>
-                  <small>
-                    {proposal.event} · {proposal.scope}
-                  </small>
+      <section className="bloco">
+        <h3>Seus eventos</h3>
+        {dados.meus.length === 0 ? (
+          <p>Você ainda não criou nenhum evento.</p>
+        ) : (
+          <div className="data-list">
+            {dados.meus.slice(0, 6).map((e) => (
+              <div key={e.id_evento}>
+                <span className="event-name">
+                  <span>{e.nome}</span>
+                  <small>{dataHora(e.data_hora)}</small>
                 </span>
-                <span className="list-figure">{formatCurrency(proposal.value)}</span>
-                <button className="btn-secondary" onClick={() => onNavigate('proposals')}>
-                  Revisar
-                </button>
+                <StatusBadge status={rotulo(e.status)} />
               </div>
             ))}
-          </section>
-        </>
-      ) : null}
+          </div>
+        )}
+      </section>
     </>
   )
 }

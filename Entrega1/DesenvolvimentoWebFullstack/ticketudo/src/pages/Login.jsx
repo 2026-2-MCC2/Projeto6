@@ -2,59 +2,95 @@ import { useState } from 'react'
 import Field from '../components/Field'
 import Icon from '../components/Icon'
 import Logo from '../components/Logo'
+import { auth } from '../api'
+import { guardarToken } from '../api/client'
 import { profiles, roleOrder } from '../data/profiles'
+import { TIPO_POR_PAPEL } from '../state/reducer'
 import { useApp } from '../state/useApp'
 
-const emptyForm = { name: '', email: '', password: '' }
+const formVazio = { nome: '', email: '', cpf: '', telefone: '', senha: '' }
 
-function validate(form, signup) {
-  const errors = {}
+function soDigitos(valor) {
+  return valor.replace(/\D/g, '')
+}
 
-  if (signup && form.name.trim().length < 3) {
-    errors.name = 'Informe o nome que vai aparecer no seu portal.'
+function validar(form, cadastro) {
+  const erros = {}
+
+  if (cadastro && form.nome.trim().length < 3) {
+    erros.nome = 'Informe o nome que vai aparecer no seu portal.'
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-    errors.email = 'Informe um e-mail válido, como voce@empresa.com.br.'
+    erros.email = 'Informe um e-mail válido, como voce@empresa.com.br.'
   }
 
-  if (form.password.length < 6) {
-    errors.password = 'A senha precisa ter ao menos 6 caracteres.'
+  if (cadastro && soDigitos(form.cpf).length !== 11) {
+    erros.cpf = 'O CPF precisa ter 11 dígitos.'
   }
 
-  return errors
+  if (form.senha.length < 6) {
+    erros.senha = 'A senha precisa ter ao menos 6 caracteres.'
+  }
+
+  return erros
 }
 
 export default function Login({ onBack }) {
   const { dispatch } = useApp()
-  const [role, setRole] = useState('organizer')
-  const [signup, setSignup] = useState(false)
-  const [form, setForm] = useState(emptyForm)
-  const [errors, setErrors] = useState({})
+  const [papel, setPapel] = useState('organizer')
+  const [cadastro, setCadastro] = useState(false)
+  const [form, setForm] = useState(formVazio)
+  const [erros, setErros] = useState({})
+  const [enviando, setEnviando] = useState(false)
 
-  const profile = profiles[role]
+  const profile = profiles[papel]
 
-  function update(field, value) {
-    setForm({ ...form, [field]: value })
-
-    if (errors[field]) setErrors({ ...errors, [field]: undefined })
+  function atualizar(campo, valor) {
+    setForm({ ...form, [campo]: valor })
+    if (erros[campo]) setErros({ ...erros, [campo]: undefined })
   }
 
-  function submit(event) {
+  async function enviar(event) {
     event.preventDefault()
-    const found = validate(form, signup)
+    const encontrados = validar(form, cadastro)
 
-    if (Object.keys(found).length > 0) {
-      setErrors(found)
+    if (Object.keys(encontrados).length > 0) {
+      setErros(encontrados)
       return
     }
 
-    dispatch({
-      type: 'session/sign-in',
-      role,
-      name: signup ? form.name : '',
-      email: form.email.trim(),
-    })
+    setEnviando(true)
+    try {
+      const resposta = cadastro
+        ? await auth.cadastro({
+            nome: form.nome.trim(),
+            email: form.email.trim(),
+            cpf: soDigitos(form.cpf),
+            telefone: form.telefone.trim() || undefined,
+            senha: form.senha,
+            tipo: TIPO_POR_PAPEL[papel],
+          })
+        : await auth.login(form.email.trim(), form.senha)
+
+      guardarToken(resposta.token)
+      dispatch({
+        type: 'sessao/entrou',
+        usuario: resposta.usuario,
+        aviso: cadastro ? 'Conta criada. Bem-vindo ao TrocaTicket.' : undefined,
+      })
+    } catch (e) {
+      // 409 e sempre e-mail ou cpf repetido; o resto cai no aviso geral
+      if (e.status === 409) {
+        setErros({ geral: e.message })
+      } else if (e.status === 401) {
+        setErros({ geral: 'E-mail ou senha incorretos.' })
+      } else {
+        setErros({ geral: e.message })
+      }
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -77,87 +113,102 @@ export default function Login({ onBack }) {
       </section>
 
       <section className="login-form">
-        <small className="eyebrow">Escolha seu portal</small>
-        <div className="role-options">
-          {roleOrder.map((id) => (
-            <button
-              className={role === id ? 'is-selected' : undefined}
-              aria-pressed={role === id}
-              onClick={() => setRole(id)}
-              key={id}
-            >
-              <b className={profiles[id].theme}>
-                <Icon name={profiles[id].icon} size={13} />
-              </b>
-              <strong>{profiles[id].label}</strong>
-              <small>{profiles[id].tagline}</small>
-            </button>
-          ))}
-        </div>
+        {cadastro ? (
+          <>
+            <small className="eyebrow">Escolha seu portal</small>
+            <div className="role-options">
+              {roleOrder.map((id) => (
+                <button
+                  className={papel === id ? 'is-selected' : undefined}
+                  aria-pressed={papel === id}
+                  onClick={() => setPapel(id)}
+                  key={id}
+                  type="button"
+                >
+                  <b className={profiles[id].theme}>
+                    <Icon name={profiles[id].icon} size={13} />
+                  </b>
+                  <strong>{profiles[id].label}</strong>
+                  <small>{profiles[id].tagline}</small>
+                </button>
+              ))}
+            </div>
+          </>
+        ) : null}
 
-        <h2>{signup ? `Criar conta de ${profile.label.toLowerCase()}` : 'Acesse seu workspace'}</h2>
+        <h2>{cadastro ? `Criar conta de ${profile.label.toLowerCase()}` : 'Acesse seu workspace'}</h2>
 
         <div className="tabs">
-          <button className={signup ? undefined : 'is-selected'} onClick={() => setSignup(false)}>
+          <button className={cadastro ? undefined : 'is-selected'} onClick={() => setCadastro(false)}>
             Entrar
           </button>
-          <button className={signup ? 'is-selected' : undefined} onClick={() => setSignup(true)}>
+          <button className={cadastro ? 'is-selected' : undefined} onClick={() => setCadastro(true)}>
             Cadastrar
           </button>
         </div>
 
-        <form onSubmit={submit} noValidate>
-          {signup ? (
-            <Field
-              label="Seu nome"
-              error={errors.name}
-              hint="É este nome que aparece no canto do workspace."
-            >
-              <input
-                id="login-name"
-                value={form.name}
-                onChange={(event) => update('name', event.target.value)}
-                placeholder="Como podemos te chamar?"
-              />
-            </Field>
+        {erros.geral ? <p className="form-erro">{erros.geral}</p> : null}
+
+        <form onSubmit={enviar} noValidate>
+          {cadastro ? (
+            <>
+              <Field label="Seu nome" error={erros.nome} hint="É este nome que aparece no canto do workspace.">
+                <input
+                  id="login-name"
+                  value={form.nome}
+                  onChange={(e) => atualizar('nome', e.target.value)}
+                  placeholder="Como podemos te chamar?"
+                />
+              </Field>
+
+              <div className="field-row">
+                <Field label="CPF" error={erros.cpf}>
+                  <input
+                    id="login-cpf"
+                    value={form.cpf}
+                    onChange={(e) => atualizar('cpf', e.target.value)}
+                    placeholder="000.000.000-00"
+                  />
+                </Field>
+                <Field label="Telefone">
+                  <input
+                    id="login-telefone"
+                    value={form.telefone}
+                    onChange={(e) => atualizar('telefone', e.target.value)}
+                    placeholder="(11) 99999-0000"
+                  />
+                </Field>
+              </div>
+            </>
           ) : null}
 
-          <Field label="E-mail corporativo" error={errors.email}>
+          <Field label="E-mail" error={erros.email}>
             <input
               id="login-email"
               type="email"
               value={form.email}
-              onChange={(event) => update('email', event.target.value)}
+              onChange={(e) => atualizar('email', e.target.value)}
               placeholder="voce@suaempresa.com.br"
             />
           </Field>
 
-          <Field label="Senha" error={errors.password}>
+          <Field label="Senha" error={erros.senha}>
             <input
               id="login-password"
               type="password"
-              value={form.password}
-              onChange={(event) => update('password', event.target.value)}
+              value={form.senha}
+              onChange={(e) => atualizar('senha', e.target.value)}
               placeholder="Digite sua senha"
             />
           </Field>
 
-          <div className="form-row">
-            <label htmlFor="login-remember">
-              <input id="login-remember" type="checkbox" /> Lembrar de mim
-            </label>
-            <button type="button" className="btn-link">
-              Esqueci minha senha
-            </button>
-          </div>
-
-          <button type="submit" className="btn-primary btn-block">
-            {signup ? 'Criar conta e entrar' : 'Entrar'} <b>→</b>
+          <button type="submit" className="btn-primary btn-block" disabled={enviando}>
+            {enviando ? 'Enviando…' : cadastro ? 'Criar conta e entrar' : 'Entrar'} <b>→</b>
           </button>
         </form>
 
         <small className="login-legal">
-          Ao continuar, você concorda com nossos <u>Termos de uso</u> e <u>Política de privacidade</u>.
+          Conta de administrador não sai pelo cadastro: ela é criada direto no banco, pelo seed.
         </small>
       </section>
     </div>

@@ -5,7 +5,12 @@
 body {
   margin: 0;
   min-width: 320px;
-  background: var(--bg);
+  /* dois clarões bem fracos tiram o preto morto do fundo */
+  background:
+    radial-gradient(900px 520px at 12% -8%, #1e5cb31a, transparent 62%),
+    radial-gradient(760px 460px at 92% 4%, #ffffff0a, transparent 58%),
+    var(--bg);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-sans);
   font-synthesis: none;
@@ -38,32 +43,63 @@ button {
 .btn-approve {
   padding: 12px 17px;
   border: 0;
-  border-radius: 5px;
+  border-radius: 7px;
   font-size: 12px;
   font-weight: 600;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
 }
 
+/* no Figma a acao principal e um botao branco com texto escuro */
 .btn-primary {
-  background: var(--accent);
-  color: var(--bg);
-  box-shadow: 0 5px 18px #ffd43b33;
+  background: linear-gradient(180deg, #ffffff, #e8e8e8);
+  color: var(--acao-texto);
+  box-shadow: inset 0 1px 0 #fff, 0 2px 6px -1px #0009, 0 8px 20px -8px #000000b3;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, #ffffff, #f2f2f2);
+  box-shadow: inset 0 1px 0 #fff, 0 4px 10px -2px #000000b3, 0 12px 26px -8px #000000cc;
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-primary:disabled {
+  background: var(--surface-hover);
+  color: var(--text-dim);
+  cursor: not-allowed;
 }
 
 .btn-secondary {
-  background: var(--surface-raised);
-  border: 1px solid #28435e;
-  color: #71b2ff;
+  background: linear-gradient(180deg, #1d1d1d, #141414);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--realce), 0 2px 6px -2px #000000a6;
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(180deg, #262626, #1a1a1a);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px);
 }
 
 .btn-light {
-  background: var(--accent);
-  color: var(--bg);
+  background: var(--acao);
+  color: var(--acao-texto);
 }
 
 .btn-approve {
   padding: 8px 12px;
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--positive-bg);
+  border: 1px solid #16614a;
+  color: var(--positive);
+}
+
+.btn-approve:hover {
+  background: #0f3a2e;
 }
 
 .btn-link {
@@ -83,7 +119,7 @@ button {
   padding: 7px 10px;
   border: 0;
   border-radius: 4px;
-  background: #122844;
+  background: var(--surface-hover);
   color: var(--blue-light);
   font-size: 10px;
 }

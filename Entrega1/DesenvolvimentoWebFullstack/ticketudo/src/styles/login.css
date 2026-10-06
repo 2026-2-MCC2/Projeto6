@@ -8,12 +8,29 @@
 .login-art {
   position: relative;
   padding: 46px 8%;
-  background: var(--blue);
-  color: #fff;
+  background: linear-gradient(160deg, #141414, #0a0a0a 55%);
+  border-right: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* o clarao verde atras do texto, como no Figma */
+.login-art::after {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: -80px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: #1e5cb333;
+  filter: blur(70px);
+  pointer-events: none;
 }
 
 .login-art .brand {
-  color: #fff;
+  position: relative;
+  z-index: 1;
+  color: var(--text);
 }
 
 .login-art .brand b {
@@ -23,6 +40,7 @@
 
 .login-art-copy {
   position: absolute;
+  z-index: 1;
   top: 28%;
 }
 
@@ -34,12 +52,12 @@
 }
 
 .login-art h1 i {
-  color: #f5c879;
+  color: var(--accent);
 }
 
 .login-art p {
   max-width: 330px;
-  color: #b7ced0;
+  color: #c3c3c3;
   font-size: 13px;
   line-height: 1.65;
 }
@@ -79,7 +97,7 @@
   padding: 0 5px 12px;
   border: 0;
   background: none;
-  color: #8e9aaa;
+  color: #9c9c9c;
   font-size: 12px;
 }
 
@@ -97,7 +115,7 @@
 }
 
 .form-row label {
-  color: #647376;
+  color: #6d6d6d;
   font-size: 10px;
 }
 
@@ -121,7 +139,7 @@
   gap: 4px;
   padding: 12px 5px;
   background: var(--surface);
-  border: 1px solid #26384c;
+  border: 1px solid var(--border);
   border-radius: 5px;
   color: var(--text);
 }
@@ -144,23 +162,23 @@
 }
 
 .role-options small {
-  color: #9aa5a5;
+  color: #a0a0a0;
   font-size: 8px;
 }
 
 .role-admin {
-  background: #e8e2f3;
-  color: #8066a1;
+  background: var(--surface-hover);
+  color: #848484;
 }
 
 .role-supplier {
-  background: #fff0d9;
-  color: #d2934f;
+  background: var(--surface-hover);
+  color: var(--text-muted);
 }
 
 .role-organizer {
-  background: #dceee3;
-  color: #579174;
+  background: var(--accent-bg);
+  color: #747474;
 }
 
 .login-legal {

@@ -1,243 +1,480 @@
+/* ==========================================================================
+   Pagina publica
+
+   A medida de tudo aqui sai dos tokens de escala: o texto cresce com a
+   largura da tela (clamp), o respiro entre secoes e um valor so
+   (--secao), e o conteudo para em --wrap no meio.
+   ========================================================================== */
+
 .site {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 0 24px 80px;
+  overflow-x: hidden;
 }
 
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* --------------------------------------------------------------------------
+   Revelacao no scroll
+   -------------------------------------------------------------------------- */
+
+.revela {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 620ms var(--suave),
+    transform 620ms var(--suave);
+}
+
+.revela.is-visivel {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revela {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Cabecalho
+   -------------------------------------------------------------------------- */
+
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #0a0a0acc;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header-inner {
   display: flex;
   align-items: center;
-  gap: 28px;
-  padding: 26px 0;
-  border-bottom: 1px solid var(--border);
+  justify-content: space-between;
+  gap: var(--espaco-4);
+  height: 72px;
 }
 
 .site-header nav {
   display: flex;
-  gap: 22px;
+  gap: var(--espaco-4);
   margin-left: auto;
+  margin-right: var(--espaco-3);
 }
 
-.site-header a {
+.site-header nav a {
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: var(--text-small);
   text-decoration: none;
+  transition: color var(--duracao) var(--suave);
 }
 
-.site-header a:hover {
+.site-header nav a:hover {
   color: var(--text);
 }
 
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
 .site-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  position: relative;
+  padding: clamp(3.5rem, 2rem + 6vw, 7rem) 0 var(--secao);
+}
+
+/* clarao difuso atras do titulo */
+.hero-brilho {
+  position: absolute;
+  top: -180px;
+  left: 50%;
+  width: min(1100px, 120%);
+  height: 620px;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(closest-side, #1e5cb333, transparent 72%),
+    radial-gradient(closest-side at 70% 40%, #ffffff0f, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-grade {
+  position: relative;
+}
+
+.pilula {
+  display: inline-flex;
   align-items: center;
-  gap: 48px;
-  padding: 72px 0;
+  gap: var(--espaco-1);
+  margin: 0 0 var(--espaco-3);
+  padding: 7px 15px;
+  background: #ffffff0a;
+  border: 1px solid var(--border);
+  border-radius: var(--raio-pill);
+  color: var(--text-muted);
+  font-size: var(--text-eyebrow);
+  letter-spacing: 0.04em;
+}
+
+.pilula i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--positive);
+  box-shadow: 0 0 0 4px #10b98126;
 }
 
 .site-hero h1 {
-  margin: 14px 0 18px;
+  max-width: 17ch;
+  margin: 0 0 var(--espaco-3);
   font-family: var(--font-serif);
-  font-size: clamp(34px, 5vw, 56px);
-  line-height: 1.05;
-  letter-spacing: -1.5px;
+  font-size: var(--text-display);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
   text-wrap: balance;
 }
 
-.site-hero h1 i {
+.site-hero h1 span {
+  display: block;
+}
+
+.site-hero h1 em {
   color: var(--accent);
+  font-style: italic;
 }
 
-.site-hero p {
-  max-width: 54ch;
+.lead {
+  max-width: 62ch;
+  margin: 0 0 var(--espaco-4);
   color: var(--text-muted);
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: var(--text-lead);
+  line-height: 1.65;
 }
 
-.site-hero-actions {
+.hero-acoes {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 28px;
+  gap: var(--espaco-2);
+  margin-bottom: var(--espaco-8);
 }
 
-.site-hero-actions .btn-secondary {
-  display: inline-flex;
-  align-items: center;
+.hero-acoes .btn-primary,
+.hero-acoes .btn-secondary {
+  padding: 14px 22px;
+  border-radius: var(--raio-pill);
+  font-size: var(--text-small);
   text-decoration: none;
 }
 
-.site-figures {
+/* --- numeros do hero --- */
+
+.hero-numeros {
   display: grid;
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--espaco-2);
   margin: 0;
-}
-
-.site-figures > div {
-  padding: 20px 22px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.site-figures dt {
-  color: var(--text-muted);
-  font-size: 11px;
-}
-
-.site-figures dd {
-  margin: 4px 0 2px;
-  color: var(--accent);
-  font-size: 27px;
-  letter-spacing: -1px;
-}
-
-.site-figures span {
-  color: var(--text-dim);
-  font-size: 11px;
-}
-
-.site-section {
-  padding: 56px 0;
+  padding-top: var(--espaco-4);
   border-top: 1px solid var(--border);
 }
 
-.site-section h2 {
-  margin: 10px 0 28px;
+.hero-numeros > div {
+  display: grid;
+  gap: 4px;
+}
+
+.hero-numeros dt {
+  color: var(--text-dim);
+  font-size: var(--text-caption, 0.7rem);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hero-numeros dd {
+  margin: 0;
   font-family: var(--font-serif);
-  font-size: clamp(24px, 3vw, 32px);
-  letter-spacing: -0.8px;
+  font-size: clamp(1.9rem, 1.4rem + 1.6vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* filho direto: senao pega tambem os spans de dentro do contador */
+.hero-numeros > div > span {
+  color: var(--text-dim);
+  font-size: var(--text-small);
+}
+
+/* o span de medida reserva a largura final, pra linha nao dancar
+   enquanto os digitos sobem */
+.contador {
+  position: relative;
+  display: inline-block;
+}
+
+.contador-medida {
+  visibility: hidden;
+}
+
+.contador > span:nth-child(2) {
+  position: absolute;
+  inset: 0;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Secoes
+   -------------------------------------------------------------------------- */
+
+.site-secao {
+  padding: var(--secao) 0;
+}
+
+.secao-alt {
+  background: linear-gradient(180deg, #ffffff05, transparent 60%);
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.secao-topo {
+  max-width: 62ch;
+  margin-bottom: var(--espaco-6);
+}
+
+.secao-topo .eyebrow {
+  margin: 0 0 var(--espaco-2);
+}
+
+.site-secao h2,
+.site-chamada h2 {
+  margin: 0 0 var(--espaco-2);
+  font-family: var(--font-serif);
+  font-size: var(--text-h2);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
-.guarantee-grid,
-.portal-grid {
+.secao-topo .lead {
+  margin-bottom: 0;
+}
+
+/* --- passos numerados --- */
+
+.passos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+  gap: var(--espaco-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: passo;
 }
 
-.guarantee-grid article,
-.portal-grid article {
-  padding: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+.passos li {
+  padding: var(--espaco-3);
+  border-top: 2px solid var(--border-strong);
 }
 
-.guarantee-grid b,
-.portal-grid b {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--blue-soft);
-  color: var(--blue-light);
+.passo-numero {
+  display: block;
+  margin-bottom: var(--espaco-2);
+  color: var(--text-dim);
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
 }
 
-.guarantee-grid h3,
-.portal-grid h3 {
-  margin: 16px 0 8px;
-  font-size: 16px;
+.passos h3,
+.cartoes h3 {
+  margin: 0 0 var(--espaco-1);
+  font-size: var(--text-h3);
+  font-weight: 600;
 }
 
-.guarantee-grid p,
-.portal-grid p {
+.passos p,
+.cartoes p {
   margin: 0;
   color: var(--text-muted);
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: var(--text-body);
+  line-height: 1.65;
 }
 
-.portal-grid .btn-link {
-  margin-top: 14px;
+/* --- cartoes --- */
+
+.cartoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+  gap: var(--espaco-3);
 }
 
-.site-split {
+.cartoes article {
+  height: 100%;
+  padding: var(--espaco-4);
+  background: linear-gradient(168deg, #171717, #101010 68%);
+  border: 1px solid var(--border);
+  border-radius: var(--raio-lg);
+  box-shadow: var(--realce), var(--sombra-rasa);
+  transition:
+    transform var(--duracao) var(--suave),
+    border-color var(--duracao) var(--suave),
+    box-shadow var(--duracao) var(--suave);
+}
+
+.cartoes article:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  box-shadow: var(--realce-forte), var(--sombra-alta);
+}
+
+.cartoes b {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-bottom: var(--espaco-3);
+  border-radius: var(--raio-md);
+  background: #ffffff0f;
+  border: 1px solid var(--border);
+  color: var(--accent);
+}
+
+.cartoes-portal .btn-link {
+  margin-top: var(--espaco-3);
+}
+
+/* --- historia e depoimentos --- */
+
+.historia-grade {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 44px;
+  gap: var(--espaco-8);
   align-items: start;
 }
 
-.site-split p {
-  max-width: 54ch;
+.historia-grade p {
   color: var(--text-muted);
-  font-size: 13.5px;
+  font-size: var(--text-body);
   line-height: 1.75;
 }
 
-.quote-stack {
+.depoimentos {
   display: grid;
-  gap: 14px;
+  gap: var(--espaco-2);
 }
 
-.quote-stack blockquote {
+.depoimentos blockquote {
   margin: 0;
-  padding: 22px 24px;
-  background: var(--surface);
+  padding: var(--espaco-4);
+  background: linear-gradient(168deg, #171717, #101010 68%);
   border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
+  border-left: 2px solid var(--border-strong);
+  border-radius: var(--raio-md);
+  box-shadow: var(--realce), var(--sombra-rasa);
 }
 
-.quote-stack p {
-  margin: 0 0 14px;
-  font-size: 13.5px;
+.depoimentos blockquote p {
+  margin: 0 0 var(--espaco-2);
+  color: var(--text);
+  font-size: var(--text-body);
   line-height: 1.7;
 }
 
-.quote-stack footer strong {
-  display: block;
-  font-size: 12px;
+.depoimentos footer {
+  display: grid;
+  gap: 2px;
 }
 
-.quote-stack footer span {
-  color: var(--text-dim);
-  font-size: 11px;
+.depoimentos strong {
+  font-size: var(--text-small);
 }
+
+.depoimentos span {
+  color: var(--text-dim);
+  font-size: var(--text-small);
+}
+
+/* --- chamada final --- */
+
+.site-chamada {
+  padding: var(--secao) 0;
+  text-align: center;
+}
+
+.site-chamada .lead {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.site-chamada .btn-primary {
+  padding: 15px 26px;
+  border-radius: var(--raio-pill);
+  font-size: var(--text-small);
+}
+
+/* --------------------------------------------------------------------------
+   Rodape
+   -------------------------------------------------------------------------- */
 
 .site-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding-top: 28px;
+  padding: var(--espaco-6) 0;
   border-top: 1px solid var(--border);
 }
 
-.site-footer p {
-  margin: 0;
-  color: var(--text-dim);
-  font-size: 12px;
-}
-
-.login-back {
-  display: inline-flex;
+.site-footer-inner {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: #fff;
-  font-size: 12px;
+  justify-content: space-between;
+  gap: var(--espaco-3);
 }
 
-@media (max-width: 900px) {
-  .site-hero,
-  .site-split {
+.site-footer p {
+  max-width: 44ch;
+  margin: var(--espaco-1) 0 0;
+  color: var(--text-dim);
+  font-size: var(--text-small);
+}
+
+.site-footer-nota {
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Telas pequenas
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .historia-grade {
     grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
+    gap: var(--espaco-5);
   }
+}
 
-  .site-hero {
-    padding: 44px 0;
-  }
-
+@media (max-width: 640px) {
   .site-header nav {
     display: none;
+  }
+
+  .site-hero h1 span {
+    display: inline;
   }
 }

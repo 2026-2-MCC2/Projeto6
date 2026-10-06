@@ -2,17 +2,17 @@ import { useEffect } from 'react'
 import Icon from './Icon'
 import { useApp } from '../state/useApp'
 
-function Toast({ toast, onDismiss }) {
+function Toast({ toast, onFechar }) {
   useEffect(() => {
-    const timer = setTimeout(onDismiss, 3600)
+    const timer = setTimeout(onFechar, 3600)
     return () => clearTimeout(timer)
-  }, [onDismiss])
+  }, [onFechar])
 
   return (
     <div className="toast" role="status">
       <Icon name="check" size={14} />
-      {toast.text}
-      <button aria-label="Fechar aviso" onClick={onDismiss}>
+      {toast.texto}
+      <button aria-label="Fechar aviso" onClick={onFechar}>
         ×
       </button>
     </div>
@@ -29,7 +29,7 @@ export default function Toaster() {
       {state.toasts.map((toast) => (
         <Toast
           toast={toast}
-          onDismiss={() => dispatch({ type: 'toast/dismiss', id: toast.id })}
+          onFechar={() => dispatch({ type: 'aviso/fechar', id: toast.id })}
           key={toast.id}
         />
       ))}

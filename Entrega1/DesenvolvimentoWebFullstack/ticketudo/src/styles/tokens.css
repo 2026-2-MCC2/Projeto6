@@ -1,32 +1,109 @@
+/* Paleta medida no site publicado (trocaticket.com.br), lendo as cores
+   computadas no navegador.
+
+   O desenho e quase preto com texto branco e um cinza-azulado palido
+   (#D7E2EA) no texto secundario. As superficies sao branco translucido
+   em cima do preto, nao cinza solido. A acao principal e uma pilula
+   branca com texto escuro. Verde so aparece como status. */
+
 :root {
-  --bg: #05070b;
-  --surface: #0b111a;
-  --surface-raised: #0f1925;
-  --surface-hover: #132945;
-  --field-bg: #080d15;
+  /* diz ao navegador que a pagina e escura: sem isso ele desenha a
+     lista do select e o calendario do date com fundo branco */
+  color-scheme: dark;
 
-  --border: #202c3b;
-  --border-soft: #1d2a38;
-  --border-strong: #2a3b50;
+  --bg: #0c0c0c;
+  --surface: #101010;
+  --surface-raised: #161616;
+  --surface-hover: #1d1d1d;
+  --field-bg: #080808;
 
-  --text: #f5f7fb;
-  --text-muted: #9ba8b7;
-  --text-dim: #8492a2;
-  --text-faint: #a1aaab;
+  /* no site as bordas sao branco com alpha, nao cinza chapado */
+  --border: #ffffff1a;
+  --border-soft: #ffffff0f;
+  --border-strong: #ffffff33;
 
-  --accent: #ffd43b;
-  --accent-bg: #332d0e;
+  --text: #ffffff;
+  --text-muted: #d7e2eacc;
+  --text-dim: #d7e2ea8f;
+  --text-faint: #d7e2ea7a;
 
-  --blue: #2d8cff;
-  --blue-light: #63aeff;
-  --blue-deep: #0d3d70;
-  --blue-soft: #10233a;
+  /* o palido da marca, usado em destaque e estado ativo */
+  --accent: #d7e2ea;
+  --accent-bg: #ffffff0f;
 
-  --positive: #4b9170;
-  --positive-bg: #e4f1e7;
+  /* o azul que aparece em gradiente e borda no site */
+  --marca: #1e5cb3;
+  --marca-clara: #5b9bf0;
 
-  --radius: 8px;
-  --shadow: 0 10px 30px #0008;
+  /* acao principal: pilula branca com texto escuro */
+  --acao: #ffffff;
+  --acao-texto: #0c0c0c;
+
+  /* nomes antigos, mantidos pra nao quebrar quem ja usa */
+  --blue: #1e5cb3;
+  --blue-light: #d7e2ea;
+  --blue-deep: #12294a;
+  --blue-soft: #121212;
+
+  --positive: #10b981;
+  --positive-bg: #0c2b22;
+
+  --negative: #f87171;
+  --negative-bg: #2b1316;
+  --negative-border: #5c2429;
+
+  /* ----------------------------------------------------------------
+     Escala
+
+     O tamanho do texto e o respiro das secoes acompanham a largura da
+     tela em vez de pular em dois ou tres breakpoints. O clamp define o
+     minimo, o quanto cresce e o maximo.
+     ---------------------------------------------------------------- */
+
+  --text-display: clamp(2.5rem, 1.5rem + 3.9vw, 4.6rem);
+  --text-h2:      clamp(1.85rem, 1.35rem + 2vw, 3rem);
+  --text-h3:      clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem);
+  --text-lead:    clamp(1rem, 0.94rem + 0.3vw, 1.18rem);
+  --text-body:    0.95rem;
+  --text-small:   0.8125rem;
+  --text-eyebrow: 0.75rem;
+
+  --espaco-1: 0.5rem;
+  --espaco-2: 1rem;
+  --espaco-3: 1.5rem;
+  --espaco-4: 2rem;
+  --espaco-5: 2.5rem;
+  --espaco-6: 3rem;
+  --espaco-8: 4rem;
+
+  --secao:  clamp(4.5rem, 3rem + 6vw, 8.5rem);
+  --gutter: clamp(1.25rem, 0.5rem + 2.6vw, 3rem);
+  --wrap:   76rem;
+
+  --raio-sm:   8px;
+  --raio-md:   14px;
+  --raio-lg:   24px;
+  --raio-pill: 999px;
+
+  --suave: cubic-bezier(0.22, 1, 0.36, 1);
+  --duracao: 280ms;
+
+  --radius: 10px;
+
+  /* profundidade: luz de cima, sombra embaixo.
+     o realce e a linha clara na borda superior, que e o que faz
+     a superficie parecer levantada em vez de pintada */
+  --realce: inset 0 1px 0 #ffffff14;
+  --realce-forte: inset 0 1px 0 #ffffff1f;
+
+  --sombra-rasa: 0 1px 2px #00000080, 0 4px 12px #00000059;
+  --sombra: 0 2px 4px #0009, 0 12px 28px -6px #000000a6;
+  --sombra-alta: 0 4px 8px #000000a6, 0 24px 56px -12px #000000d9;
+  --shadow: var(--sombra);
+
+  /* superficies em degrade: o topo um pouco mais claro que a base */
+  --camada: linear-gradient(180deg, #ffffff0a, #ffffff03 38%, #ffffff00);
+  --camada-forte: linear-gradient(180deg, #ffffff14, #ffffff05 45%, #ffffff00);
 
   --font-sans: 'DM Sans', 'Segoe UI', sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;

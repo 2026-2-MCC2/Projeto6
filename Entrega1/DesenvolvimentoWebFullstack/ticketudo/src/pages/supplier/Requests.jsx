@@ -1,116 +1,87 @@
-import { useState } from 'react'
+import Carregando from '../../components/Carregando'
 import EmptyState from '../../components/EmptyState'
 import PageHeading from '../../components/PageHeading'
 import StatusBadge from '../../components/StatusBadge'
-import Tabs from '../../components/Tabs'
-import { formatCurrency } from '../../utils/format'
+import { solicitacoes } from '../../api'
+import { useRecurso } from '../../hooks/useRecurso'
+import { dataHora, moeda, rotulo } from '../../utils/format'
 import { useApp } from '../../state/useApp'
 
-export default function Requests({ profile }) {
-  const { state, dispatch } = useApp()
-  const [filter, setFilter] = useState('Em análise')
-  const [values, setValues] = useState({})
-  const [errors, setErrors] = useState({})
+export default function Requests({ profile, onOpenPanel, onMudou }) {
+  const { dispatch } = useApp()
+  const { dados, carregando, erro, recarregar } = useRecurso(() => solicitacoes.minhas())
 
-  const visible = state.serviceRequests.filter((request) => request.status === filter)
-
-  const options = ['Em análise', 'Proposta enviada', 'Recusada'].map((status) => ({
-    id: status,
-    label: status === 'Em análise' ? 'Em análise' : status === 'Recusada' ? 'Recusadas' : 'Respondidas',
-    count: state.serviceRequests.filter((request) => request.status === status).length,
-  }))
-
-  function send(request) {
-    const value = Number(values[request.id])
-
-    if (!value) {
-      setErrors({ ...errors, [request.id]: 'Informe o valor da proposta.' })
-      return
+  async function responder(item, aceitar) {
+    try {
+      if (aceitar) await solicitacoes.aceitar(item.id_solicitacao)
+      else await solicitacoes.recusar(item.id_solicitacao)
+      dispatch({
+        type: 'aviso',
+        texto: `Solicitação de ${item.evento} ${aceitar ? 'aceita' : 'recusada'}.`,
+      })
+      recarregar()
+      onMudou?.()
+    } catch (e) {
+      dispatch({ type: 'aviso', texto: e.message })
     }
-
-    dispatch({ type: 'service-request/decide', id: request.id, accepted: true, value })
-    setErrors({ ...errors, [request.id]: undefined })
   }
+
+  if (carregando || erro) return <Carregando erro={erro} aoTentarDeNovo={recarregar} />
 
   return (
     <>
       <PageHeading
         eyebrow={profile.tagline}
         title="Solicitações"
-        description="Pedidos de orçamento enviados por produtoras credenciadas na plataforma."
+        description="Organizadores que pediram um serviço seu. Negocie pelo chat antes de responder."
       />
 
-      <Tabs options={options} value={filter} onChange={setFilter} />
-
-      {visible.length === 0 ? (
+      {dados.length === 0 ? (
         <EmptyState
-          title="Nenhuma solicitação nesta aba"
-          description="Quando uma produtora pedir orçamento para a sua empresa, o chamado aparece aqui."
-          icon="file"
+          title="Nenhuma solicitação ainda"
+          description="Depois de credenciado, os organizadores conseguem te encontrar e pedir orçamento."
         />
       ) : (
         <div className="request-grid">
-          {visible.map((request) => (
-            <article className="request-card" key={request.id}>
+          {dados.map((item) => (
+            <article className="request-card" key={item.id_solicitacao}>
               <header>
                 <div>
-                  <small className="eyebrow">{request.organizer}</small>
-                  <h3>{request.event}</h3>
-                  <p>{request.scope}</p>
+                  <small className="eyebrow">{item.servico}</small>
+                  <h3>{item.evento}</h3>
+                  <p>{item.organizador}</p>
                 </div>
-                <StatusBadge status={request.status} />
+                <StatusBadge status={rotulo(item.status)} />
               </header>
 
               <dl className="request-facts">
                 <div>
-                  <dt>Período</dt>
-                  <dd>{request.period}</dd>
+                  <dt>Data do evento</dt>
+                  <dd>{dataHora(item.data_hora)}</dd>
                 </div>
                 <div>
-                  <dt>Local</dt>
-                  <dd>{request.venue}</dd>
+                  <dt>Valor proposto</dt>
+                  <dd>{moeda(item.valor_proposto)}</dd>
                 </div>
-                <div>
-                  <dt>Público</dt>
-                  <dd>{request.audience}</dd>
-                </div>
-                {request.value ? (
-                  <div>
-                    <dt>Proposta enviada</dt>
-                    <dd>{formatCurrency(request.value)}</dd>
-                  </div>
-                ) : null}
               </dl>
 
-              {request.status === 'Em análise' ? (
-                <footer className="request-footer">
-                  <label className={errors[request.id] ? 'field has-error' : 'field'}>
-                    Valor da proposta (R$)
-                    <input
-                      id={`value-${request.id}`}
-                      type="number"
-                      min="0"
-                      value={values[request.id] ?? ''}
-                      onChange={(event) => setValues({ ...values, [request.id]: event.target.value })}
-                      placeholder="480000"
-                    />
-                    {errors[request.id] ? <small className="field-error">{errors[request.id]}</small> : null}
-                  </label>
-                  <div className="request-actions">
-                    <button
-                      className="btn-secondary"
-                      onClick={() =>
-                        dispatch({ type: 'service-request/decide', id: request.id, accepted: false })
-                      }
-                    >
+              {item.mensagem ? <p className="request-descricao">“{item.mensagem}”</p> : null}
+
+              <footer>
+                <button className="btn-link" onClick={() => onOpenPanel('chat')}>
+                  Abrir chat
+                </button>
+                {item.status === 'em_analise' ? (
+                  <>
+                    <button className="btn-secondary" onClick={() => responder(item, false)}>
                       Recusar
                     </button>
-                    <button className="btn-approve" onClick={() => send(request)}>
-                      Enviar proposta
+                    <button className="btn-approve" onClick={() => responder(item, true)}>
+                      Aceitar
                     </button>
-                  </div>
-                </footer>
-              ) : null}
+                  </>
+                ) : null}
+              </footer>
             </article>
           ))}
         </div>
