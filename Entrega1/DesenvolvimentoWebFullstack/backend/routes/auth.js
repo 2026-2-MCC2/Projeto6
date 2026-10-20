@@ -44,7 +44,7 @@ router.post('/cadastro', async (req, res) => {
     };
     return res.status(201).json({ usuario, token: gerarToken(usuario) });
   } catch (e) {
-    if (e.code === 'ER_DUP_ENTRY') {
+    if (e.code === pool.DUPLICADO) {
       const campo = e.message.includes('email') ? 'email' : 'cpf';
       return res.status(409).json({ erro: `ja existe uma conta com esse ${campo}` });
     }

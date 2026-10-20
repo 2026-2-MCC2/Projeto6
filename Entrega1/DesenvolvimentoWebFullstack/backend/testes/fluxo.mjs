@@ -113,7 +113,7 @@ const evId = ev.body.id_evento
 const semLote = await api('POST', `/eventos/${evId}/enviar-analise`, {}, org)
 check('evento sem lote nao vai pra analise', semLote.status === 400, semLote.body.erro)
 
-// datas no formato que o mysql aceita
+// datas no formato "AAAA-MM-DD hh:mm:ss" que o banco aceita
 const dia = 86400000
 const data = (ms) => new Date(Date.now() + ms).toISOString().slice(0, 19).replace('T', ' ')
 

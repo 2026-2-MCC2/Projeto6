@@ -21,7 +21,7 @@ router.get('/', autenticar, async (req, res) => {
             s.nome as servico, ss.status,
             (select texto_mensagem from mensagem where id_chat = ch.id_chat
               order by criado_em desc limit 1) as ultima_mensagem,
-            (select group_concat(u.nome separator ', ') from chat_participante p
+            (select string_agg(u.nome, ', ') from chat_participante p
                join usuario u on u.id_usuario = p.id_usuario
               where p.id_chat = ch.id_chat and p.id_usuario <> ?) as com_quem
        from chat ch
@@ -41,7 +41,7 @@ router.get('/usuarios', autenticar, permitir('adm'), async (req, res) => {
   const busca = `%${(req.query.busca || '').trim()}%`;
   const [linhas] = await pool.query(
     `select id_usuario, nome, email, tipo from usuario
-      where id_usuario <> ? and (nome like ? or email like ?)
+      where id_usuario <> ? and (nome ilike ? or email ilike ?)
       order by nome limit 30`,
     [req.usuario.id, busca, busca],
   );

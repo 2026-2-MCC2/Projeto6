@@ -1,7 +1,5 @@
 -- Dados iniciais do TrocaTicket.
--- Rodar depois do trocaticket.sql:  mysql -u root -p trocaticket < seed.sql
-
-USE trocaticket;
+-- Roda sozinho depois do trocaticket.sql no `npm run db:reset` do backend.
 
 -- A conta de administrador nao pode ser criada pelo cadastro do site
 -- (a rota /auth/cadastro so aceita comprador, organizador e fornecedor),

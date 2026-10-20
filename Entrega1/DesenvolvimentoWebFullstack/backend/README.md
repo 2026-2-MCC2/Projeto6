@@ -1,33 +1,38 @@
 # Backend TrocaTicket
 
-API em Node + Express 5 com MySQL/MariaDB, autenticacao por JWT e senha
-guardada com bcrypt.
+API em Node + Express 5 com PostgreSQL no [Supabase](https://supabase.com),
+autenticacao por JWT e senha guardada com bcrypt.
 
 ## Como rodar
 
-1. Criar o banco e os dados iniciais (de dentro de `Entrega1/tabelas_bd`):
+1. Criar um projeto no Supabase (o plano gratis serve). Anote a senha do
+   banco que ele pede na criacao.
 
-```
-mysql -u root -p < trocaticket.sql
-mysql -u root -p trocaticket < seed.sql
-```
+2. Copiar `.env.example` para `.env` e colar em `DATABASE_URL` a connection
+   string do projeto: botao **Connect** no topo do painel > **Session
+   pooler**. Troque `[YOUR-PASSWORD]` pela senha do passo 1. O
+   `JWT_SECRET` pode ser qualquer frase longa.
 
-2. Copiar `.env.example` para `.env` e preencher com os dados do seu MySQL
-   (o `JWT_SECRET` pode ser qualquer frase longa).
-
-3. Instalar e subir:
+3. Instalar, criar as tabelas e subir:
 
 ```
 npm install
+npm run db:reset
 npm run dev
 ```
+
+O `db:reset` roda `Entrega1/tabelas_bd/trocaticket.sql` e depois o
+`seed.sql`. Ele **apaga tudo** e recria do zero, entao use quando quiser
+um banco limpo (ou quando o schema mudar). Como o banco fica na nuvem, o
+grupo inteiro pode usar o mesmo projeto: so uma pessoa precisa rodar o
+`db:reset`, e os outros so preenchem o `.env`.
 
 O servidor sobe em `http://localhost:3000`. Para conferir se o banco
 respondeu: `GET /health`.
 
-4. Com o servidor no ar e o banco recem-criado, `npm test` roda o teste de
-   fumaca que percorre o fluxo inteiro (cadastro, credenciamento, evento,
-   aprovacao, compra e revenda).
+4. Com o servidor no ar e o banco recem-criado (`npm run db:reset`),
+   `npm test` roda o teste de fumaca que percorre o fluxo inteiro
+   (cadastro, credenciamento, evento, aprovacao, compra e revenda).
 
 O seed ja cria o administrador:
 `admin@trocaticket.com.br` / `admin123`. A rota de cadastro **nao** aceita

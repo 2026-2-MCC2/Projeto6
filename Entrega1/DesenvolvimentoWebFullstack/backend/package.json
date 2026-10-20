@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "node testes/fluxo.mjs"
+    "test": "node testes/fluxo.mjs",
+    "db:reset": "node scripts/reset-db.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -14,7 +15,7 @@
     "dotenv": "^18.0.5",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mysql2": "^3.24.5"
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

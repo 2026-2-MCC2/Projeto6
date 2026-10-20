@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
        join local_evento l on l.id_local = e.id_local
        left join lote lo on lo.id_evento = e.id_evento and now() <= lo.data_fim
       where e.status = 'aprovado' and e.data_hora >= now()
-      group by e.id_evento
+      group by e.id_evento, c.nome, l.nome, l.cidade, l.estado
       order by e.data_hora`,
   );
   res.json(linhas);
@@ -55,7 +55,7 @@ router.get('/:id', async (req, res) => {
   const [[lotes], [externos], [servicos]] = await Promise.all([
     pool.query(
       `select lo.*,
-              (now() between lo.data_inicio and lo.data_fim) as aberto,
+              (now() between lo.data_inicio and lo.data_fim)::int as aberto,
               (select count(*) from ingresso
                 where id_lote = lo.id_lote and status = 'disponivel') as disponiveis
          from lote lo where lo.id_evento = ? order by lo.setor, lo.data_inicio`,
@@ -178,7 +178,7 @@ router.post('/:id/lotes', autenticar, permitir('organizador'), async (req, res) 
       teto_revenda: Number((Number(preco) * (1 + margem / 100)).toFixed(2)),
     });
   } catch (e) {
-    if (e.code === 'ER_DUP_ENTRY') {
+    if (e.code === pool.DUPLICADO) {
       return res.status(409).json({ erro: `esse evento ja tem o lote "${nome}" no setor "${setor}"` });
     }
     throw e;
@@ -247,7 +247,7 @@ router.post('/:id/solicitacoes', autenticar, permitir('organizador'), async (req
     res.status(201).json({ id_solicitacao: sol.insertId, id_chat: chat.insertId, status: 'em_analise' });
   } catch (e) {
     await conexao.rollback();
-    if (e.code === 'ER_DUP_ENTRY') {
+    if (e.code === pool.DUPLICADO) {
       return res.status(409).json({ erro: 'esse servico ja foi solicitado para esse evento' });
     }
     throw e;

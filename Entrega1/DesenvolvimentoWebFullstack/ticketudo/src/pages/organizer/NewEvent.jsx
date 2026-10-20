@@ -17,7 +17,7 @@ const loteVazio = {
   data_fim: '',
 }
 
-// o input datetime-local devolve "2027-03-14T20:00"; o mysql quer espaco
+// o input datetime-local devolve "2027-03-14T20:00"; o backend grava com espaco
 function paraBanco(valor) {
   return valor ? valor.replace('T', ' ') + ':00' : ''
 }

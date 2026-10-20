@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
        join usuario u on u.id_usuario = f.id_usuario
        left join servico s on s.id_fornecedor = f.id_fornecedor and s.ativo = true
       where f.situacao = 'credenciado'
-      group by f.id_fornecedor
+      group by f.id_fornecedor, u.email, u.telefone
       order by f.nome_empresa`,
   );
   res.json(linhas);
@@ -52,7 +52,7 @@ router.post('/perfil', autenticar, permitir('fornecedor'), async (req, res) => {
     );
     res.status(201).json({ id_fornecedor: r.insertId, nome_empresa, situacao: 'nao_solicitado' });
   } catch (e) {
-    if (e.code === 'ER_DUP_ENTRY') {
+    if (e.code === pool.DUPLICADO) {
       return res.status(409).json({ erro: 'ja existe um fornecedor com esse cnpj' });
     }
     throw e;
