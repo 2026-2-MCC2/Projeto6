@@ -5,34 +5,83 @@ autenticacao por JWT e senha guardada com bcrypt.
 
 ## Como rodar
 
-1. Criar um projeto no Supabase (o plano gratis serve). Anote a senha do
-   banco que ele pede na criacao.
+O banco fica no [Supabase](https://supabase.com) e ja esta criado. Cada
+pessoa do grupo so precisa configurar o proprio ambiente.
 
-2. Copiar `.env.example` para `.env` e colar em `DATABASE_URL` a connection
-   string do projeto: botao **Connect** no topo do painel > **Session
-   pooler**. Troque `[YOUR-PASSWORD]` pela senha do passo 1. O
-   `JWT_SECRET` pode ser qualquer frase longa.
+> A rede da faculdade bloqueia as portas do banco (5432 e 6543). Por isso
+> rodamos pelo **GitHub Codespaces**, que fica na nuvem e nao tem esse
+> bloqueio. Em casa da pra rodar no computador normalmente.
 
-3. Instalar, criar as tabelas e subir:
+### 1. Backend
+
+```
+cd Entrega1/DesenvolvimentoWebFullstack/backend
+cp .env.example .env
+```
+
+No `.env`, preencha a `DATABASE_URL` com a senha do banco (pedir no grupo,
+**nunca** commitar). A senha vai sem colchetes. Depois:
 
 ```
 npm install
-npm run db:reset
 npm run dev
 ```
 
-O `db:reset` roda `Entrega1/tabelas_bd/trocaticket.sql` e depois o
-`seed.sql`. Ele **apaga tudo** e recria do zero, entao use quando quiser
-um banco limpo (ou quando o schema mudar). Como o banco fica na nuvem, o
-grupo inteiro pode usar o mesmo projeto: so uma pessoa precisa rodar o
-`db:reset`, e os outros so preenchem o `.env`.
+Tem que aparecer `Servidor rodando na porta 3000`.
 
-O servidor sobe em `http://localhost:3000`. Para conferir se o banco
-respondeu: `GET /health`.
+### 2. Site
 
-4. Com o servidor no ar e o banco recem-criado (`npm run db:reset`),
-   `npm test` roda o teste de fumaca que percorre o fluxo inteiro
-   (cadastro, credenciamento, evento, aprovacao, compra e revenda).
+Em outro terminal:
+
+```
+cd Entrega1/DesenvolvimentoWebFullstack/ticketudo
+npm install
+npm run dev
+```
+
+### 3. So no Codespaces: ligar o site ao backend
+
+No Codespaces pelo navegador, o site nao enxerga o backend em `localhost`.
+Na aba **Portas**:
+
+1. Porta **3000**: botao direito > **Visibilidade da porta** > **Publica**.
+2. Portas **3000** e **5173**: botao direito > **Alterar protocolo da
+   porta** > **HTTP** (em HTTPS da `ERR_HTTP2_PROTOCOL_ERROR`).
+3. Crie `ticketudo/.env` com o endereco da porta 3000, **sem barra no fim**:
+   `VITE_API_URL=https://SEU-CODESPACE-3000.app.github.dev`
+4. No `.env` do backend, ponha o endereco da porta 5173, **sem barra no fim**:
+   `CORS_ORIGIN=https://SEU-CODESPACE-5173.app.github.dev`
+5. Reinicie os dois (`Ctrl+C` e `npm run dev`).
+
+Cada Codespace tem enderecos proprios: se criar outro, refaca este passo.
+
+### Recriar o banco do zero
+
+```
+npm run db:reset
+```
+
+Roda `Entrega1/tabelas_bd/trocaticket.sql` e depois o `seed.sql`.
+**Apaga todos os dados de todo mundo**, entao so use combinando com o
+grupo. Se a rede bloquear o banco, da pra colar os dois arquivos no **SQL
+Editor** do painel do Supabase e clicar em Run.
+
+### Teste de fumaca
+
+Com o servidor no ar e o banco recem-recriado, `npm test` percorre o fluxo
+inteiro (cadastro, credenciamento, evento, aprovacao, compra e revenda).
+Ele cria usuarios e eventos de teste, entao depois rode `npm run db:reset`
+de novo.
+
+### Problemas comuns
+
+| erro | causa |
+|---|---|
+| `password authentication failed` | senha errada ou com colchetes `[ ]` na URL |
+| `tenant/user ... not found` | endereco do servidor errado; o projeto e `aws-0-us-east-1` |
+| `ETIMEDOUT` | a rede bloqueia o banco; use o Codespaces |
+| "Nao consegui falar com o servidor" | porta 3000 privada, ou `CORS_ORIGIN`/`VITE_API_URL` com barra no fim |
+| `ERR_HTTP2_PROTOCOL_ERROR` | protocolo da porta em HTTPS; troque para HTTP |
 
 O seed ja cria o administrador:
 `admin@trocaticket.com.br` / `admin123`. A rota de cadastro **nao** aceita
