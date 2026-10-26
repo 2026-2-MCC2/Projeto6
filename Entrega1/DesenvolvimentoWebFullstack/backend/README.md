@@ -1,87 +1,64 @@
 # Backend TrocaTicket
 
-API em Node + Express 5 com PostgreSQL no [Supabase](https://supabase.com),
+API em Node + Express 5 com PostgreSQL (Supabase ou banco local embutido),
 autenticacao por JWT e senha guardada com bcrypt.
 
 ## Como rodar
 
-O banco fica no [Supabase](https://supabase.com) e ja esta criado. Cada
-pessoa do grupo so precisa configurar o proprio ambiente.
-
-> A rede da faculdade bloqueia as portas do banco (5432 e 6543). Por isso
-> rodamos pelo **GitHub Codespaces**, que fica na nuvem e nao tem esse
-> bloqueio. Em casa da pra rodar no computador normalmente.
-
-### 1. Backend
-
-```
-cd Entrega1/DesenvolvimentoWebFullstack/backend
-cp .env.example .env
-```
-
-No `.env`, preencha a `DATABASE_URL` com a senha do banco (pedir no grupo,
-**nunca** commitar). A senha vai sem colchetes. Depois:
+Tudo sai da **raiz do repositorio**, com um comando so. Nao precisa de
+`.env`, senha do banco nem Codespaces:
 
 ```
 npm install
 npm run dev
 ```
 
-Tem que aparecer `Servidor rodando na porta 3000`.
+Abra `http://localhost:5173`. Esse comando sobe o backend (porta 3000) e o
+site (porta 5173) juntos; os logs aparecem marcados com `[api]` e `[site]`.
 
-### 2. Site
+O site chama a API em `/api/...` e o Vite repassa para o backend, entao nao
+existe mais `CORS_ORIGIN` nem `VITE_API_URL` para configurar. No Codespaces
+basta abrir a porta 5173.
 
-Em outro terminal:
+### Banco de dados
 
-```
-cd Entrega1/DesenvolvimentoWebFullstack/ticketudo
-npm install
-npm run dev
-```
+Sem `DATABASE_URL`, o backend usa um **Postgres embutido**
+([PGlite](https://pglite.dev)) que roda dentro do proprio Node e grava em
+`backend/.banco-local/` (fora do Git). Na primeira vez ele cria as tabelas
+e roda o seed sozinho. Cada pessoa tem o seu banco, entao ninguem apaga os
+dados de ninguem, e funciona na rede da faculdade.
 
-### 3. So no Codespaces: ligar o site ao backend
-
-No Codespaces pelo navegador, o site nao enxerga o backend em `localhost`.
-Na aba **Portas**:
-
-1. Porta **3000**: botao direito > **Visibilidade da porta** > **Publica**.
-2. Portas **3000** e **5173**: botao direito > **Alterar protocolo da
-   porta** > **HTTP** (em HTTPS da `ERR_HTTP2_PROTOCOL_ERROR`).
-3. Crie `ticketudo/.env` com o endereco da porta 3000, **sem barra no fim**:
-   `VITE_API_URL=https://SEU-CODESPACE-3000.app.github.dev`
-4. No `.env` do backend, ponha o endereco da porta 5173, **sem barra no fim**:
-   `CORS_ORIGIN=https://SEU-CODESPACE-5173.app.github.dev`
-5. Reinicie os dois (`Ctrl+C` e `npm run dev`).
-
-Cada Codespace tem enderecos proprios: se criar outro, refaca este passo.
+Para usar o banco compartilhado do Supabase, crie `backend/.env` com a
+`DATABASE_URL` (modelo no `.env.example`). Lembrando que a rede da faculdade
+bloqueia essa conexao.
 
 ### Recriar o banco do zero
+
+Pare o `npm run dev` e, na raiz:
 
 ```
 npm run db:reset
 ```
 
-Roda `Entrega1/tabelas_bd/trocaticket.sql` e depois o `seed.sql`.
-**Apaga todos os dados de todo mundo**, entao so use combinando com o
-grupo. Se a rede bloquear o banco, da pra colar os dois arquivos no **SQL
-Editor** do painel do Supabase e clicar em Run.
+Roda `Entrega1/tabelas_bd/trocaticket.sql` e depois o `seed.sql` no banco
+em uso (o local ou, se tiver `DATABASE_URL`, o Supabase; neste caso apaga
+os dados de todo mundo). Para o banco local tambem da pra simplesmente
+apagar a pasta `backend/.banco-local`.
 
 ### Teste de fumaca
 
-Com o servidor no ar e o banco recem-recriado, `npm test` percorre o fluxo
-inteiro (cadastro, credenciamento, evento, aprovacao, compra e revenda).
-Ele cria usuarios e eventos de teste, entao depois rode `npm run db:reset`
-de novo.
+Com o `npm run dev` no ar e o banco recem-recriado, `npm test` (na raiz)
+percorre o fluxo inteiro (cadastro, credenciamento, evento, aprovacao,
+compra e revenda). Ele cria usuarios e eventos de teste, entao depois rode
+`npm run db:reset` de novo.
 
-### Problemas comuns
+### Vercel
 
-| erro | causa |
-|---|---|
-| `password authentication failed` | senha errada ou com colchetes `[ ]` na URL |
-| `tenant/user ... not found` | endereco do servidor errado; o projeto e `aws-0-us-east-1` |
-| `ETIMEDOUT` | a rede bloqueia o banco; use o Codespaces |
-| "Nao consegui falar com o servidor" | porta 3000 privada, ou `CORS_ORIGIN`/`VITE_API_URL` com barra no fim |
-| `ERR_HTTP2_PROTOCOL_ERROR` | protocolo da porta em HTTPS; troque para HTTP |
+O repositorio ja esta pronto para a Vercel (`vercel.json` e `api/index.js`
+na raiz): o site vira arquivos estaticos e o Express roda como funcao em
+`/api`. Na Vercel cadastre `DATABASE_URL` (de preferencia o *Transaction
+pooler* do Supabase, porta 6543) e `JWT_SECRET` em Settings > Environment
+Variables. Detalhes no README da raiz.
 
 O seed ja cria o administrador:
 `admin@trocaticket.com.br` / `admin123`. A rota de cadastro **nao** aceita
@@ -98,7 +75,7 @@ O seed ja cria o administrador:
 
 ## Rotas
 
-Tudo que pede login espera o cabecalho `Authorization: Bearer <token>`.
+Todas as rotas ficam em `/api` (ex.: `POST /api/auth/login`). Tudo que pede login espera o cabecalho `Authorization: Bearer <token>`.
 
 ### Autenticacao
 | metodo | rota | quem |

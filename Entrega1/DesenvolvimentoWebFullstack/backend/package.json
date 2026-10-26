@@ -4,12 +4,13 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon --ignore .banco-local server.js",
     "start": "node server.js",
     "test": "node testes/fluxo.mjs",
     "db:reset": "node scripts/reset-db.js"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.5.11",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^18.0.5",

@@ -1,0 +1,22 @@
+{
+  "name": "trocaticket",
+  "private": true,
+  "description": "TrocaTicket - grupo Ticketudo (FECAP). Site React + Vite e API Express.",
+  "workspaces": [
+    "Entrega1/DesenvolvimentoWebFullstack/backend",
+    "Entrega1/DesenvolvimentoWebFullstack/ticketudo"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n api,site -c blue,magenta \"npm run dev -w backend\" \"npm run dev -w ticketudo\"",
+    "build": "npm run build -w ticketudo",
+    "lint": "npm run lint -w ticketudo",
+    "test": "npm test -w backend",
+    "db:reset": "npm run db:reset -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

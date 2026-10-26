@@ -1,7 +1,7 @@
 // Unico lugar do front que fala HTTP. Se a API mudar de endereco ou o jeito
 // de autenticar mudar, muda aqui e so aqui.
 
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const BASE = import.meta.env.VITE_API_URL || '/api'
 const CHAVE = 'trocaticket:token'
 
 export class ErroApi extends Error {

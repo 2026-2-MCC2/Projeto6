@@ -1,6 +1,6 @@
 // Teste de fumaca do backend do TrocaTicket.
 // Sobe o servidor, roda o banco limpo com o seed e execute: npm test
-const base = process.env.API || 'http://localhost:3000'
+const base = process.env.API || 'http://localhost:3000/api'
 let ok = 0, fail = 0
 const linhas = []
 

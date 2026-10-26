@@ -1,4 +1,4 @@
-// Conexao com o Postgres do Supabase.
+// Conexao com o Postgres (Supabase ou banco local embutido).
 //
 // As rotas foram escritas no estilo do mysql2 (placeholder "?", resultado
 // em [linhas], insertId, affectedRows, getConnection/beginTransaction).
@@ -13,34 +13,109 @@ types.setTypeParser(types.builtins.INT8, (valor) => Number(valor));
 // erro de chave unica duplicada no Postgres
 const DUPLICADO = '23505';
 
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error('DATABASE_URL nao configurada. Veja o .env.example do backend.');
-}
-
-const local = /@(localhost|127\.0\.0\.1)[:/]/.test(connectionString);
-
-const pool = new Pool({
-  connectionString,
-  // o Supabase exige SSL; banco local normalmente nao tem
-  ssl: local ? false : { rejectUnauthorized: false },
-  max: 10,
-});
-
 // as colunas de data nao guardam fuso. O banco (now(), current_timestamp)
 // e o Node (new Date) precisam estar no mesmo horario, senao a janela dos
 // lotes erra em 3 horas quando o backend roda num servidor em UTC.
 const FUSO = (process.env.DB_TIMEZONE || 'America/Sao_Paulo').replace(/'/g, '');
 process.env.TZ = FUSO;
 
-async function conectar() {
-  const cliente = await pool.connect();
-  if (!cliente.fusoAjustado) {
-    await cliente.query(`set timezone to '${FUSO}'`);
-    cliente.fusoAjustado = true;
-  }
-  return cliente;
+const connectionString = process.env.DATABASE_URL;
+
+// Dois modos:
+// - com DATABASE_URL: conecta no Postgres de verdade (Supabase). E o modo
+//   da Vercel e de quem quiser usar o banco compartilhado.
+// - sem DATABASE_URL: usa um Postgres embutido (PGlite) que roda dentro do
+//   proprio Node e grava em backend/.banco-local. Nao precisa de senha nem
+//   de rede, entao funciona ate na rede da faculdade.
+let banco;
+if (connectionString) {
+  banco = bancoRemoto(connectionString);
+} else if (process.env.VERCEL) {
+  throw new Error('DATABASE_URL nao configurada na Vercel (Settings > Environment Variables).');
+} else {
+  banco = bancoLocal();
 }
+
+function bancoRemoto(url) {
+  const local = /@(localhost|127\.0\.0\.1)[:/]/.test(url);
+  const pool = new Pool({
+    connectionString: url,
+    // o Supabase exige SSL; banco local normalmente nao tem
+    ssl: local ? false : { rejectUnauthorized: false },
+    // na Vercel cada funcao abre o proprio pool, entao poucas conexoes
+    max: process.env.VERCEL ? 3 : 10,
+  });
+
+  return {
+    async conectar() {
+      const cliente = await pool.connect();
+      if (!cliente.fusoAjustado) {
+        await cliente.query(`set timezone to '${FUSO}'`);
+        cliente.fusoAjustado = true;
+      }
+      return cliente;
+    },
+    end: () => pool.end(),
+  };
+}
+
+function bancoLocal() {
+  const fs = require('fs');
+  const path = require('path');
+  const pasta = path.join(__dirname, '..', '.banco-local');
+  const sqls = path.join(__dirname, '..', '..', '..', 'tabelas_bd');
+
+  let pronto;
+  function abrir() {
+    pronto ??= (async () => {
+      const { PGlite } = await import('@electric-sql/pglite');
+      const db = await PGlite.create(pasta);
+      await db.exec(`set timezone to '${FUSO}'`);
+      // primeira vez: cria as tabelas e o seed sozinho
+      const { rows } = await db.query("select to_regclass('public.usuario') as tabela");
+      if (!rows[0].tabela) {
+        console.log('banco local vazio: criando tabelas e seed...');
+        for (const nome of ['trocaticket.sql', 'seed.sql']) {
+          await db.exec(fs.readFileSync(path.join(sqls, nome), 'utf8'));
+        }
+        console.log('banco local pronto. login do adm: admin@trocaticket.com.br / admin123');
+      }
+      return db;
+    })();
+    return pronto;
+  }
+
+  // O PGlite tem uma conexao so. Para as transacoes de uma requisicao nao
+  // se misturarem com as de outra, cada "cliente" pega a vez numa fila e so
+  // devolve no release(). Na pratica e como um pool de tamanho 1.
+  let fila = Promise.resolve();
+
+  return {
+    async conectar() {
+      const db = await abrir();
+      let liberar;
+      const vez = fila;
+      fila = new Promise((r) => (liberar = r));
+      await vez;
+
+      return {
+        async query(texto, valores) {
+          // sem parametros pode ter varios comandos (ex.: arquivo .sql)
+          const r = valores && valores.length
+            ? await db.query(texto, valores)
+            : (await db.exec(texto)).at(-1) || { rows: [], fields: [] };
+          return { rows: r.rows, fields: r.fields, rowCount: r.affectedRows ?? r.rows.length };
+        },
+        release: () => liberar(),
+      };
+    },
+    async end() {
+      if (pronto) await (await pronto).close();
+    },
+  };
+}
+
+const conectar = () => banco.conectar();
 
 // troca cada "?" por $1, $2... Array de valores vira lista ("in (?)") e
 // array de arrays vira varias linhas ("values ?"), como no mysql2.
@@ -128,5 +203,5 @@ module.exports = {
     };
   },
 
-  end: () => pool.end(),
+  end: () => banco.end(),
 };

@@ -27,6 +27,43 @@ Com notificações, mensagens diretas e um painel de aprovações centralizado, 
 <br><br>
 
 
+## 🚀 Como rodar
+
+Precisa de Node 20.19+ (recomendado o 22, do `.nvmrc`). Na raiz do repositorio:
+
+```
+npm install
+npm run dev
+```
+
+Abra `http://localhost:5173`. Um comando sobe o site e a API juntos, sem
+`.env` e sem senha: o banco de desenvolvimento e um Postgres embutido que se
+cria sozinho com o seed. Login do administrador: `admin@trocaticket.com.br` /
+`admin123`.
+
+| comando | o que faz |
+|---|---|
+| `npm run dev` | sobe a API (3000) e o site (5173) |
+| `npm run build` | gera o site em `ticketudo/dist` |
+| `npm run lint` | ESLint do site |
+| `npm test` | teste de fumaca da API (com o `dev` no ar) |
+| `npm run db:reset` | recria o banco do zero (com o `dev` parado) |
+
+Mais detalhes (banco compartilhado no Supabase, rotas da API) no
+[README do backend](Entrega1/DesenvolvimentoWebFullstack/backend/README.md).
+
+### Publicar na Vercel
+
+1. Em [vercel.com/new](https://vercel.com/new), importe este repositorio. Deixe
+   o *Root Directory* na raiz; o `vercel.json` ja define build e saida.
+2. Em **Settings > Environment Variables**, cadastre:
+   - `DATABASE_URL`: no Supabase, **Connect > Transaction pooler** (porta 6543), com a senha do banco.
+   - `JWT_SECRET`: uma frase longa e aleatoria.
+3. Faca o deploy. Cada push na `main` publica de novo, e cada PR ganha um link de preview.
+
+O site e a API ficam no mesmo endereco (`/` e `/api`), entao nao ha CORS
+nem URL de API para configurar.
+
 ## 🛠 Estrutura de pastas
 
 |-->Entrega1<br>
@@ -62,8 +99,11 @@ Com notificações, mensagens diretas e um painel de aprovações centralizado, 
 &emsp;&emsp;|README.md<br>
 &emsp;|-->Proj.BancodeDados<br>
 &emsp;&emsp;|DER_TT.pdf<br>
+|-->api <i>(entrada da API na Vercel)</i><br>
 |.gitignore<br>
+|package.json <i>(comandos do projeto todo)</i><br>
 |README.md<br>
+|vercel.json<br>
 
 A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do projeto, o mesmo que você está lendo agora) e a pasta <b>Entrega1</b>, que reúne as entregas do projeto organizadas por disciplina:
 
