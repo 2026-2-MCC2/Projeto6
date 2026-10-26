@@ -102,13 +102,16 @@ nem URL de API para configurar.
 &emsp;&emsp;|README.md<br>
 &emsp;|-->Proj.BancodeDados<br>
 &emsp;&emsp;|DER_TT.pdf<br>
+|-->Entrega2<br>
+&emsp;|-->Cálculo<br>
+&emsp;&emsp;|MaximosMinimos_TrocaTicket_Grupo_Ticketudo.pdf<br>
 |-->api <i>(entrada da API na Vercel)</i><br>
 |.gitignore<br>
 |package.json <i>(comandos do projeto todo)</i><br>
 |README.md<br>
 |vercel.json<br>
 
-A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do projeto, o mesmo que você está lendo agora) e a pasta <b>Entrega1</b>, que reúne as entregas do projeto organizadas por disciplina:
+A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do projeto, o mesmo que você está lendo agora) e as pastas <b>Entrega1</b> e <b>Entrega2</b>, que reúnem as entregas do projeto organizadas por disciplina:
 
 <b>Entrega1/Cálculo</b>: Entrega da disciplina de Cálculo (documento sobre Séries de Taylor aplicado ao projeto).
 
@@ -119,6 +122,8 @@ A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do pr
 <b>Entrega1/PI</b>: Entregas da Materia de PI, com o design do Figma
 
 <b>Entrega1/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados, com o diagrama entidade-relacionamento (DER) do projeto.
+
+<b>Entrega2/Cálculo</b>: Entrega da disciplina de Cálculo II (máximos, mínimos e concavidade da função de engajamento com notificações, com quadros de sinais e gráficos).
 
 
 ## 🎓 Referências
