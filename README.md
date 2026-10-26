@@ -52,6 +52,9 @@ cria sozinho com o seed. Login do administrador: `admin@trocaticket.com.br` /
 Mais detalhes (banco compartilhado no Supabase, rotas da API) no
 [README do backend](Entrega1/DesenvolvimentoWebFullstack/backend/README.md).
 
+Vai mexer no código? Leia antes o [guia de contribuição](CONTRIBUTING.md): como criar branch,
+fazer commit e abrir Pull Request.
+
 ### Publicar na Vercel
 
 1. Em [vercel.com/new](https://vercel.com/new), importe este repositorio. Deixe
