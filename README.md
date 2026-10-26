@@ -104,7 +104,6 @@ nem URL de API para configurar.
 &emsp;&emsp;|DER_TT.pdf<br>
 |-->Entrega2<br>
 &emsp;|-->Cálculo<br>
-&emsp;&emsp;|MaximosMinimos_TrocaTicket_Grupo_Ticketudo.docx<br>
 &emsp;&emsp;|MaximosMinimos_TrocaTicket_Grupo_Ticketudo.pdf<br>
 |-->api <i>(entrada da API na Vercel)</i><br>
 |.gitignore<br>
