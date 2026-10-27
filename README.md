@@ -107,6 +107,8 @@ nem URL de API para configurar.
 &emsp;&emsp;|MaximosMinimos_TrocaTicket_Grupo_Ticketudo.pdf<br>
 &emsp;|-->Proj.BancodeDados<br>
 &emsp;&emsp;|README.md<br>
+&emsp;&emsp;|seed_mysql.sql<br>
+&emsp;&emsp;|trocaticket_mysql.sql<br>
 |-->api <i>(entrada da API na Vercel)</i><br>
 |.gitignore<br>
 |package.json <i>(comandos do projeto todo)</i><br>
@@ -127,7 +129,7 @@ A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do pr
 
 <b>Entrega2/Cálculo</b>: Entrega da disciplina de Cálculo II (máximos, mínimos e concavidade da função de engajamento com notificações, com quadros de sinais e gráficos).
 
-<b>Entrega2/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados, com as tabelas, chaves primárias e estrangeiras e o diagrama do banco. Veja o [README do banco](Entrega2/Proj.BancodeDados/README.md).
+<b>Entrega2/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados: script do banco em MySQL, com as tabelas, chaves primárias e estrangeiras e o diagrama. Veja o [README do banco](Entrega2/Proj.BancodeDados/README.md).
 
 ## 🎓 Referências
 
