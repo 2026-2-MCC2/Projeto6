@@ -2,7 +2,7 @@ import Contador from '../components/Contador'
 import Icon from '../components/Icon'
 import Logo from '../components/Logo'
 import Revela from '../components/Revela'
-import { guarantees, platformStats, testimonials } from '../data/platform'
+import { guarantees, platformStats, testimonials } from '../data/paginaInicial'
 import { profiles, roleOrder } from '../data/profiles'
 
 const passos = [
