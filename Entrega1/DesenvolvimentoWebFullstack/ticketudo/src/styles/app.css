@@ -184,32 +184,11 @@
    E isso que faz o card parecer levantado em vez de pintado.
    ------------------------------------------------------------------ */
 
-.site-figures > div,
-.guarantee-grid article,
-.portal-grid article,
-.quote-stack blockquote,
-.partner-card,
 .form-card,
 .panel,
 .login-form .role-options button {
   background: linear-gradient(168deg, #171717, #101010 68%) !important;
   box-shadow: var(--realce), var(--sombra-rasa);
-}
-
-.site-figures > div,
-.guarantee-grid article,
-.portal-grid article,
-.partner-card {
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-
-.site-figures > div:hover,
-.guarantee-grid article:hover,
-.portal-grid article:hover,
-.partner-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--border-strong);
-  box-shadow: var(--realce-forte), var(--sombra-alta);
 }
 
 .login-form .role-options button.is-selected {

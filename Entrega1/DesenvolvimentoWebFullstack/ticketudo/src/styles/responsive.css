@@ -47,30 +47,14 @@
     margin-top: 18px;
   }
 
-  .stats,
-  .partner-grid {
-    grid-template-columns: 1fr;
-  }
 
-  .banner {
-    display: block;
-    padding: 25px 20px;
-  }
-
-  .banner-stat {
-    display: block;
-    margin-top: 20px;
-  }
 
   .field-row {
     grid-template-columns: 1fr;
     gap: 0;
   }
 
-  .event-card {
-    grid-template-columns: 80px 1fr 20px;
-  }
-
+  
   .login {
     display: block;
   }

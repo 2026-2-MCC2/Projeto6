@@ -38,24 +38,6 @@
   font-size: 26px;
 }
 
-.panel-contact {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border-soft);
-}
-
-.panel-contact strong {
-  display: block;
-  font-size: 12px;
-}
-
-.panel-contact small {
-  display: block;
-  color: var(--accent);
-  font-size: 10px;
-}
 
 .panel-messages {
   height: calc(100vh - 230px);
@@ -84,19 +66,6 @@
   color: var(--text);
 }
 
-.panel-form {
-  margin-top: 22px;
-}
-
-.panel-form > p {
-  color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.panel-list {
-  margin-top: 15px;
-}
 
 .panel-composer {
   display: flex;
