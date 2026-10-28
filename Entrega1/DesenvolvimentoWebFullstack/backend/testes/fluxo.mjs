@@ -90,7 +90,7 @@ const meuAntes = await api('GET', '/credenciamento/meu', null, forn)
 check('pop-up le a situacao nao_solicitado', meuAntes.body.situacao === 'nao_solicitado' && meuAntes.body.perfil === 'fornecedor')
 
 const dadosForn = {
-  nome_empresa: 'Gabisom', razao_social: 'Gabisom Eventos Ltda', cnpj: cnpjValido(String(n).slice(-12)),
+  nome_empresa: `Gabisom ${n}`, razao_social: 'Gabisom Eventos Ltda', cnpj: cnpjValido(String(n).slice(-12)),
   cidade: 'Sao Paulo', estado: 'sp', telefone: '(11) 98888-7777', categorias: ['iluminacao', 'estrutura'],
   descricao: 'Som, luz e palco para shows', declaracao: true,
 }
@@ -108,16 +108,21 @@ check('pop-up mostra em analise com os dados', meuForn.body.situacao === 'em_ana
 const serv = await api('POST', '/fornecedores/servicos', { nome: 'Som e luz', preco: 15000 }, forn)
 check('em analise ja cadastra servico', serv.status === 201)
 
+// as contas sao comparadas pelo nome (que leva o Date.now()), entao o teste
+// passa mesmo com cadastros de rodadas anteriores no banco
+const naVitrine = (lista) => lista.some((f) => f.nome_empresa === dadosForn.nome_empresa)
 const vitrineAntes = await api('GET', '/fornecedores')
-check('fornecedor em analise nao aparece na vitrine', vitrineAntes.body.length === 0)
+check('fornecedor em analise nao aparece na vitrine', !naVitrine(vitrineAntes.body))
 
 const filaCred = await api('GET', '/admin/credenciamentos?perfil=fornecedor', null, adm)
-check('adm ve a fila de fornecedores com os dados', filaCred.body.length === 1 && filaCred.body[0].razao_social === 'Gabisom Eventos Ltda', `${filaCred.body.length}`)
+const meuPedido = filaCred.body.find((c) => c.id_credenciamento === cred.body.id_credenciamento)
+check('adm ve a fila de fornecedores com os dados', meuPedido?.razao_social === 'Gabisom Eventos Ltda', `${filaCred.body.length} na fila`)
 await api('POST', `/admin/credenciamentos/${cred.body.id_credenciamento}/aprovar`, {}, adm)
 const vitrineDepois = await api('GET', '/fornecedores')
-check('credenciado aparece na vitrine', vitrineDepois.body.length === 1)
+check('credenciado aparece na vitrine', naVitrine(vitrineDepois.body))
 const historico = await api('GET', '/admin/credenciamentos?perfil=fornecedor&status=aprovado', null, adm)
-check('fica registrado quem aprovou e quando', historico.body[0]?.analisado_por === 'Administrador' && !!historico.body[0]?.revisado_em)
+const aprovado = historico.body.find((c) => c.id_credenciamento === cred.body.id_credenciamento)
+check('fica registrado quem aprovou e quando', aprovado?.analisado_por === 'Administrador' && !!aprovado?.revisado_em)
 
 // 4b. credenciamento do organizador
 const semCred = await api('POST', '/eventos', {
@@ -127,7 +132,7 @@ const semCred = await api('POST', '/eventos', {
 check('organizador sem credenciamento nao cria evento', semCred.status === 403 && semCred.body.codigo === 'credenciamento_necessario', semCred.body.erro)
 
 const dadosOrg = {
-  tipo_pessoa: 'fisica', nome_organizacao: 'Lucas Producoes', cidade: 'Sao Paulo', estado: 'SP',
+  tipo_pessoa: 'fisica', nome_organizacao: `Lucas Producoes ${n}`, cidade: 'Sao Paulo', estado: 'SP',
   telefone: '11977776666', categorias: [cat.body.id_categoria], descricao: 'Organizo shows ha 3 anos',
   publico_medio: 800, declaracao: true,
 }
@@ -232,7 +237,8 @@ const aceitarRetido = await api('POST', `/solicitacoes/${sol.body.id_solicitacao
 check('fornecedor nao responde pedido retido', aceitarRetido.status === 404)
 
 const filaOrg = await api('GET', '/admin/credenciamentos?perfil=organizador', null, adm)
-check('adm ve a fila de organizadores', filaOrg.body.length === 1 && filaOrg.body[0].nome_organizacao === 'Lucas Producoes' && filaOrg.body[0].categorias.length === 1)
+const pedidoOrg = filaOrg.body.find((c) => c.id_credenciamento === credOrg.body.id_credenciamento)
+check('adm ve a fila de organizadores', pedidoOrg?.nome_organizacao === dadosOrg.nome_organizacao && pedidoOrg?.categorias.length === 1, `${filaOrg.body.length} na fila`)
 const recusaSemMotivo = await api('POST', `/admin/credenciamentos/${credOrg.body.id_credenciamento}/recusar`, {}, adm)
 check('recusa sem motivo da 400', recusaSemMotivo.status === 400)
 const aprovOrg = await api('POST', `/admin/credenciamentos/${credOrg.body.id_credenciamento}/aprovar`, {}, adm)

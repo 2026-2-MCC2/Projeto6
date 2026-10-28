@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Carregando from '../../components/Carregando'
 import EmptyState from '../../components/EmptyState'
+import MotivoRecusa from '../../components/MotivoRecusa'
 import PageHeading from '../../components/PageHeading'
 import StatusBadge from '../../components/StatusBadge'
 import Tabs from '../../components/Tabs'
@@ -87,9 +88,12 @@ export default function Events({ profile, onMudou }) {
   const { dispatch } = useApp()
   const [aba, setAba] = useState('em_analise')
   const [aberto, setAberto] = useState(null)
+  // card com o campo de motivo aberto
+  const [recusando, setRecusando] = useState(null)
   const { dados, carregando, erro, recarregar } = useRecurso(() => admin.eventos(aba), aba)
 
-  async function decidir(evento, aprovar) {
+  // motivo so vem na recusa
+  async function decidir(evento, aprovar, motivo) {
     try {
       if (aprovar) {
         const r = await admin.aprovarEvento(evento.id_evento)
@@ -98,12 +102,11 @@ export default function Events({ profile, onMudou }) {
           texto: `${evento.nome} aprovado. ${r.ingressos_gerados} ingressos gerados.`,
         })
       } else {
-        const motivo = window.prompt('Por que está recusando?')
-        if (!motivo) return
         await admin.recusarEvento(evento.id_evento, motivo)
         dispatch({ type: 'aviso', texto: `${evento.nome} recusado.` })
       }
       setAberto(null)
+      setRecusando(null)
       recarregar()
       onMudou?.()
     } catch (e) {
@@ -172,24 +175,33 @@ export default function Events({ profile, onMudou }) {
 
                 {aberto === evento.id_evento ? <Detalhe id={evento.id_evento} /> : null}
 
-                <footer>
-                  <button
-                    className="btn-link"
-                    onClick={() => setAberto(aberto === evento.id_evento ? null : evento.id_evento)}
-                  >
-                    {aberto === evento.id_evento ? 'Esconder detalhes' : 'Ver lotes e fornecedores'}
-                  </button>
-                  {evento.status === 'em_analise' ? (
-                    <>
-                      <button className="btn-secondary" onClick={() => decidir(evento, false)}>
-                        Recusar
-                      </button>
-                      <button className="btn-approve" onClick={() => decidir(evento, true)}>
-                        Aprovar evento
-                      </button>
-                    </>
-                  ) : null}
-                </footer>
+                {recusando === evento.id_evento ? (
+                  <MotivoRecusa
+                    id={`motivo-evento-${evento.id_evento}`}
+                    aviso="O organizador vai ver esse motivo e pode corrigir o evento."
+                    onConfirmar={(motivo) => decidir(evento, false, motivo)}
+                    onCancelar={() => setRecusando(null)}
+                  />
+                ) : (
+                  <footer>
+                    <button
+                      className="btn-link"
+                      onClick={() => setAberto(aberto === evento.id_evento ? null : evento.id_evento)}
+                    >
+                      {aberto === evento.id_evento ? 'Esconder detalhes' : 'Ver lotes e fornecedores'}
+                    </button>
+                    {evento.status === 'em_analise' ? (
+                      <>
+                        <button className="btn-secondary" onClick={() => setRecusando(evento.id_evento)}>
+                          Recusar
+                        </button>
+                        <button className="btn-approve" onClick={() => decidir(evento, true)}>
+                          Aprovar evento
+                        </button>
+                      </>
+                    ) : null}
+                  </footer>
+                )}
               </article>
             )
           })}

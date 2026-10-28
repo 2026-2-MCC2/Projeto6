@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Carregando from '../../components/Carregando'
 import EmptyState from '../../components/EmptyState'
+import MotivoRecusa from '../../components/MotivoRecusa'
 import PageHeading from '../../components/PageHeading'
 import StatusBadge from '../../components/StatusBadge'
 import Tabs from '../../components/Tabs'
@@ -76,12 +77,15 @@ export default function Requests({ profile, onMudou }) {
   const { dispatch } = useApp()
   const [perfil, setPerfil] = useState('organizador')
   const [aba, setAba] = useState('em_analise')
+  // card com o campo de motivo aberto
+  const [recusando, setRecusando] = useState(null)
   const { dados, carregando, erro, recarregar } = useRecurso(
     () => admin.credenciamentos(perfil, aba),
     `${perfil}-${aba}`,
   )
 
-  async function decidir(pedido, aprovar) {
+  // motivo so vem na recusa
+  async function decidir(pedido, aprovar, motivo) {
     const nome = pedido.nome_organizacao || pedido.nome_empresa
     try {
       if (aprovar) {
@@ -91,11 +95,10 @@ export default function Requests({ profile, onMudou }) {
           : ''
         dispatch({ type: 'aviso', texto: `${nome} credenciado.${liberadas}` })
       } else {
-        const motivo = window.prompt('Por que está recusando? A pessoa vai ver esse motivo.')
-        if (!motivo || !motivo.trim()) return
-        await admin.recusarCredenciamento(pedido.id_credenciamento, motivo.trim())
+        await admin.recusarCredenciamento(pedido.id_credenciamento, motivo)
         dispatch({ type: 'aviso', texto: `${nome} recusado.` })
       }
+      setRecusando(null)
       recarregar()
       onMudou?.()
     } catch (e) {
@@ -141,9 +144,16 @@ export default function Requests({ profile, onMudou }) {
                 <p className="request-descricao">Motivo da recusa: {pedido.observacao}</p>
               ) : null}
 
-              {pedido.status === 'em_analise' ? (
+              {pedido.status === 'em_analise' && recusando === pedido.id_credenciamento ? (
+                <MotivoRecusa
+                  id={`motivo-cred-${pedido.id_credenciamento}`}
+                  aviso="A pessoa vai ver esse motivo no aviso de credenciamento."
+                  onConfirmar={(motivo) => decidir(pedido, false, motivo)}
+                  onCancelar={() => setRecusando(null)}
+                />
+              ) : pedido.status === 'em_analise' ? (
                 <footer>
-                  <button className="btn-secondary" onClick={() => decidir(pedido, false)}>
+                  <button className="btn-secondary" onClick={() => setRecusando(pedido.id_credenciamento)}>
                     Recusar
                   </button>
                   <button className="btn-approve" onClick={() => decidir(pedido, true)}>

@@ -3,10 +3,12 @@ import PageHeading from '../../components/PageHeading'
 import StatCard from '../../components/StatCard'
 import StatusBadge from '../../components/StatusBadge'
 import { fornecedores, solicitacoes } from '../../api'
+import { useCredenciamento } from '../../hooks/useCredenciamento'
 import { useRecurso } from '../../hooks/useRecurso'
 import { rotulo } from '../../utils/format'
 
 export default function Overview({ profile, onNavigate }) {
+  const { abrir } = useCredenciamento()
   const { dados, carregando, erro, recarregar } = useRecurso(async () => {
     const perfil = await fornecedores.meuPerfil().catch((e) => (e.status === 404 ? null : Promise.reject(e)))
     if (!perfil) return { perfil: null, servicos: [], pedidos: [] }
@@ -29,10 +31,10 @@ export default function Overview({ profile, onNavigate }) {
           description="Falta um passo para você aparecer na plataforma."
         />
         <div className="empty-state">
-          <strong>Cadastre sua empresa</strong>
-          <p>Depois do perfil e dos serviços, você pede credenciamento ao administrador.</p>
-          <button className="btn-primary" onClick={() => onNavigate('profile')}>
-            Ir para Meu perfil
+          <strong>Faça seu credenciamento</strong>
+          <p>Envie os dados da sua empresa ao administrador. Depois disso você já cadastra seus serviços.</p>
+          <button className="btn-primary" onClick={abrir}>
+            Fazer credenciamento
           </button>
         </div>
       </>

@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
+import CredenciamentoFlutuante from '../components/CredenciamentoFlutuante'
 import SidePanel from '../components/SidePanel'
 import { admin, solicitacoes } from '../api'
 import { profiles } from '../data/profiles'
+import { useCredenciamento } from '../hooks/useCredenciamento'
 import { pagesByRole } from '../pages'
 import { useApp } from '../state/useApp'
 
@@ -56,6 +58,18 @@ export default function Workspace({ onSignOut }) {
   const profile = profiles[papel]
   const pages = pagesByRole[papel]
   const [contadores, atualizarContadores] = useContadores(papel)
+  const { exigir } = useCredenciamento()
+  const temCredenciamento = papel === 'organizer' || papel === 'supplier'
+
+  // criar evento depende do credenciamento: sem ele, abre o pop-up e so
+  // depois de enviar segue para a tela do evento
+  function navegar(destino) {
+    if (papel === 'organizer' && destino === 'new') {
+      exigir('Para criar eventos, faça um credenciamento simples.', () => setPage('new'))
+      return
+    }
+    setPage(destino)
+  }
 
   const CurrentPage = pages?.[page] ?? pages?.home
 
@@ -65,7 +79,7 @@ export default function Workspace({ onSignOut }) {
         profile={profile}
         page={page}
         contadores={contadores}
-        onNavigate={setPage}
+        onNavigate={navegar}
         onOpenPanel={setPanel}
         onSignOut={onSignOut}
       />
@@ -75,13 +89,14 @@ export default function Workspace({ onSignOut }) {
           <CurrentPage
             page={page}
             profile={profile}
-            onNavigate={setPage}
+            onNavigate={navegar}
             onOpenPanel={setPanel}
             onMudou={atualizarContadores}
           />
         </div>
       </main>
       {panel ? <SidePanel type={panel} onClose={() => setPanel(null)} /> : null}
+      {temCredenciamento ? <CredenciamentoFlutuante /> : null}
     </div>
   )
 }
