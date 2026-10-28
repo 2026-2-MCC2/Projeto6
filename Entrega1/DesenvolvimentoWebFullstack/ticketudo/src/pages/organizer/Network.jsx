@@ -25,14 +25,18 @@ function Solicitar({ fornecedor, meusEventos, onPronto }) {
     e.preventDefault()
     setErro(null)
     try {
-      await eventos.solicitarServico(Number(form.id_evento), {
+      const r = await eventos.solicitarServico(Number(form.id_evento), {
         id_servico: Number(form.id_servico),
         mensagem: form.mensagem || undefined,
         valor_proposto: form.valor ? Number(form.valor) : undefined,
       })
       dispatch({
         type: 'aviso',
-        texto: `Solicitação enviada para ${fornecedor.nome_empresa}. O chat já está aberto.`,
+        // organizador em analise: o pedido fica guardado ate a aprovacao
+        texto:
+          r.status === 'aguardando_organizador'
+            ? 'Pedido enviado. O fornecedor vai recebê-lo quando seu credenciamento for aprovado.'
+            : `Solicitação enviada para ${fornecedor.nome_empresa}. O chat já está aberto.`,
       })
       onPronto()
     } catch (err) {

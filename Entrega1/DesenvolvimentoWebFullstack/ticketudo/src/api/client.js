@@ -46,6 +46,10 @@ export async function pedir(metodo, rota, corpo) {
   if (!resposta.ok) {
     // token vencido ou invalido: derruba a sessao
     if (resposta.status === 401 && token) limparToken()
+    // acao que depende do credenciamento: o pop-up escuta esse evento e abre
+    if (resposta.status === 403 && dados?.codigo === 'credenciamento_necessario') {
+      window.dispatchEvent(new CustomEvent('credenciamento-necessario', { detail: dados }))
+    }
     throw new ErroApi(dados?.erro || `Erro ${resposta.status}`, resposta.status, dados)
   }
 

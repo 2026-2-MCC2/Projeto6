@@ -1,5 +1,5 @@
-// O estado global guarda so o que e realmente global: quem esta logado e os
-// avisos de canto de tela. Os dados de cada pagina vem da API, pela
+// O estado global guarda so o que e realmente global: quem esta logado, os
+// avisos de canto de tela e o pop-up de credenciamento. Os dados de cada pagina vem da API, pela
 // useRecurso, pra nao ter duas versoes da verdade.
 
 export const initialState = {
@@ -7,6 +7,11 @@ export const initialState = {
   carregandoSessao: true,
   toasts: [],
   sequencia: 0,
+  // pop-up de credenciamento (organizador e fornecedor)
+  //   info: o que veio de GET /credenciamento/meu
+  //   motivo: frase de quem abriu ("Para criar eventos, ...")
+  //   depois: o que fazer quando a pessoa enviar (seguir a acao que tentou)
+  credenciamento: { info: null, expandido: false, motivo: null, depois: null },
 }
 
 export function iniciais(nome) {
@@ -74,6 +79,26 @@ export function reducer(state, action) {
 
     case 'aviso':
       return comAviso(state, action.texto)
+
+    case 'credenciamento/carregado':
+      return { ...state, credenciamento: { ...state.credenciamento, info: action.info } }
+
+    case 'credenciamento/abrir':
+      return {
+        ...state,
+        credenciamento: {
+          ...state.credenciamento,
+          expandido: true,
+          motivo: action.motivo || null,
+          depois: action.depois || null,
+        },
+      }
+
+    case 'credenciamento/minimizar':
+      return {
+        ...state,
+        credenciamento: { ...state.credenciamento, expandido: false, motivo: null, depois: null },
+      }
 
     case 'aviso/fechar':
       return { ...state, toasts: state.toasts.filter((t) => t.id !== action.id) }
