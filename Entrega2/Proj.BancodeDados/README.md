@@ -11,13 +11,16 @@ Diagrama entidade-relacionamento da primeira entrega: [`Entrega1/Proj.BancodeDad
 
 ## Tabelas
 
-O banco tem 17 tabelas. Todas têm chave primária (PK), e as ligações entre elas são feitas por chaves estrangeiras (FK).
+O banco tem 20 tabelas. Todas têm chave primária (PK), e as ligações entre elas são feitas por chaves estrangeiras (FK).
 
 | Tabela | Para que serve | PK | FKs |
 |---|---|---|---|
 | `usuario` | Todas as contas (comprador, organizador, fornecedor e administrador) | `id_usuario` | — |
+| `organizador` | Dados do credenciamento de um usuário organizador (pessoa física ou produtora) | `id_organizador` | `id_usuario` → `usuario` |
+| `organizador_categoria` | Tipos de evento que o organizador declarou | `id_organizador` + `id_categoria` (composta) | `id_organizador` → `organizador`; `id_categoria` → `categoria` |
 | `fornecedor` | Dados da empresa de um usuário fornecedor | `id_fornecedor` | `id_usuario` → `usuario` |
-| `credenciamento` | Pedidos de credenciamento do fornecedor, analisados pelo administrador | `id_credenciamento` | `id_fornecedor` → `fornecedor`; `id_adm` → `usuario` |
+| `fornecedor_atuacao` | Áreas em que o fornecedor atua (iluminação, comida, bebida…) | `id_fornecedor` + `categoria` (composta) | `id_fornecedor` → `fornecedor` |
+| `credenciamento` | Pedidos de credenciamento de organizadores e fornecedores, analisados pelo administrador (cada linha é de um dos dois) | `id_credenciamento` | `id_organizador` → `organizador`; `id_fornecedor` → `fornecedor`; `id_adm` → `usuario` |
 | `servico` | Serviços que cada fornecedor oferece, com preço | `id_servico` | `id_fornecedor` → `fornecedor` |
 | `categoria` | Categorias de evento (show, teatro, festival…) | `id_categoria` | — |
 | `local_evento` | Locais onde os eventos acontecem | `id_local` | — |
@@ -47,7 +50,12 @@ O banco tem 17 tabelas. Todas têm chave primária (PK), e as ligações entre e
 
 ```mermaid
 erDiagram
+    usuario ||--o| organizador : "tem perfil de"
+    organizador ||--o{ organizador_categoria : "declara"
+    categoria ||--o{ organizador_categoria : "e declarada em"
+    organizador ||--o{ credenciamento : "pede"
     usuario ||--o| fornecedor : "tem perfil de"
+    fornecedor ||--o{ fornecedor_atuacao : "atua em"
     fornecedor ||--o{ credenciamento : "pede"
     usuario ||--o{ credenciamento : "analisa"
     fornecedor ||--o{ servico : "oferece"
@@ -76,7 +84,7 @@ erDiagram
 
 1. Abrir o `trocaticket_mysql.sql` no MySQL Workbench e executar tudo (botão do raio).
 2. Abrir o `seed_mysql.sql` e executar.
-3. Conferir com `SHOW TABLES;` no banco `trocaticket`: são 17 tabelas.
+3. Conferir com `SHOW TABLES;` no banco `trocaticket`: são 20 tabelas.
 
 O script apaga e recria o banco `trocaticket` do zero, então pode ser rodado de novo sempre que precisar.
 

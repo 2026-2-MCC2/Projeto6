@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../config/bd');
 const { autenticar, permitir } = require('../middleware/auth');
+const { liberarSolicitacoesRetidas } = require('../lib/credenciamento');
 
 const router = express.Router();
 
@@ -105,20 +106,49 @@ router.post('/eventos/:id/recusar', async (req, res) => {
 
 // --- credenciamento --------------------------------------------------------
 
+// tudo o que a pessoa enviou, pro adm decidir. ?perfil=organizador|fornecedor
+const CONSULTA_CREDENCIAMENTO = {
+  organizador: `
+    select c.id_credenciamento, c.status, c.observacao, c.solicitado_em, c.revisado_em,
+           adm.nome as analisado_por,
+           o.id_organizador, o.tipo_pessoa, o.nome_organizacao, o.razao_social, o.cnpj,
+           o.cidade, o.estado, o.telefone, o.descricao, o.link, o.publico_medio,
+           u.nome, u.email, u.cpf,
+           array(select ca.nome from organizador_categoria oc
+                   join categoria ca on ca.id_categoria = oc.id_categoria
+                  where oc.id_organizador = o.id_organizador order by ca.nome) as categorias
+      from credenciamento c
+      join organizador o on o.id_organizador = c.id_organizador
+      join usuario u on u.id_usuario = o.id_usuario
+      left join usuario adm on adm.id_usuario = c.id_adm
+     where c.status = ?
+     order by c.solicitado_em`,
+  fornecedor: `
+    select c.id_credenciamento, c.status, c.observacao, c.solicitado_em, c.revisado_em,
+           adm.nome as analisado_por,
+           f.id_fornecedor, f.nome_empresa, f.razao_social, f.cnpj,
+           f.cidade, f.estado, f.telefone, f.descricao, f.link,
+           u.nome, u.email, u.cpf,
+           array(select fa.categoria from fornecedor_atuacao fa
+                  where fa.id_fornecedor = f.id_fornecedor order by fa.categoria) as categorias,
+           (select count(*) from servico where id_fornecedor = f.id_fornecedor and ativo = true)
+             as total_servicos
+      from credenciamento c
+      join fornecedor f on f.id_fornecedor = c.id_fornecedor
+      join usuario u on u.id_usuario = f.id_usuario
+      left join usuario adm on adm.id_usuario = c.id_adm
+     where c.status = ?
+     order by c.solicitado_em`,
+};
+
 router.get('/credenciamentos', async (req, res) => {
+  const perfil = req.query.perfil || 'fornecedor';
   const status = req.query.status || 'em_analise';
-  const [linhas] = await pool.query(
-    `select c.*, f.nome_empresa, f.cnpj, f.descricao, u.nome, u.email,
-            (select count(*) from servico where id_fornecedor = f.id_fornecedor and ativo = true)
-              as total_servicos
-       from credenciamento c
-       join fornecedor f on f.id_fornecedor = c.id_fornecedor
-       join usuario u on u.id_usuario = f.id_usuario
-      where c.status = ?
-      order by c.solicitado_em`,
-    [status],
-  );
-  res.json(linhas);
+  if (!CONSULTA_CREDENCIAMENTO[perfil]) {
+    return res.status(400).json({ erro: 'perfil precisa ser organizador ou fornecedor' });
+  }
+  const [linhas] = await pool.query(CONSULTA_CREDENCIAMENTO[perfil], [status]);
+  res.json(linhas.map((l) => ({ ...l, perfil })));
 });
 
 async function responderCredenciamento(req, res, aprovado) {
@@ -131,25 +161,49 @@ async function responderCredenciamento(req, res, aprovado) {
   if (pedido.status !== 'em_analise') {
     return res.status(409).json({ erro: 'essa solicitacao ja foi analisada' });
   }
-  if (!aprovado && !req.body.observacao) {
+  const motivo = String(req.body.observacao || '').trim();
+  if (!aprovado && !motivo) {
     return res.status(400).json({ erro: 'escreva o motivo da recusa em "observacao"' });
   }
+
+  const perfil = pedido.id_organizador ? 'organizador' : 'fornecedor';
+  const situacao = aprovado ? 'credenciado' : 'recusado';
 
   const conexao = await pool.getConnection();
   try {
     await conexao.beginTransaction();
+    // fica gravado quem analisou e quando (rastreabilidade)
     await conexao.query(
       'update credenciamento set status = ?, observacao = ?, id_adm = ?, revisado_em = now() where id_credenciamento = ?',
-      [aprovado ? 'aprovado' : 'recusado', req.body.observacao || null, req.usuario.id, pedido.id_credenciamento],
+      [aprovado ? 'aprovado' : 'recusado', motivo || null, req.usuario.id, pedido.id_credenciamento],
     );
-    await conexao.query('update fornecedor set situacao = ? where id_fornecedor = ?', [
-      aprovado ? 'credenciado' : 'recusado',
-      pedido.id_fornecedor,
-    ]);
+
+    let liberadas = 0;
+    if (perfil === 'organizador') {
+      await conexao.query('update organizador set situacao = ? where id_organizador = ?', [
+        situacao,
+        pedido.id_organizador,
+      ]);
+      // aprovado: os pedidos de servico que estavam retidos chegam aos fornecedores
+      if (aprovado) {
+        const [[org]] = await conexao.query('select id_usuario from organizador where id_organizador = ?', [
+          pedido.id_organizador,
+        ]);
+        liberadas = await liberarSolicitacoesRetidas(conexao, org.id_usuario);
+      }
+    } else {
+      await conexao.query('update fornecedor set situacao = ? where id_fornecedor = ?', [
+        situacao,
+        pedido.id_fornecedor,
+      ]);
+    }
+
     await conexao.commit();
     res.json({
       id_credenciamento: pedido.id_credenciamento,
+      perfil,
       status: aprovado ? 'aprovado' : 'recusado',
+      solicitacoes_liberadas: liberadas,
     });
   } catch (e) {
     await conexao.rollback();

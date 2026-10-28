@@ -32,16 +32,50 @@ CREATE TABLE usuario (
 ) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
--- Fornecedores e credenciamento
+-- Organizadores, fornecedores e credenciamento
 -- --------------------------------------------------------
+-- A conta funciona logo depois do cadastro, mas organizador e fornecedor so
+-- operam de verdade depois que o adm aprova o credenciamento. A linha em
+-- organizador / fornecedor nasce quando a pessoa envia o credenciamento;
+-- sem linha, a situacao e "nao_solicitado".
+
+CREATE TABLE organizador (
+  id_organizador   INT AUTO_INCREMENT PRIMARY KEY,
+  id_usuario       INT NOT NULL UNIQUE,
+  -- fisica = produtor independente (usa o CPF da conta); juridica = produtora
+  tipo_pessoa      VARCHAR(10) CHECK (tipo_pessoa IN ('fisica','juridica')) NOT NULL,
+  nome_organizacao VARCHAR(140) NOT NULL,
+  razao_social     VARCHAR(160),
+  cnpj             VARCHAR(14) UNIQUE,
+  cidade           VARCHAR(80)  NOT NULL,
+  estado           CHAR(2)      NOT NULL,
+  telefone         VARCHAR(20)  NOT NULL,
+  descricao        TEXT NOT NULL,
+  link             VARCHAR(200),
+  publico_medio    INT CHECK (publico_medio > 0),
+  -- espelha o ultimo credenciamento, pra nao ter que varrer o historico
+  situacao         VARCHAR(30)
+                   CHECK (situacao IN ('nao_solicitado','em_analise','credenciado','recusado'))
+                   NOT NULL DEFAULT 'em_analise',
+  criado_em        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT ck_organizador_juridica
+    CHECK (tipo_pessoa = 'fisica' OR (cnpj IS NOT NULL AND razao_social IS NOT NULL)),
+  CONSTRAINT fk_organizador_usuario FOREIGN KEY (id_usuario)
+    REFERENCES usuario (id_usuario) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 CREATE TABLE fornecedor (
   id_fornecedor INT AUTO_INCREMENT PRIMARY KEY,
   id_usuario    INT NOT NULL UNIQUE,
   nome_empresa  VARCHAR(140) NOT NULL,
+  razao_social  VARCHAR(160),
   cnpj          VARCHAR(18)  NOT NULL UNIQUE,
+  cidade        VARCHAR(80),
+  estado        CHAR(2),
+  telefone      VARCHAR(20),
   descricao     TEXT,
-  -- espelha a ultima solicitacao analisada, pra nao ter que varrer o historico
+  link          VARCHAR(200),
+  -- espelha o ultimo credenciamento, pra nao ter que varrer o historico
   situacao      VARCHAR(30)
                 CHECK (situacao IN ('nao_solicitado','em_analise','credenciado','recusado'))
                 NOT NULL DEFAULT 'nao_solicitado',
@@ -50,17 +84,35 @@ CREATE TABLE fornecedor (
     REFERENCES usuario (id_usuario) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+-- em que areas o fornecedor atua (as mesmas dos itens de custo do evento)
+CREATE TABLE fornecedor_atuacao (
+  id_fornecedor INT NOT NULL,
+  categoria     VARCHAR(30)
+                CHECK (categoria IN ('iluminacao','comida','bebida','seguranca','estrutura','outros'))
+                NOT NULL,
+  PRIMARY KEY (id_fornecedor, categoria),
+  CONSTRAINT fk_atuacao_fornecedor FOREIGN KEY (id_fornecedor)
+    REFERENCES fornecedor (id_fornecedor) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- um pedido por envio: guarda quem analisou, quando e o motivo da recusa.
+-- E de um organizador OU de um fornecedor, nunca dos dois.
 CREATE TABLE credenciamento (
   id_credenciamento INT AUTO_INCREMENT PRIMARY KEY,
-  id_fornecedor INT NOT NULL,
-  id_adm        INT NULL,
-  status        VARCHAR(30)
-                CHECK (status IN ('em_analise','aprovado','recusado')) NOT NULL DEFAULT 'em_analise',
-  observacao    TEXT,
-  solicitado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  revisado_em   DATETIME NULL,
+  id_fornecedor  INT NULL,
+  id_organizador INT NULL,
+  id_adm         INT NULL,
+  status         VARCHAR(30)
+                 CHECK (status IN ('em_analise','aprovado','recusado')) NOT NULL DEFAULT 'em_analise',
+  observacao     TEXT,
+  solicitado_em  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  revisado_em    DATETIME NULL,
+  CONSTRAINT ck_credenciamento_um_perfil
+    CHECK ((id_fornecedor IS NULL) <> (id_organizador IS NULL)),
   CONSTRAINT fk_credenciamento_fornecedor FOREIGN KEY (id_fornecedor)
     REFERENCES fornecedor (id_fornecedor) ON DELETE CASCADE,
+  CONSTRAINT fk_credenciamento_organizador FOREIGN KEY (id_organizador)
+    REFERENCES organizador (id_organizador) ON DELETE CASCADE,
   CONSTRAINT fk_credenciamento_adm FOREIGN KEY (id_adm)
     REFERENCES usuario (id_usuario) ON DELETE SET NULL
 ) ENGINE=InnoDB;
@@ -85,6 +137,22 @@ CREATE TABLE categoria (
   id_categoria INT AUTO_INCREMENT PRIMARY KEY,
   nome         VARCHAR(80) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
+
+-- tipos de evento que o organizador declarou no credenciamento
+CREATE TABLE organizador_categoria (
+  id_organizador INT NOT NULL,
+  id_categoria   INT NOT NULL,
+  PRIMARY KEY (id_organizador, id_categoria),
+  CONSTRAINT fk_orgcat_organizador FOREIGN KEY (id_organizador)
+    REFERENCES organizador (id_organizador) ON DELETE CASCADE,
+  CONSTRAINT fk_orgcat_categoria FOREIGN KEY (id_categoria)
+    REFERENCES categoria (id_categoria)
+) ENGINE=InnoDB;
+
+-- O organizador digita o local ao cadastrar o evento. A tabela existe
+-- porque o mesmo lugar se repete entre eventos; a chave abaixo faz o
+-- segundo evento no mesmo endereco reaproveitar a linha em vez de
+-- duplicar.
 
 -- O organizador digita o local ao cadastrar o evento. A tabela existe
 -- porque o mesmo lugar se repete entre eventos; a chave abaixo faz o
@@ -171,8 +239,11 @@ CREATE TABLE solicitacao_servico (
   id_servico     INT NOT NULL,
   mensagem       TEXT,
   valor_proposto DECIMAL(10,2),
+  -- aguardando_organizador = pedido de organizador ainda nao credenciado.
+  -- Fica retido (sem chat, o fornecedor nao ve) ate o adm aprovar o organizador.
   status         VARCHAR(30)
-                CHECK (status IN ('em_analise','aceita','recusada')) NOT NULL DEFAULT 'em_analise',
+                CHECK (status IN ('aguardando_organizador','em_analise','aceita','recusada'))
+                NOT NULL DEFAULT 'em_analise',
   criado_em      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   respondido_em  DATETIME NULL,
   CONSTRAINT fk_solicitacao_evento FOREIGN KEY (id_evento)
