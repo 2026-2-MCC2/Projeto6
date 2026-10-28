@@ -38,8 +38,8 @@ npm run dev
 
 Abra `http://localhost:5173`. Um comando sobe o site e a API juntos, sem
 `.env` e sem senha: o banco de desenvolvimento e um Postgres embutido que se
-cria sozinho com o seed. Login do administrador: `admin@trocaticket.com.br` /
-`admin123`.
+cria sozinho com o seed. O login do administrador do banco local aparece no
+terminal na primeira vez que o `npm run dev` cria o banco.
 
 | comando | o que faz |
 |---|---|

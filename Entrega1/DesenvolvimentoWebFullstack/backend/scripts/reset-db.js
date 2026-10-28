@@ -17,8 +17,7 @@ async function main() {
       await cliente.query(fs.readFileSync(path.join(pasta, nome), 'utf8'));
     }
     await cliente.query('commit');
-    console.log('banco pronto. login do adm: admin@trocaticket.com.br / admin123');
-  } catch (e) {
+    console.log('banco pronto. login do adm (banco local): admin@trocaticket.com.br / admin123');  } catch (e) {
     await cliente.query('rollback');
     throw e;
   } finally {
