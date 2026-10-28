@@ -4,12 +4,33 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 
+// O segredo que assina os logins (JWT) nunca fica escrito no codigo.
+// - Na Vercel ele e obrigatorio e vem das Environment Variables.
+// - No computador, sem .env, e sorteado na primeira vez e guardado em
+//   backend/.banco-local (pasta que nao vai pro Git). Assim cada maquina tem
+//   o seu e o login nao cai toda vez que o nodemon reinicia o servidor.
 if (!process.env.JWT_SECRET) {
   if (process.env.VERCEL) {
     throw new Error('JWT_SECRET nao configurado na Vercel (Settings > Environment Variables).');
   }
-  // so para desenvolvimento: sem isso ninguem conseguiria logar sem .env
-  process.env.JWT_SECRET = 'segredo-de-desenvolvimento-nao-usar-em-producao';
+  process.env.JWT_SECRET = segredoLocal();
+}
+
+function segredoLocal() {
+  const fs = require('fs');
+  const path = require('path');
+  const crypto = require('crypto');
+  const pasta = path.join(__dirname, '.banco-local');
+  const arquivo = path.join(pasta, 'jwt-segredo');
+
+  try {
+    return fs.readFileSync(arquivo, 'utf8').trim();
+  } catch {
+    const segredo = crypto.randomBytes(32).toString('hex');
+    fs.mkdirSync(pasta, { recursive: true });
+    fs.writeFileSync(arquivo, segredo);
+    return segredo;
+  }
 }
 
 const pool = require('./config/bd'); // pool seria para nos utilizarmos o banco sem ter que ficar chamando ele toda hora

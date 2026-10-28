@@ -18,7 +18,8 @@ async function main() {
     }
     await cliente.query('commit');
     console.log('banco pronto. login do adm (banco local): admin@trocaticket.com.br / admin123');
-  } catch (e) {    await cliente.query('rollback');
+  } catch (e) {
+    await cliente.query('rollback');
     throw e;
   } finally {
     cliente.release();
