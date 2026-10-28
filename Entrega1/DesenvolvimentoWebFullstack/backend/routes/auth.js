@@ -8,6 +8,12 @@ const router = express.Router();
 // conta de adm nao sai por cadastro aberto, so pelo seed ou direto no banco
 const TIPOS = ['comprador', 'organizador', 'fornecedor'];
 
+// e-mail e sempre gravado e comparado sem espacos nas pontas e em minusculas,
+// para Caio@x.com e caio@x.com serem a mesma conta
+function normalizarEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
 function gerarToken(usuario) {
   return jwt.sign(
     { id: usuario.id_usuario, nome: usuario.nome, email: usuario.email, tipo: usuario.tipo },
@@ -17,7 +23,8 @@ function gerarToken(usuario) {
 }
 
 router.post('/cadastro', async (req, res) => {
-  const { nome, email, cpf, senha, telefone, tipo } = req.body;
+    const { nome, cpf, senha, telefone, tipo } = req.body;
+  const email = normalizarEmail(req.body.email);
 
   if (!nome || !email || !cpf || !senha) {
     return res.status(400).json({ erro: 'nome, email, cpf e senha sao obrigatorios' });
@@ -53,8 +60,8 @@ router.post('/cadastro', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { email, senha } = req.body;
-
+  const { senha } = req.body;
+  const email = normalizarEmail(req.body.email);
   if (!email || !senha) {
     return res.status(400).json({ erro: 'email e senha sao obrigatorios' });
   }
