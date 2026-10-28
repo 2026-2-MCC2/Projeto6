@@ -1,8 +1,14 @@
 const express = require('express');
 const pool = require('../config/bd');
 const { autenticar, permitir } = require('../middleware/auth');
+const { situacaoDe, exigirCredenciamento, abrirChatDaSolicitacao } = require('../lib/credenciamento');
 
 const router = express.Router();
+
+// organizador sem credenciamento pedido nao cria evento; para mandar o
+// evento ao adm, o credenciamento precisa estar aprovado
+const credenciamentoPedido = exigirCredenciamento(['em_analise', 'credenciado'], 'criar eventos');
+const credenciado = exigirCredenciamento(['credenciado'], 'enviar o evento para analise');
 
 async function buscarEvento(id) {
   const [linhas] = await pool.query('select * from evento where id_evento = ?', [id]);
@@ -99,7 +105,7 @@ async function acharOuCriarLocal(local) {
   return r.insertId;
 }
 
-router.post('/', autenticar, permitir('organizador'), async (req, res) => {
+router.post('/', autenticar, permitir('organizador'), credenciamentoPedido, async (req, res) => {
   const { nome, descricao, data_hora, id_categoria, local } = req.body;
 
   if (!nome || !data_hora || !id_categoria) {
@@ -202,8 +208,11 @@ router.post('/:id/fornecedores-externos', autenticar, permitir('organizador'), a
   res.status(201).json({ id_fornecedor_externo: r.insertId, nome, servico, valor: Number(valor) });
 });
 
-// requisita um servico de fornecedor credenciado e ja abre o chat entre os dois
-router.post('/:id/solicitacoes', autenticar, permitir('organizador'), async (req, res) => {
+// requisita um servico de fornecedor credenciado e ja abre o chat entre os dois.
+// Se o organizador ainda nao esta credenciado, o pedido fica retido
+// (aguardando_organizador): sem chat e sem aparecer pro fornecedor. Ele e
+// liberado quando o adm aprova o organizador (admin.js).
+router.post('/:id/solicitacoes', autenticar, permitir('organizador'), credenciamentoPedido, async (req, res) => {
   const evento = await eventoDoOrganizador(req, res);
   if (!evento) return;
 
@@ -223,28 +232,31 @@ router.post('/:id/solicitacoes', autenticar, permitir('organizador'), async (req
     return res.status(409).json({ erro: 'esse fornecedor ainda nao esta credenciado' });
   }
 
+  const retida = (await situacaoDe(req.usuario)) !== 'credenciado';
+
   const conexao = await pool.getConnection();
   try {
     await conexao.beginTransaction();
 
     const [sol] = await conexao.query(
-      'insert into solicitacao_servico (id_evento, id_servico, mensagem, valor_proposto) values (?, ?, ?, ?)',
-      [evento.id_evento, id_servico, mensagem || null, valor_proposto ?? servico.preco],
+      `insert into solicitacao_servico (id_evento, id_servico, mensagem, valor_proposto, status)
+       values (?, ?, ?, ?, ?)`,
+      [evento.id_evento, id_servico, mensagem || null, valor_proposto ?? servico.preco,
+        retida ? 'aguardando_organizador' : 'em_analise'],
     );
-    const [chat] = await conexao.query('insert into chat (id_solicitacao) values (?)', [sol.insertId]);
-    await conexao.query(
-      'insert into chat_participante (id_chat, id_usuario) values (?, ?), (?, ?)',
-      [chat.insertId, req.usuario.id, chat.insertId, servico.id_usuario],
-    );
-    if (mensagem) {
-      await conexao.query(
-        'insert into mensagem (id_chat, id_remetente, texto_mensagem) values (?, ?, ?)',
-        [chat.insertId, req.usuario.id, mensagem],
-      );
-    }
+    const idChat = retida ? null : await abrirChatDaSolicitacao(conexao, {
+      id_solicitacao: sol.insertId,
+      id_organizador: req.usuario.id,
+      id_usuario_fornecedor: servico.id_usuario,
+      mensagem,
+    });
 
     await conexao.commit();
-    res.status(201).json({ id_solicitacao: sol.insertId, id_chat: chat.insertId, status: 'em_analise' });
+    res.status(201).json({
+      id_solicitacao: sol.insertId,
+      id_chat: idChat,
+      status: retida ? 'aguardando_organizador' : 'em_analise',
+    });
   } catch (e) {
     await conexao.rollback();
     if (e.code === pool.DUPLICADO) {
@@ -257,7 +269,7 @@ router.post('/:id/solicitacoes', autenticar, permitir('organizador'), async (req
 });
 
 // manda o evento pro adm analisar
-router.post('/:id/enviar-analise', autenticar, permitir('organizador'), async (req, res) => {
+router.post('/:id/enviar-analise', autenticar, permitir('organizador'), credenciado, async (req, res) => {
   const evento = await eventoDoOrganizador(req, res);
   if (!evento) return;
 

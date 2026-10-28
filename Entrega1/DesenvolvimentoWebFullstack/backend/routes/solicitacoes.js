@@ -4,7 +4,8 @@ const { autenticar, permitir } = require('../middleware/auth');
 
 const router = express.Router();
 
-// o que chegou pro fornecedor logado
+// o que chegou pro fornecedor logado. Pedido retido (organizador ainda nao
+// credenciado) nao aparece ate o adm aprovar o organizador.
 router.get('/', autenticar, permitir('fornecedor'), async (req, res) => {
   const [linhas] = await pool.query(
     `select ss.*, s.nome as servico, e.nome as evento, e.data_hora,
@@ -15,7 +16,7 @@ router.get('/', autenticar, permitir('fornecedor'), async (req, res) => {
        join evento e on e.id_evento = ss.id_evento
        join usuario u on u.id_usuario = e.id_organizador
        left join chat ch on ch.id_solicitacao = ss.id_solicitacao
-      where f.id_usuario = ?
+      where f.id_usuario = ? and ss.status <> 'aguardando_organizador'
       order by ss.criado_em desc`,
     [req.usuario.id],
   );
@@ -27,7 +28,7 @@ async function responder(req, res, aceita) {
     `select ss.* from solicitacao_servico ss
        join servico s on s.id_servico = ss.id_servico
        join fornecedor f on f.id_fornecedor = s.id_fornecedor
-      where ss.id_solicitacao = ? and f.id_usuario = ?`,
+      where ss.id_solicitacao = ? and f.id_usuario = ? and ss.status <> 'aguardando_organizador'`,
     [req.params.id, req.usuario.id],
   );
   const solicitacao = linhas[0];

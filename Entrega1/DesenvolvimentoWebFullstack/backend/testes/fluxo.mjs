@@ -18,6 +18,19 @@ async function api(metodo, rota, corpo, token) {
   return { status: r.status, body: await r.json().catch(() => ({})) }
 }
 
+// gera um CNPJ valido (com os digitos verificadores certos) diferente a cada rodada
+function cnpjValido(base12) {
+  const dv = (b) => {
+    let soma = 0
+    let peso = b.length - 7
+    for (const d of b) { soma += Number(d) * peso; peso = peso === 2 ? 9 : peso - 1 }
+    const r = soma % 11
+    return r < 2 ? 0 : 11 - r
+  }
+  const d1 = dv(base12)
+  return base12 + d1 + dv(base12 + d1)
+}
+
 const n = Date.now()
 const emails = {}
 let seq = 0
@@ -70,22 +83,58 @@ check('rota de adm exige token', semToken.status === 401)
 const cat = await api('POST', '/categorias', { nome: 'Show ' + n }, adm)
 check('adm cria categoria', cat.status === 201)
 
-// 4. fornecedor: perfil, servico, credenciamento
-await api('POST', '/fornecedores/perfil', { nome_empresa: 'Gabisom', cnpj: String(n).slice(-14) }, forn)
-const semServico = await api('POST', '/fornecedores/credenciamento', null, forn)
-check('credenciamento barrado sem servico', semServico.status === 400, semServico.body.erro)
-const serv = await api('POST', '/fornecedores/servicos', { nome: 'Som e luz', preco: 15000 }, forn)
-const cred = await api('POST', '/fornecedores/credenciamento', null, forn)
+// 4. credenciamento do fornecedor: pede antes, depois cadastra servicos
+const servAntes = await api('POST', '/fornecedores/servicos', { nome: 'Som e luz', preco: 15000 }, forn)
+check('fornecedor sem credenciamento nao cadastra servico', servAntes.status === 403 && servAntes.body.codigo === 'credenciamento_necessario', servAntes.body.erro)
+const meuAntes = await api('GET', '/credenciamento/meu', null, forn)
+check('pop-up le a situacao nao_solicitado', meuAntes.body.situacao === 'nao_solicitado' && meuAntes.body.perfil === 'fornecedor')
+
+const dadosForn = {
+  nome_empresa: 'Gabisom', razao_social: 'Gabisom Eventos Ltda', cnpj: cnpjValido(String(n).slice(-12)),
+  cidade: 'Sao Paulo', estado: 'sp', telefone: '(11) 98888-7777', categorias: ['iluminacao', 'estrutura'],
+  descricao: 'Som, luz e palco para shows', declaracao: true,
+}
+const cnpjRuim = await api('POST', '/credenciamento', { ...dadosForn, cnpj: '11.111.111/1111-11' }, forn)
+check('CNPJ invalido da 400 com o campo', cnpjRuim.status === 400 && !!cnpjRuim.body.campos?.cnpj, cnpjRuim.body.campos?.cnpj)
+const semDeclaracao = await api('POST', '/credenciamento', { ...dadosForn, declaracao: false, estado: 'XX' }, forn)
+check('sem declaracao e UF errada da 400 por campo', semDeclaracao.status === 400 && !!semDeclaracao.body.campos?.declaracao && !!semDeclaracao.body.campos?.estado)
+const cred = await api('POST', '/credenciamento', dadosForn, forn)
 check('fornecedor pede credenciamento', cred.status === 201)
+const credDeNovo = await api('POST', '/credenciamento', dadosForn, forn)
+check('nao pede de novo enquanto esta em analise', credDeNovo.status === 409)
+const meuForn = await api('GET', '/credenciamento/meu', null, forn)
+check('pop-up mostra em analise com os dados', meuForn.body.situacao === 'em_analise' && meuForn.body.dados?.categorias?.length === 2 && meuForn.body.dados?.estado === 'SP')
+
+const serv = await api('POST', '/fornecedores/servicos', { nome: 'Som e luz', preco: 15000 }, forn)
+check('em analise ja cadastra servico', serv.status === 201)
 
 const vitrineAntes = await api('GET', '/fornecedores')
 check('fornecedor em analise nao aparece na vitrine', vitrineAntes.body.length === 0)
 
-const filaCred = await api('GET', '/admin/credenciamentos', null, adm)
-check('adm ve a fila de credenciamento', filaCred.body.length === 1, `${filaCred.body.length}`)
+const filaCred = await api('GET', '/admin/credenciamentos?perfil=fornecedor', null, adm)
+check('adm ve a fila de fornecedores com os dados', filaCred.body.length === 1 && filaCred.body[0].razao_social === 'Gabisom Eventos Ltda', `${filaCred.body.length}`)
 await api('POST', `/admin/credenciamentos/${cred.body.id_credenciamento}/aprovar`, {}, adm)
 const vitrineDepois = await api('GET', '/fornecedores')
 check('credenciado aparece na vitrine', vitrineDepois.body.length === 1)
+const historico = await api('GET', '/admin/credenciamentos?perfil=fornecedor&status=aprovado', null, adm)
+check('fica registrado quem aprovou e quando', historico.body[0]?.analisado_por === 'Administrador' && !!historico.body[0]?.revisado_em)
+
+// 4b. credenciamento do organizador
+const semCred = await api('POST', '/eventos', {
+  nome: 'Antes do credenciamento', data_hora: '2027-03-14 20:00:00', id_categoria: cat.body.id_categoria,
+  local: { nome: 'Arena TT', cidade: 'Sao Paulo', estado: 'SP' },
+}, org)
+check('organizador sem credenciamento nao cria evento', semCred.status === 403 && semCred.body.codigo === 'credenciamento_necessario', semCred.body.erro)
+
+const dadosOrg = {
+  tipo_pessoa: 'fisica', nome_organizacao: 'Lucas Producoes', cidade: 'Sao Paulo', estado: 'SP',
+  telefone: '11977776666', categorias: [cat.body.id_categoria], descricao: 'Organizo shows ha 3 anos',
+  publico_medio: 800, declaracao: true,
+}
+const juridicaSemCnpj = await api('POST', '/credenciamento', { ...dadosOrg, tipo_pessoa: 'juridica' }, org)
+check('organizador pessoa juridica precisa de CNPJ e razao social', juridicaSemCnpj.status === 400 && !!juridicaSemCnpj.body.campos?.cnpj && !!juridicaSemCnpj.body.campos?.razao_social)
+const credOrg = await api('POST', '/credenciamento', dadosOrg, org)
+check('organizador pede credenciamento', credOrg.status === 201, credOrg.body.erro)
 
 // 5. evento + lotes + fornecedor externo
 const semLocal = await api('POST', '/eventos', {
@@ -118,8 +167,8 @@ check('mesmo local nao duplica', ev2.status === 201 && locaisDepois === locaisAn
   `${locaisAntes} -> ${locaisDepois}`)
 const evId = ev.body.id_evento
 
-const semLote = await api('POST', `/eventos/${evId}/enviar-analise`, {}, org)
-check('evento sem lote nao vai pra analise', semLote.status === 400, semLote.body.erro)
+const emAnalise = await api('POST', `/eventos/${evId}/enviar-analise`, {}, org)
+check('organizador em analise nao envia evento pro adm', emAnalise.status === 403 && emAnalise.body.codigo === 'credenciamento_necessario', emAnalise.body.erro)
 
 // datas no formato "AAAA-MM-DD hh:mm:ss" que o banco aceita
 const dia = 86400000
@@ -169,15 +218,40 @@ const invasao = await api('POST', `/eventos/${evId}/lotes`, { nome: 'x', preco: 
 check('organizador nao mexe em evento alheio', invasao.status === 403)
 
 // 6. solicitacao de servico + chat
+// organizador ainda em analise: o pedido fica retido
 const sol = await api('POST', `/eventos/${evId}/solicitacoes`, {
   id_servico: serv.body.id_servico, mensagem: 'Topa fechar?', valor_proposto: 14000,
 }, org)
-check('solicitacao cria chat junto', sol.status === 201 && !!sol.body.id_chat)
+check('pedido de organizador em analise fica retido', sol.status === 201 && sol.body.status === 'aguardando_organizador' && !sol.body.id_chat)
 const dup = await api('POST', `/eventos/${evId}/solicitacoes`, { id_servico: serv.body.id_servico }, org)
 check('nao solicita o mesmo servico 2x', dup.status === 409)
 
+const inboxRetido = await api('GET', '/solicitacoes', null, forn)
+check('fornecedor nao ve o pedido retido', inboxRetido.body.length === 0)
+const aceitarRetido = await api('POST', `/solicitacoes/${sol.body.id_solicitacao}/aceitar`, {}, forn)
+check('fornecedor nao responde pedido retido', aceitarRetido.status === 404)
+
+const filaOrg = await api('GET', '/admin/credenciamentos?perfil=organizador', null, adm)
+check('adm ve a fila de organizadores', filaOrg.body.length === 1 && filaOrg.body[0].nome_organizacao === 'Lucas Producoes' && filaOrg.body[0].categorias.length === 1)
+const recusaSemMotivo = await api('POST', `/admin/credenciamentos/${credOrg.body.id_credenciamento}/recusar`, {}, adm)
+check('recusa sem motivo da 400', recusaSemMotivo.status === 400)
+const aprovOrg = await api('POST', `/admin/credenciamentos/${credOrg.body.id_credenciamento}/aprovar`, {}, adm)
+check('aprovar o organizador libera o pedido retido', aprovOrg.body.solicitacoes_liberadas === 1, JSON.stringify(aprovOrg.body))
+
 const inbox = await api('GET', '/solicitacoes', null, forn)
-check('fornecedor ve a solicitacao', inbox.body.length === 1)
+check('fornecedor ve a solicitacao com chat', inbox.body.length === 1 && !!inbox.body[0].id_chat && inbox.body[0].status === 'em_analise')
+sol.body.id_chat = inbox.body[0].id_chat
+
+const semLote = await api('POST', `/eventos/${ev2.body.id_evento}/enviar-analise`, {}, org)
+check('evento sem lote nao vai pra analise', semLote.status === 400, semLote.body.erro)
+
+// recusa com motivo e reenvio
+const credIntruso = await api('POST', '/credenciamento', { ...dadosOrg, nome_organizacao: 'Intruso Eventos' }, org2)
+await api('POST', `/admin/credenciamentos/${credIntruso.body.id_credenciamento}/recusar`, { observacao: 'Descreva melhor sua experiencia' }, adm)
+const meuRecusado = await api('GET', '/credenciamento/meu', null, org2)
+check('recusado ve o motivo', meuRecusado.body.situacao === 'recusado' && meuRecusado.body.motivo_recusa === 'Descreva melhor sua experiencia')
+const reenvio = await api('POST', '/credenciamento', { ...dadosOrg, nome_organizacao: 'Intruso Eventos', descricao: 'Fiz 10 festas universitarias' }, org2)
+check('recusado corrige e reenvia', reenvio.status === 201)
 await api('POST', `/solicitacoes/${sol.body.id_solicitacao}/aceitar`, {}, forn)
 
 await api('POST', `/chats/${sol.body.id_chat}/mensagens`, { texto: 'Fechado, mando o contrato' }, forn)

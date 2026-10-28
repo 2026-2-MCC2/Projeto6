@@ -37,6 +37,7 @@ const ROTULOS = {
   aprovado: 'Aprovado',
   recusado: 'Recusada',
   aceita: 'Aceita',
+  aguardando_organizador: 'Aguardando credenciamento',
   recusada: 'Recusada',
   nao_solicitado: 'Pendente',
   credenciado: 'Aprovado',
@@ -47,4 +48,17 @@ const ROTULOS = {
 
 export function rotulo(status) {
   return ROTULOS[status] ?? status
+}
+
+export function cnpj(valor) {
+  const d = String(valor || '').replace(/\D/g, '')
+  if (d.length !== 14) return valor || '—'
+  return d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+}
+
+export function telefone(valor) {
+  const d = String(valor || '').replace(/\D/g, '')
+  if (d.length === 11) return d.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3')
+  if (d.length === 10) return d.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3')
+  return valor || '—'
 }

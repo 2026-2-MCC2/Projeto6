@@ -9,7 +9,7 @@ export default function Overview({ profile, onNavigate }) {
   const { dados, carregando, erro, recarregar } = useRecurso(async () => {
     const [fila, creds, publicos, vitrine] = await Promise.all([
       admin.eventos('em_analise'),
-      admin.credenciamentos('em_analise'),
+      admin.credenciamentosNaFila(),
       eventos.publicos(),
       fornecedores.vitrine(),
     ])
@@ -81,9 +81,9 @@ export default function Overview({ profile, onNavigate }) {
             {dados.creds.slice(0, 5).map((c) => (
               <div key={c.id_credenciamento}>
                 <span className="event-name">
-                  <span>{c.nome_empresa}</span>
+                  <span>{c.nome_organizacao || c.nome_empresa}</span>
                   <small>
-                    {c.total_servicos} serviço(s) · {c.nome}
+                    {c.perfil === 'organizador' ? 'Organizador' : 'Fornecedor'} · {c.nome}
                   </small>
                 </span>
                 <button className="btn-link" onClick={() => onNavigate('requests')}>

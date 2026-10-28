@@ -9,7 +9,7 @@ import { useApp } from '../state/useApp'
 
 async function buscarContadores(papel) {
   if (papel === 'admin') {
-    const [eventos, creds] = await Promise.all([admin.eventos(), admin.credenciamentos()])
+    const [eventos, creds] = await Promise.all([admin.eventos(), admin.credenciamentosNaFila()])
     return { events: eventos.length, requests: creds.length }
   }
 

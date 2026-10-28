@@ -27,10 +27,14 @@ export const fornecedores = {
   vitrine: () => get('/fornecedores'),
   servicosDe: (id) => get(`/fornecedores/${id}/servicos`),
   meuPerfil: () => get('/fornecedores/perfil'),
-  criarPerfil: (dados) => post('/fornecedores/perfil', dados),
   meusServicos: () => get('/fornecedores/meus-servicos'),
   criarServico: (dados) => post('/fornecedores/servicos', dados),
-  pedirCredenciamento: () => post('/fornecedores/credenciamento', {}),
+}
+
+// organizador e fornecedor: situacao e envio do credenciamento
+export const credenciamento = {
+  meu: () => get('/credenciamento/meu'),
+  enviar: (dados) => post('/credenciamento', dados),
 }
 
 export const solicitacoes = {
@@ -64,7 +68,17 @@ export const admin = {
   eventos: (status = 'em_analise') => get(`/admin/eventos?status=${status}`),
   aprovarEvento: (id) => post(`/admin/eventos/${id}/aprovar`, {}),
   recusarEvento: (id, motivo) => post(`/admin/eventos/${id}/recusar`, { motivo }),
-  credenciamentos: (status = 'em_analise') => get(`/admin/credenciamentos?status=${status}`),
+  // perfil: 'organizador' ou 'fornecedor'
+  credenciamentos: (perfil, status = 'em_analise') =>
+    get(`/admin/credenciamentos?perfil=${perfil}&status=${status}`),
+  // os dois perfis juntos, para os contadores
+  credenciamentosNaFila: async () => {
+    const [orgs, forns] = await Promise.all([
+      get('/admin/credenciamentos?perfil=organizador'),
+      get('/admin/credenciamentos?perfil=fornecedor'),
+    ])
+    return [...orgs, ...forns]
+  },
   aprovarCredenciamento: (id) => post(`/admin/credenciamentos/${id}/aprovar`, {}),
   recusarCredenciamento: (id, observacao) =>
     post(`/admin/credenciamentos/${id}/recusar`, { observacao }),

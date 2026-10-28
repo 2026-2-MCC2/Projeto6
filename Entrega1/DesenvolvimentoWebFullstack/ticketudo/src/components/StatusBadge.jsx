@@ -1,5 +1,6 @@
 const tones = {
   'Em análise': 'is-waiting',
+  'Aguardando credenciamento': 'is-waiting',
   Pendente: 'is-waiting',
   'Proposta enviada': 'is-waiting',
   Aceita: 'is-positive',
