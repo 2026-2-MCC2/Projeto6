@@ -60,9 +60,9 @@ na raiz): o site vira arquivos estaticos e o Express roda como funcao em
 pooler* do Supabase, porta 6543) e `JWT_SECRET` em Settings > Environment
 Variables. Detalhes no README da raiz.
 
-O seed ja cria o administrador:
-`admin@trocaticket.com.br` / `admin123`. A rota de cadastro **nao** aceita
-`tipo: adm`, entao administrador so entra pelo seed ou direto no banco.
+O seed ja cria o administrador do banco local:
+`admin@trocaticket.com.br` / `admin123` (so vale no banco local; no site
+publicado a senha foi trocada). A rota de cadastro **nao** aceita `tipo: adm`, entao administrador so entra pelo seed ou direto no banco.
 
 ## Perfis
 

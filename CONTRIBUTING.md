@@ -69,8 +69,8 @@ npm install
 npm run dev
 ```
 
-Abra `http://localhost:5173` e teste o que você mudou. Login do administrador:
-`admin@trocaticket.com.br` / `admin123`.
+Abra `http://localhost:5173` e teste o que você mudou. Login do administrador
+**só no banco local**: `admin@trocaticket.com.br` / `admin123`. No site publicado a senha é outra; peça ao Caio.
 
 Antes de fazer commit, rode também:
 
