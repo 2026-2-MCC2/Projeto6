@@ -2,7 +2,7 @@ export const profiles = {
   organizer: {
     label: 'Organizador',
     tagline: 'Produtor de eventos',
-    pitch: 'Cadastre seus eventos, monte os lotes e contrate fornecedores credenciados.',
+    pitch: 'Cadastre seus eventos, contrate fornecedores credenciados e acompanhe o custo antes de enviar para análise.',
     icon: 'ticket',
     theme: 'role-organizer',
     menu: [
@@ -15,7 +15,7 @@ export const profiles = {
   supplier: {
     label: 'Fornecedor',
     tagline: 'Parceiro credenciado',
-    pitch: 'Cadastre seus serviços, peça credenciamento e atenda os organizadores.',
+    pitch: 'Cadastre seus serviços, peça credenciamento e aceite ou recuse os pedidos dos organizadores.',
     icon: 'briefcase',
     theme: 'role-supplier',
     menu: [
@@ -27,7 +27,7 @@ export const profiles = {
   admin: {
     label: 'Administrador',
     tagline: 'Gestão central',
-    pitch: 'Analise eventos e credenciamentos antes de liberar na plataforma.',
+    pitch: 'Aprove credenciamentos e eventos, confira o custo com fornecedores e converse com os usuários.',
     icon: 'shield',
     theme: 'role-admin',
     menu: [
