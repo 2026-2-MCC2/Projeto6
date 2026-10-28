@@ -107,24 +107,6 @@
   font-weight: 700;
 }
 
-.form-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 2px 0 22px;
-}
-
-.form-row label {
-  color: #6d6d6d;
-  font-size: 10px;
-}
-
-.login-divider {
-  margin: 25px 0 16px;
-  color: var(--text-dim);
-  font-size: 10px;
-  text-align: center;
-}
 
 .role-options {
   display: grid;

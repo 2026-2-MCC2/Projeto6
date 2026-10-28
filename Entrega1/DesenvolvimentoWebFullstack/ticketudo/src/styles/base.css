@@ -50,7 +50,6 @@ button {
 
 .btn-primary,
 .btn-secondary,
-.btn-light,
 .btn-approve {
   padding: 12px 17px;
   border: 0;
@@ -97,11 +96,6 @@ button {
   transform: translateY(1px);
 }
 
-.btn-light {
-  background: var(--acao);
-  color: var(--acao-texto);
-}
-
 .btn-approve {
   padding: 8px 12px;
   background: var(--positive-bg);
@@ -124,13 +118,4 @@ button {
 
 .btn-block {
   width: 100%;
-}
-
-.btn-soft {
-  padding: 7px 10px;
-  border: 0;
-  border-radius: 4px;
-  background: var(--surface-hover);
-  color: var(--blue-light);
-  font-size: 10px;
 }
