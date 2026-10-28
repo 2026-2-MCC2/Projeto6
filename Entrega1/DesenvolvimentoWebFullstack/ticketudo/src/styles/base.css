@@ -1,4 +1,3 @@
-
 * {
   box-sizing: border-box;
 }
@@ -51,7 +50,6 @@ button {
 
 .btn-primary,
 .btn-secondary,
-.btn-light,
 .btn-approve {
   padding: 12px 17px;
   border: 0;
