@@ -65,13 +65,13 @@ export default function Login({ onBack }) {
       const resposta = cadastro
         ? await auth.cadastro({
             nome: form.nome.trim(),
-            email: form.email.trim(),
+            email: form.email.trim().toLowerCase(),
             cpf: soDigitos(form.cpf),
             telefone: form.telefone.trim() || undefined,
             senha: form.senha,
             tipo: TIPO_POR_PAPEL[papel],
           })
-        : await auth.login(form.email.trim(), form.senha)
+        : await auth.login(form.email.trim().toLowerCase(), form.senha)
 
       guardarToken(resposta.token)
       dispatch({
@@ -186,6 +186,9 @@ export default function Login({ onBack }) {
             <input
               id="login-email"
               type="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               value={form.email}
               onChange={(e) => atualizar('email', e.target.value)}
               placeholder="voce@suaempresa.com.br"

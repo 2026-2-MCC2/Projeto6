@@ -34,7 +34,9 @@ CREATE TABLE usuario (
   telefone   VARCHAR(20),
   tipo       VARCHAR(30)
                 CHECK (tipo IN ('comprador','organizador','fornecedor','adm')) NOT NULL DEFAULT 'comprador',
-  criado_em  TIMESTAMP NOT NULL DEFAULT current_timestamp
+  criado_em  TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  -- e-mail sempre em minusculas (o login compara sem diferenciar maiusculas)
+  CONSTRAINT ck_usuario_email_minusculo CHECK (email = lower(email))
 );
 
 -- --------------------------------------------------------

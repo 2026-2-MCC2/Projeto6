@@ -49,6 +49,14 @@ const login = await api('POST', '/auth/login', { email: emails['Lucas Organizado
 check('login devolve token', !!login.body.token)
 const senhaErrada = await api('POST', '/auth/login', { email: emails['Lucas Organizador'], senha: 'errada' })
 check('senha errada e rejeitada', senhaErrada.status === 401)
+const maiusc = emails['Lucas Organizador'].toUpperCase()
+const loginMaiusc = await api('POST', '/auth/login', { email: '  ' + maiusc + '  ', senha: 'senha123' })
+check('login aceita o e-mail com maiusculas e espacos', !!loginMaiusc.body.token)
+const emailMisto = `Fulano.${Date.now()}@TT.com`
+const cadMisto = await api('POST', '/auth/cadastro', { nome: 'Fulano', email: emailMisto, cpf: String(Date.now() + 555).slice(-11), senha: 'senha123' })
+check('cadastro grava o e-mail em minusculas', cadMisto.body.usuario?.email === emailMisto.toLowerCase(), cadMisto.body.usuario?.email)
+const cadRepetido = await api('POST', '/auth/cadastro', { nome: 'Outro', email: emailMisto.toUpperCase(), cpf: String(Date.now() + 777).slice(-11), senha: 'senha123' })
+check('nao cria conta repetida mudando so as maiusculas', cadRepetido.status === 409, cadRepetido.body.erro)
 const eu = await api('GET', '/auth/eu', null, org)
 check('/auth/eu devolve o usuario logado', eu.body.tipo === 'organizador', eu.body.nome)
 
