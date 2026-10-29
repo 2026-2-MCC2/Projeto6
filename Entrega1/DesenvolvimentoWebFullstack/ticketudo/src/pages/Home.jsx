@@ -2,33 +2,33 @@ import Contador from '../components/Contador'
 import Icon from '../components/Icon'
 import Logo from '../components/Logo'
 import Revela from '../components/Revela'
-import { guarantees, platformStats, testimonials } from '../data/paginaInicial'
-import { profiles, roleOrder } from '../data/profiles'
+import { destaques, guarantees, testimonials } from '../data/paginaInicial'
+import { profiles, todosOsPapeis } from '../data/profiles'
 
 const passos = [
   {
     numero: '01',
-    titulo: 'O organizador publica',
+    titulo: 'O cadastro é aprovado',
     texto:
-      'Cadastra o evento, monta os lotes com preço, quantidade e o teto de revenda, e envia para análise.',
+      'Organizadores e fornecedores criam a conta e enviam o credenciamento. O administrador analisa e aprova ou recusa, com o motivo.',
   },
   {
     numero: '02',
-    titulo: 'A plataforma confere',
+    titulo: 'O organizador monta o evento',
     texto:
-      'Um administrador revisa os lotes, o custo com fornecedores e a documentação antes de liberar a venda.',
+      'Cadastra o evento e o local, registra os fornecedores próprios com o valor de cada serviço e acompanha o custo total.',
   },
   {
     numero: '03',
-    titulo: 'A venda abre',
+    titulo: 'Os fornecedores respondem',
     texto:
-      'Cada ingresso nasce com código único e nome do dono. O pagamento fica retido até a transferência se concluir.',
+      'O organizador escolhe fornecedores credenciados e pede um serviço, com o valor que propõe. O fornecedor aceita ou recusa, e a conversa acontece no chat.',
   },
   {
     numero: '04',
-    titulo: 'A revenda respeita o teto',
+    titulo: 'O administrador revisa',
     texto:
-      'Quem comprou pode revender, mas nunca acima do limite que o organizador definiu. Sem ágio, sem cambista.',
+      'O evento vai para análise. O administrador confere o custo com fornecedores e aprova ou recusa, informando o motivo. Só eventos aprovados são liberados.',
   },
 ]
 
@@ -56,25 +56,25 @@ export default function Home({ onEnter }) {
             <Revela>
               <p className="pilula">
                 <i aria-hidden="true" />
-                Custódia protegida e transferência verificada
+                Planejamento de eventos com fornecedores credenciados
               </p>
             </Revela>
 
             <Revela atraso={80}>
               <h1>
-                <span>O dinheiro só sai</span>
-                <span>da custódia quando</span>
+                <span>Planeje o evento,</span>
+                <span>contrate fornecedores</span>
                 <span>
-                  <em>você entra</em> no evento.
+                  e <em>acompanhe o custo</em>.
                 </span>
               </h1>
             </Revela>
 
             <Revela atraso={160}>
               <p className="lead">
-                A TrocaTicket concentra compra, venda e repasse de ingressos em um ambiente com
-                identidade verificada, ingresso validado e pagamento retido até a confirmação da
-                transferência.
+                A TrocaTicket reúne organizador, fornecedores credenciados e administrador em um só
+                lugar. Você cadastra o evento, pede serviços, conversa pelo chat e vê o custo antes
+                de enviar o evento para análise.
               </p>
             </Revela>
 
@@ -91,25 +91,15 @@ export default function Home({ onEnter }) {
 
             <Revela atraso={320}>
               <dl className="hero-numeros">
-                <div>
-                  <dt>Ingressos validados</dt>
-                  <dd>
-                    <Contador valor={platformStats.validated} casas={1} sufixo="%" />
-                  </dd>
-                  <span>por biometria ou token dinâmico</span>
-                </div>
-                <div>
-                  <dt>Organizadores</dt>
-                  <dd>
-                    <Contador valor={platformStats.organizers} />
-                  </dd>
-                  <span>produtoras credenciadas</span>
-                </div>
-                <div>
-                  <dt>Liquidação</dt>
-                  <dd>{platformStats.settlement}</dd>
-                  <span>após a confirmação de entrada</span>
-                </div>
+                {destaques.map((item) => (
+                  <div key={item.id}>
+                    <dt>{item.rotulo}</dt>
+                    <dd>
+                      {typeof item.valor === 'number' ? <Contador valor={item.valor} /> : item.valor}
+                    </dd>
+                    <span>{item.texto}</span>
+                  </div>
+                ))}
               </dl>
             </Revela>
           </div>
@@ -120,10 +110,10 @@ export default function Home({ onEnter }) {
         <div className="wrap">
           <Revela className="secao-topo">
             <p className="eyebrow">Como funciona</p>
-            <h2>Quatro etapas entre o anúncio e a catraca</h2>
+            <h2>Quatro etapas entre o cadastro e o evento aprovado</h2>
             <p className="lead">
-              Nenhum ingresso entra à venda sem passar por análise, e nenhum pagamento é liberado
-              antes da transferência se concluir.
+              Nenhum evento é liberado sem a revisão do administrador, e só fornecedores
+              credenciados aparecem para o organizador.
             </p>
           </Revela>
 
@@ -142,8 +132,8 @@ export default function Home({ onEnter }) {
       <section className="site-secao secao-alt" id="garantias">
         <div className="wrap">
           <Revela className="secao-topo">
-            <p className="eyebrow">O que garante a negociação</p>
-            <h2>Quatro travas entre o anúncio e o golpe</h2>
+            <p className="eyebrow">Regras da plataforma</p>
+            <h2>Quatro regras que valem para todo mundo</h2>
           </Revela>
 
           <div className="cartoes">
@@ -174,7 +164,7 @@ export default function Home({ onEnter }) {
           </Revela>
 
           <div className="cartoes cartoes-portal">
-            {roleOrder.map((role, i) => {
+            {todosOsPapeis.map((role, i) => {
               const profile = profiles[role]
 
               return (
@@ -233,7 +223,7 @@ export default function Home({ onEnter }) {
           <Revela>
             <h2>Pronto para entrar?</h2>
             <p className="lead">
-              Crie sua conta de organizador ou fornecedor em menos de um minuto.
+              Crie sua conta de organizador ou fornecedor e envie o credenciamento para análise.
             </p>
             <button className="btn-primary" onClick={onEnter}>
               Acessar plataforma <b>→</b>
@@ -247,7 +237,7 @@ export default function Home({ onEnter }) {
           <div>
             <Logo />
             <p>
-              Infraestrutura de liquidação, custódia e troca de ingressos nominais.
+              Plataforma para planejar eventos com fornecedores credenciados.
             </p>
           </div>
           <p className="site-footer-nota">
