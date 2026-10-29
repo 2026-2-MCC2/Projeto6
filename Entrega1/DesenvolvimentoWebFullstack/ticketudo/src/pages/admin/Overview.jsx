@@ -62,7 +62,7 @@ export default function Overview({ profile, onNavigate }) {
                 <span className="event-name">
                   <span>{e.nome}</span>
                   <small>
-                    {e.organizador} · {dataHora(e.data_hora)}
+                    {e.organizador} · {dataHora(e.data_inicio)}
                   </small>
                 </span>
                 <button className="btn-link" onClick={() => onNavigate('events')}>

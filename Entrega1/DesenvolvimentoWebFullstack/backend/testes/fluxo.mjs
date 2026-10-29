@@ -32,6 +32,13 @@ function cnpjValido(base12) {
 }
 
 const n = Date.now()
+// periodo, publico e margem de um evento (FLX-02). inicio no formato do banco.
+const periodo = (inicio, horas = 8) => ({
+  data_inicio: inicio,
+  data_fim: new Date(new Date(inicio.replace(' ', 'T')).getTime() + horas * 3600000)
+    .toISOString().slice(0, 19).replace('T', ' '),
+  publico_minimo: 500, publico_maximo: 1000, margem_lucro: 20,
+})
 const emails = {}
 let seq = 0
 async function criar(tipo, nome) {
@@ -126,7 +133,7 @@ check('fica registrado quem aprovou e quando', aprovado?.analisado_por === 'Admi
 
 // 4b. credenciamento do organizador
 const semCred = await api('POST', '/eventos', {
-  nome: 'Antes do credenciamento', data_hora: '2027-03-14 20:00:00', id_categoria: cat.body.id_categoria,
+  nome: 'Antes do credenciamento', ...periodo('2027-03-14 20:00:00'), id_categoria: cat.body.id_categoria,
   local: { nome: 'Arena TT', cidade: 'Sao Paulo', estado: 'SP' },
 }, org)
 check('organizador sem credenciamento nao cria evento', semCred.status === 403 && semCred.body.codigo === 'credenciamento_necessario', semCred.body.erro)
@@ -143,18 +150,18 @@ check('organizador pede credenciamento', credOrg.status === 201, credOrg.body.er
 
 // 5. evento + lotes + fornecedor externo
 const semLocal = await api('POST', '/eventos', {
-  nome: 'Sem lugar', data_hora: '2027-03-14 20:00:00', id_categoria: cat.body.id_categoria,
+  nome: 'Sem lugar', ...periodo('2027-03-14 20:00:00'), id_categoria: cat.body.id_categoria,
 }, org)
 check('evento sem local e barrado', semLocal.status === 400, semLocal.body.erro)
 
 const ufRuim = await api('POST', '/eventos', {
-  nome: 'UF errada', data_hora: '2027-03-14 20:00:00', id_categoria: cat.body.id_categoria,
+  nome: 'UF errada', ...periodo('2027-03-14 20:00:00'), id_categoria: cat.body.id_categoria,
   local: { nome: 'Arena TT', cidade: 'Sao Paulo', estado: 'Sao Paulo' },
 }, org)
 check('estado com mais de 2 letras e barrado', ufRuim.status === 400, ufRuim.body.erro)
 
 const ev = await api('POST', '/eventos', {
-  nome: 'Festival Pulse', data_hora: '2027-03-14 20:00:00',
+  nome: 'Festival Pulse', ...periodo('2027-03-14 20:00:00'),
   id_categoria: cat.body.id_categoria,
   local: { nome: 'Arena TT', cidade: 'Sao Paulo', estado: 'sp', endereco: 'Rua 1, 100' },
 }, org)
@@ -163,7 +170,7 @@ check('organizador cria evento com local digitado', ev.status === 201)
 // o segundo evento no mesmo lugar reaproveita a linha em vez de duplicar
 const locaisAntes = (await api('GET', '/locais')).body.length
 const ev2 = await api('POST', '/eventos', {
-  nome: 'Outro no mesmo lugar', data_hora: '2027-04-10 20:00:00',
+  nome: 'Outro no mesmo lugar', ...periodo('2027-04-10 20:00:00'),
   id_categoria: cat.body.id_categoria,
   local: { nome: 'Arena TT', cidade: 'Sao Paulo', estado: 'SP', endereco: 'Rua 1, 100' },
 }, org)
@@ -171,6 +178,51 @@ const locaisDepois = (await api('GET', '/locais')).body.length
 check('mesmo local nao duplica', ev2.status === 201 && locaisDepois === locaisAntes,
   `${locaisAntes} -> ${locaisDepois}`)
 const evId = ev.body.id_evento
+const org2 = await criar('organizador', 'Intruso')
+
+// 5b. planejamento do evento (FLX-02) e editar/excluir (WEB-05)
+const baseEv = { nome: 'Festival Pulse', id_categoria: cat.body.id_categoria,
+  local: { nome: 'Arena TT', cidade: 'Sao Paulo', estado: 'SP', endereco: 'Rua 1, 100' } }
+const publicoRuim = await api('POST', '/eventos', { ...baseEv, ...periodo('2027-03-14 20:00:00'), publico_minimo: 900, publico_maximo: 100 }, org)
+check('publico maximo menor que o minimo da 400', publicoRuim.status === 400, publicoRuim.body.erro)
+const margemRuim = await api('POST', '/eventos', { ...baseEv, ...periodo('2027-03-14 20:00:00'), margem_lucro: 100 }, org)
+check('margem de 100% da 400', margemRuim.status === 400, margemRuim.body.erro)
+const periodoRuim = await api('POST', '/eventos', { ...baseEv, ...periodo('2027-03-14 20:00:00', -5) }, org)
+check('evento que termina antes de comecar da 400', periodoRuim.status === 400, periodoRuim.body.erro)
+
+const item1 = await api('POST', `/eventos/${evId}/itens`, { categoria: 'iluminacao', descricao: 'Iluminacao de palco', quantidade: 1, custo_estimado: 12000 }, org)
+const item2 = await api('POST', `/eventos/${evId}/itens`, { categoria: 'seguranca', descricao: 'Seguranca (20 pessoas)', quantidade: 20, custo_estimado: 8000 }, org)
+check('organizador cadastra itens de custo', item1.status === 201 && item2.status === 201, item1.body.erro)
+const itemRuim = await api('POST', `/eventos/${evId}/itens`, { categoria: 'foguete', descricao: 'x', quantidade: 0, custo_estimado: -1 }, org)
+check('item invalido da 400', itemRuim.status === 400, itemRuim.body.erro)
+const itemEdit = await api('PUT', `/eventos/${evId}/itens/${item2.body.id_item}`, { categoria: 'seguranca', descricao: 'Seguranca (25 pessoas)', quantidade: 25, custo_estimado: 10000 }, org)
+check('organizador edita item', itemEdit.status === 200 && itemEdit.body.quantidade === 25)
+const custoFiscal = await api('POST', `/eventos/${evId}/custos`, { tipo: 'fiscal', descricao: 'ISS e taxas', valor: 3000 }, org)
+const custoOp = await api('POST', `/eventos/${evId}/custos`, { tipo: 'operacional', descricao: 'Equipe de producao', valor: 4500.5 }, org)
+check('organizador cadastra outros custos', custoFiscal.status === 201 && custoOp.status === 201)
+const custoRuim = await api('POST', `/eventos/${evId}/custos`, { tipo: 'imposto', descricao: '', valor: 10 }, org)
+check('custo invalido da 400', custoRuim.status === 400)
+const plano = await api('GET', `/eventos/${evId}/planejamento`, null, org)
+check('planejamento soma itens e custos', plano.body.totais?.itens_estimado === 22000 && plano.body.totais?.custos === 7500.5,
+  JSON.stringify(plano.body.totais))
+const planoAlheio = await api('GET', `/eventos/${evId}/planejamento`, null, org2)
+const itemAlheio = await api('POST', `/eventos/${evId}/itens`, { categoria: 'comida', descricao: 'x', quantidade: 1, custo_estimado: 1 }, org2)
+check('outro organizador nao ve nem mexe no planejamento', planoAlheio.status === 403 && itemAlheio.status === 403)
+
+const editado = await api('PUT', `/eventos/${evId}`, { ...baseEv, ...periodo('2027-03-14 20:00:00', 10), publico_minimo: 600, publico_maximo: 1200, publico_esperado: 900, margem_lucro: 25 }, org)
+check('organizador edita o evento', editado.status === 200 && editado.body.publico_esperado === 900, editado.body.erro)
+const editRuim = await api('PUT', `/eventos/${evId}`, { ...baseEv, ...periodo('2027-03-14 20:00:00'), publico_minimo: 0 }, org)
+check('editar com dados invalidos da 400', editRuim.status === 400)
+const editAlheio = await api('PUT', `/eventos/${evId}`, { ...baseEv, ...periodo('2027-03-14 20:00:00') }, org2)
+const editNada = await api('PUT', '/eventos/999999', { ...baseEv, ...periodo('2027-03-14 20:00:00') }, org)
+check('editar evento alheio da 403 e inexistente 404', editAlheio.status === 403 && editNada.status === 404)
+
+const descartavel = await api('POST', '/eventos', { ...baseEv, nome: 'Vai ser excluido', ...periodo('2027-05-01 20:00:00') }, org)
+await api('POST', `/eventos/${descartavel.body.id_evento}/itens`, { categoria: 'comida', descricao: 'Buffet', quantidade: 1, custo_estimado: 500 }, org)
+const delAlheio = await api('DELETE', `/eventos/${descartavel.body.id_evento}`, null, org2)
+const del = await api('DELETE', `/eventos/${descartavel.body.id_evento}`, null, org)
+const delDeNovo = await api('DELETE', `/eventos/${descartavel.body.id_evento}`, null, org)
+check('excluir: alheio 403, dono exclui, depois 404', delAlheio.status === 403 && del.status === 200 && delDeNovo.status === 404)
 
 const emAnalise = await api('POST', `/eventos/${evId}/enviar-analise`, {}, org)
 check('organizador em analise nao envia evento pro adm', emAnalise.status === 403 && emAnalise.body.codigo === 'credenciamento_necessario', emAnalise.body.erro)
@@ -218,7 +270,6 @@ check('setores diferentes convivem', loteFuturo.status === 201 && loteCamarote.s
 await api('POST', `/eventos/${evId}/fornecedores-externos`, { nome: 'Buffet do Ze', servico: 'Comida', valor: 5000 }, org)
 
 // outro organizador nao mexe nesse evento
-const org2 = await criar('organizador', 'Intruso')
 const invasao = await api('POST', `/eventos/${evId}/lotes`, { nome: 'x', preco: 1, quantidade: 1 }, org2)
 check('organizador nao mexe em evento alheio', invasao.status === 403)
 
@@ -248,8 +299,8 @@ const inbox = await api('GET', '/solicitacoes', null, forn)
 check('fornecedor ve a solicitacao com chat', inbox.body.length === 1 && !!inbox.body[0].id_chat && inbox.body[0].status === 'em_analise')
 sol.body.id_chat = inbox.body[0].id_chat
 
-const semLote = await api('POST', `/eventos/${ev2.body.id_evento}/enviar-analise`, {}, org)
-check('evento sem lote nao vai pra analise', semLote.status === 400, semLote.body.erro)
+const semItem = await api('POST', `/eventos/${ev2.body.id_evento}/enviar-analise`, {}, org)
+check('evento sem item de custo nao vai pra analise', semItem.status === 400, semItem.body.erro)
 
 // recusa com motivo e reenvio
 const credIntruso = await api('POST', '/credenciamento', { ...dadosOrg, nome_organizacao: 'Intruso Eventos' }, org2)

@@ -8,7 +8,7 @@ const router = express.Router();
 // credenciado) nao aparece ate o adm aprovar o organizador.
 router.get('/', autenticar, permitir('fornecedor'), async (req, res) => {
   const [linhas] = await pool.query(
-    `select ss.*, s.nome as servico, e.nome as evento, e.data_hora,
+    `select ss.*, s.nome as servico, e.nome as evento, e.data_inicio,
             u.nome as organizador, ch.id_chat
        from solicitacao_servico ss
        join servico s on s.id_servico = ss.id_servico

@@ -21,7 +21,7 @@ export default function Overview({ profile, onNavigate }) {
       <PageHeading
         eyebrow={profile.tagline}
         title="Visão geral"
-        description="Seus eventos e o que falta para eles entrarem à venda."
+        description="Seus eventos e em que etapa cada um está."
       >
         <button className="btn-primary" onClick={() => onNavigate('new')}>
           Novo evento
@@ -31,7 +31,7 @@ export default function Overview({ profile, onNavigate }) {
       <div className="stat-grid">
         <StatCard label="Rascunhos" value={porStatus('rascunho')} note="ainda não enviados" icon="file" />
         <StatCard label="Em análise" value={porStatus('em_analise')} note="com o administrador" icon="check" />
-        <StatCard label="Aprovados" value={porStatus('aprovado')} note="ingressos à venda" icon="ticket" />
+        <StatCard label="Aprovados" value={porStatus('aprovado')} note="liberados pelo administrador" icon="ticket" />
         <StatCard
           label="Fornecedores"
           value={dados.vitrine.length}
@@ -50,9 +50,12 @@ export default function Overview({ profile, onNavigate }) {
               <div key={e.id_evento}>
                 <span className="event-name">
                   <span>{e.nome}</span>
-                  <small>{dataHora(e.data_hora)}</small>
+                  <small>{dataHora(e.data_inicio)}</small>
                 </span>
                 <StatusBadge status={rotulo(e.status)} />
+                <button className="btn-link" onClick={() => onNavigate('evento', e.id_evento)}>
+                  Abrir
+                </button>
               </div>
             ))}
           </div>

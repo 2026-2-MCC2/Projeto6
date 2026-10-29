@@ -57,7 +57,7 @@ export default function Requests({ profile, onOpenPanel, onMudou }) {
               <dl className="request-facts">
                 <div>
                   <dt>Data do evento</dt>
-                  <dd>{dataHora(item.data_hora)}</dd>
+                  <dd>{dataHora(item.data_inicio)}</dd>
                 </div>
                 <div>
                   <dt>Valor proposto</dt>

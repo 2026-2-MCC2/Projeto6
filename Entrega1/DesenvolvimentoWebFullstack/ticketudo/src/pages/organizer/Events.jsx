@@ -1,20 +1,27 @@
+import { useState } from 'react'
 import Carregando from '../../components/Carregando'
 import EmptyState from '../../components/EmptyState'
 import PageHeading from '../../components/PageHeading'
 import StatusBadge from '../../components/StatusBadge'
 import { eventos } from '../../api'
 import { useRecurso } from '../../hooks/useRecurso'
-import { dataHora, rotulo } from '../../utils/format'
+import { numero, periodo, rotulo } from '../../utils/format'
 import { useApp } from '../../state/useApp'
+
+// so da pra editar ou excluir antes de o evento ir para o administrador
+const EDITAVEL = ['rascunho', 'recusado']
+const NAO_EXCLUI = ['em_analise', 'aprovado']
 
 export default function Events({ profile, onNavigate }) {
   const { dispatch } = useApp()
   const { dados, carregando, erro, recarregar } = useRecurso(() => eventos.meus())
+  const [excluindo, setExcluindo] = useState(null)
 
-  async function enviar(evento) {
+  async function excluir(evento) {
     try {
-      await eventos.enviarAnalise(evento.id_evento)
-      dispatch({ type: 'aviso', texto: `${evento.nome} enviado para análise.` })
+      await eventos.excluir(evento.id_evento)
+      dispatch({ type: 'aviso', texto: `${evento.nome} excluído.` })
+      setExcluindo(null)
       recarregar()
     } catch (e) {
       dispatch({ type: 'aviso', texto: e.message })
@@ -28,7 +35,7 @@ export default function Events({ profile, onNavigate }) {
       <PageHeading
         eyebrow={profile.tagline}
         title="Meus eventos"
-        description="Rascunho é só seu. Depois de aprovado, os ingressos entram à venda."
+        description="Abra um evento para montar os itens de custo, os outros custos e acompanhar o total."
       >
         <button className="btn-primary" onClick={() => onNavigate('new')}>
           Novo evento
@@ -38,7 +45,7 @@ export default function Events({ profile, onNavigate }) {
       {dados.length === 0 ? (
         <EmptyState
           title="Você ainda não criou nenhum evento"
-          description="Comece por Adicionar evento, cadastre os lotes e mande para análise."
+          description="Comece por Adicionar evento. Depois cadastre os itens de custo e envie para análise."
         />
       ) : (
         <div className="report-list">
@@ -46,31 +53,54 @@ export default function Events({ profile, onNavigate }) {
             <article className="report-card" key={evento.id_evento}>
               <header>
                 <div>
-                  <small className="eyebrow">{dataHora(evento.data_hora)}</small>
+                  <small className="eyebrow">{periodo(evento.data_inicio, evento.data_fim)}</small>
                   <h3>{evento.nome}</h3>
                 </div>
                 <StatusBadge status={rotulo(evento.status)} />
               </header>
 
-              {evento.descricao ? <p>{evento.descricao}</p> : null}
+              <p>
+                {evento.local} — {evento.cidade}/{evento.estado} · público de{' '}
+                {numero(evento.publico_minimo)} a {numero(evento.publico_maximo)} ·{' '}
+                {evento.total_itens} item(ns) de custo
+              </p>
 
-              {evento.motivo_recusa ? (
-                <p className="request-descricao">
-                  O administrador recusou: {evento.motivo_recusa}
-                </p>
+              {evento.motivo_recusa && evento.status === 'recusado' ? (
+                <p className="request-descricao">O administrador recusou: {evento.motivo_recusa}</p>
               ) : null}
 
-              <footer>
-                {evento.status === 'rascunho' || evento.status === 'recusado' ? (
-                  <button className="btn-approve" onClick={() => enviar(evento)}>
-                    Enviar para análise
+              {excluindo === evento.id_evento ? (
+                <div className="confirmar-exclusao" role="alert">
+                  <p>Excluir “{evento.nome}”? Isso apaga também os itens e os custos.</p>
+                  <div>
+                    <button className="btn-secondary" onClick={() => setExcluindo(null)}>
+                      Cancelar
+                    </button>
+                    <button className="btn-recusar" onClick={() => excluir(evento)}>
+                      Excluir evento
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <footer>
+                  {NAO_EXCLUI.includes(evento.status) ? null : (
+                    <button className="btn-link perigo" onClick={() => setExcluindo(evento.id_evento)}>
+                      Excluir
+                    </button>
+                  )}
+                  {EDITAVEL.includes(evento.status) ? (
+                    <button
+                      className="btn-secondary"
+                      onClick={() => onNavigate('evento', { id: evento.id_evento, editar: true })}
+                    >
+                      Editar
+                    </button>
+                  ) : null}
+                  <button className="btn-primary" onClick={() => onNavigate('evento', evento.id_evento)}>
+                    Abrir evento
                   </button>
-                ) : evento.status === 'em_analise' ? (
-                  <small>Aguardando um administrador analisar.</small>
-                ) : (
-                  <small>Aprovado — ingressos à venda.</small>
-                )}
-              </footer>
+                </footer>
+              )}
             </article>
           ))}
         </div>

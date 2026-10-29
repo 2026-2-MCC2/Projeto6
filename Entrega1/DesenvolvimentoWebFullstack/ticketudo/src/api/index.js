@@ -1,4 +1,4 @@
-import { get, post, del } from './client'
+import { get, post, put, del } from './client'
 
 export const auth = {
   cadastro: (dados) => post('/auth/cadastro', dados),
@@ -17,6 +17,16 @@ export const eventos = {
   meus: () => get('/eventos/meus'),
   detalhe: (id) => get(`/eventos/${id}`),
   criar: (dados) => post('/eventos', dados),
+  editar: (id, dados) => put(`/eventos/${id}`, dados),
+  excluir: (id) => del(`/eventos/${id}`),
+  // dados + itens de custo + outros custos + totais (so o dono)
+  planejamento: (id) => get(`/eventos/${id}/planejamento`),
+  criarItem: (id, dados) => post(`/eventos/${id}/itens`, dados),
+  editarItem: (id, idItem, dados) => put(`/eventos/${id}/itens/${idItem}`, dados),
+  excluirItem: (id, idItem) => del(`/eventos/${id}/itens/${idItem}`),
+  criarCusto: (id, dados) => post(`/eventos/${id}/custos`, dados),
+  editarCusto: (id, idCusto, dados) => put(`/eventos/${id}/custos/${idCusto}`, dados),
+  excluirCusto: (id, idCusto) => del(`/eventos/${id}/custos/${idCusto}`),
   criarLote: (id, dados) => post(`/eventos/${id}/lotes`, dados),
   criarFornecedorExterno: (id, dados) => post(`/eventos/${id}/fornecedores-externos`, dados),
   solicitarServico: (id, dados) => post(`/eventos/${id}/solicitacoes`, dados),

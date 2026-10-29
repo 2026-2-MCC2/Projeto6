@@ -2,6 +2,8 @@ const express = require('express');
 const pool = require('../config/bd');
 const { autenticar, permitir } = require('../middleware/auth');
 const { situacaoDe, exigirCredenciamento, abrirChatDaSolicitacao } = require('../lib/credenciamento');
+const { buscarEvento, eventoDoOrganizador, podeMexer } = require('../lib/eventos');
+const { ufValida, texto } = require('../lib/validacao');
 
 const router = express.Router();
 
@@ -10,45 +12,31 @@ const router = express.Router();
 const credenciamentoPedido = exigirCredenciamento(['em_analise', 'credenciado'], 'criar eventos');
 const credenciado = exigirCredenciamento(['credenciado'], 'enviar o evento para analise');
 
-async function buscarEvento(id) {
-  const [linhas] = await pool.query('select * from evento where id_evento = ?', [id]);
-  return linhas[0] || null;
-}
-
-// garante que o evento existe e que quem chamou e o dono dele
-async function eventoDoOrganizador(req, res) {
-  const evento = await buscarEvento(req.params.id);
-  if (!evento) {
-    res.status(404).json({ erro: 'evento nao encontrado' });
-    return null;
-  }
-  if (evento.id_organizador !== req.usuario.id) {
-    res.status(403).json({ erro: 'esse evento e de outro organizador' });
-    return null;
-  }
-  return evento;
-}
-
 // so os aprovados aparecem pro publico
 router.get('/', async (req, res) => {
   const [linhas] = await pool.query(
-    `select e.id_evento, e.nome, e.descricao, e.data_hora,
+    `select e.id_evento, e.nome, e.descricao, e.data_inicio, e.data_fim,
             c.nome as categoria, l.nome as local, l.cidade, l.estado,
             min(lo.preco) as menor_preco
        from evento e
        join categoria c on c.id_categoria = e.id_categoria
        join local_evento l on l.id_local = e.id_local
        left join lote lo on lo.id_evento = e.id_evento and now() <= lo.data_fim
-      where e.status = 'aprovado' and e.data_hora >= now()
+      where e.status = 'aprovado' and e.data_fim >= now()
       group by e.id_evento, c.nome, l.nome, l.cidade, l.estado
-      order by e.data_hora`,
+      order by e.data_inicio`,
   );
   res.json(linhas);
 });
 
 router.get('/meus', autenticar, permitir('organizador'), async (req, res) => {
   const [linhas] = await pool.query(
-    'select * from evento where id_organizador = ? order by criado_em desc',
+    `select e.*, l.nome as local, l.cidade, l.estado, c.nome as categoria,
+            (select count(*) from item_custo where id_evento = e.id_evento) as total_itens
+       from evento e
+       join local_evento l on l.id_local = e.id_local
+       join categoria c on c.id_categoria = e.id_categoria
+      where e.id_organizador = ? order by e.criado_em desc`,
     [req.usuario.id],
   );
   res.json(linhas);
@@ -105,30 +93,112 @@ async function acharOuCriarLocal(local) {
   return r.insertId;
 }
 
-router.post('/', autenticar, permitir('organizador'), credenciamentoPedido, async (req, res) => {
-  const { nome, descricao, data_hora, id_categoria, local } = req.body;
+// confere os dados do evento (criar e editar usam a mesma regra).
+// Devolve { erro } ou { dados } ja limpos.
+async function validarEvento(corpo) {
+  const nome = texto(corpo.nome);
+  const local = corpo.local || {};
+  const { data_inicio, data_fim, id_categoria } = corpo;
 
-  if (!nome || !data_hora || !id_categoria) {
-    return res.status(400).json({ erro: 'nome, data_hora e id_categoria sao obrigatorios' });
+  if (!nome || !data_inicio || !data_fim || !id_categoria) {
+    return { erro: 'nome, data_inicio, data_fim e id_categoria sao obrigatorios' };
   }
-  if (!local || !local.nome || !local.cidade || !local.estado) {
-    return res.status(400).json({ erro: 'informe o local: nome, cidade e estado' });
+  if (!texto(local.nome) || !texto(local.cidade) || !texto(local.estado)) {
+    return { erro: 'informe o local: nome, cidade e estado' };
   }
-  if (String(local.estado).trim().length !== 2) {
-    return res.status(400).json({ erro: 'o estado precisa ter 2 letras, como SP' });
+  if (texto(local.estado).length !== 2) {
+    return { erro: 'o estado precisa ter 2 letras, como SP' };
   }
-  if (new Date(data_hora) <= new Date()) {
-    return res.status(400).json({ erro: 'a data do evento precisa ser no futuro' });
+  if (!ufValida(local.estado)) return { erro: 'UF invalida' };
+
+  const inicio = new Date(data_inicio);
+  const fim = new Date(data_fim);
+  if (Number.isNaN(inicio.getTime()) || Number.isNaN(fim.getTime())) {
+    return { erro: 'data_inicio e data_fim precisam ser datas validas' };
   }
+  if (inicio <= new Date()) return { erro: 'o evento precisa comecar no futuro' };
+  if (fim < inicio) return { erro: 'o evento nao pode terminar antes de comecar' };
+
+  const inteiro = (v) => (v === undefined || v === null || v === '' ? null : Number(v));
+  const publicoMinimo = inteiro(corpo.publico_minimo);
+  const publicoMaximo = inteiro(corpo.publico_maximo);
+  const publicoEsperado = inteiro(corpo.publico_esperado);
+  const margem = corpo.margem_lucro === undefined || corpo.margem_lucro === '' ? 0 : Number(corpo.margem_lucro);
+
+  if (!Number.isInteger(publicoMinimo) || publicoMinimo <= 0) {
+    return { erro: 'o publico minimo precisa ser um numero inteiro maior que zero' };
+  }
+  if (!Number.isInteger(publicoMaximo) || publicoMaximo < publicoMinimo) {
+    return { erro: 'o publico maximo precisa ser maior ou igual ao minimo' };
+  }
+  if (publicoEsperado !== null
+      && (!Number.isInteger(publicoEsperado) || publicoEsperado < publicoMinimo || publicoEsperado > publicoMaximo)) {
+    return { erro: 'o publico esperado precisa ficar entre o minimo e o maximo' };
+  }
+  if (!Number.isFinite(margem) || margem < 0 || margem >= 100) {
+    return { erro: 'a margem de lucro precisa ser de 0 a 99,99%' };
+  }
+
+  const [cat] = await pool.query('select 1 from categoria where id_categoria = ?', [Number(id_categoria) || 0]);
+  if (!cat.length) return { erro: 'categoria nao encontrada' };
+
+  return {
+    dados: {
+      nome,
+      descricao: texto(corpo.descricao) || null,
+      data_inicio,
+      data_fim,
+      id_categoria: Number(id_categoria),
+      publico_minimo: publicoMinimo,
+      publico_maximo: publicoMaximo,
+      publico_esperado: publicoEsperado,
+      margem_lucro: margem,
+    },
+    local,
+  };
+}
+
+router.post('/', autenticar, permitir('organizador'), credenciamentoPedido, async (req, res) => {
+  const { erro, dados, local } = await validarEvento(req.body);
+  if (erro) return res.status(400).json({ erro });
 
   const idLocal = await acharOuCriarLocal(local);
-
+  const colunas = Object.keys(dados);
   const [r] = await pool.query(
-    `insert into evento (id_organizador, id_local, id_categoria, nome, descricao, data_hora)
-     values (?, ?, ?, ?, ?, ?)`,
-    [req.usuario.id, idLocal, id_categoria, nome, descricao || null, data_hora],
+    `insert into evento (id_organizador, id_local, ${colunas.join(', ')})
+     values (?, ?, ${colunas.map(() => '?').join(', ')})`,
+    [req.usuario.id, idLocal, ...Object.values(dados)],
   );
-  res.status(201).json({ id_evento: r.insertId, nome, status: 'rascunho' });
+  res.status(201).json({ id_evento: r.insertId, nome: dados.nome, status: 'rascunho' });
+});
+
+// editar (WEB-05): so o dono, e so em rascunho ou depois de recusado
+router.put('/:id', autenticar, permitir('organizador'), async (req, res) => {
+  const evento = await eventoDoOrganizador(req, res);
+  if (!evento || !podeMexer(evento, 'dados', res)) return;
+
+  const { erro, dados, local } = await validarEvento(req.body);
+  if (erro) return res.status(400).json({ erro });
+
+  const idLocal = await acharOuCriarLocal(local);
+  await pool.query(
+    `update evento set id_local = ?, ${Object.keys(dados).map((c) => `${c} = ?`).join(', ')}
+      where id_evento = ?`,
+    [idLocal, ...Object.values(dados), evento.id_evento],
+  );
+  res.json({ id_evento: evento.id_evento, ...dados, status: evento.status });
+});
+
+// excluir (WEB-05). Regra: so enquanto o evento nao foi para o adm
+// (em analise ou aprovado). Itens, custos e propostas saem junto (CASCADE).
+router.delete('/:id', autenticar, permitir('organizador'), async (req, res) => {
+  const evento = await eventoDoOrganizador(req, res);
+  if (!evento) return;
+  if (['em_analise', 'aprovado'].includes(evento.status)) {
+    return res.status(409).json({ erro: 'evento em analise ou aprovado nao pode ser excluido' });
+  }
+  await pool.query('delete from evento where id_evento = ?', [evento.id_evento]);
+  res.json({ id_evento: evento.id_evento, excluido: true });
 });
 
 router.post('/:id/lotes', autenticar, permitir('organizador'), async (req, res) => {
@@ -162,7 +232,7 @@ router.post('/:id/lotes', autenticar, permitir('organizador'), async (req, res) 
     return res.status(400).json({ erro: 'data_fim precisa ser depois de data_inicio' });
   }
   // nao adianta vender ingresso depois que o show comecou
-  if (fim > new Date(evento.data_hora)) {
+  if (fim > new Date(evento.data_inicio)) {
     return res.status(400).json({ erro: 'a venda do lote nao pode terminar depois do evento' });
   }
 
@@ -280,11 +350,11 @@ router.post('/:id/enviar-analise', autenticar, permitir('organizador'), credenci
     return res.status(409).json({ erro: 'esse evento ja foi aprovado' });
   }
 
-  const [lotes] = await pool.query('select count(*) as total from lote where id_evento = ?', [
+  const [itens] = await pool.query('select count(*) as total from item_custo where id_evento = ?', [
     evento.id_evento,
   ]);
-  if (!lotes[0].total) {
-    return res.status(400).json({ erro: 'cadastre pelo menos um lote antes de enviar para analise' });
+  if (!itens[0].total) {
+    return res.status(400).json({ erro: 'cadastre pelo menos um item de custo antes de enviar para analise' });
   }
 
   await pool.query(

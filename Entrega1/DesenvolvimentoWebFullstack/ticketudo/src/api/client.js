@@ -59,3 +59,4 @@ export async function pedir(metodo, rota, corpo) {
 export const get = (rota) => pedir('GET', rota)
 export const post = (rota, corpo) => pedir('POST', rota, corpo)
 export const del = (rota) => pedir('DELETE', rota)
+export const put = (rota, corpo) => pedir('PUT', rota, corpo)

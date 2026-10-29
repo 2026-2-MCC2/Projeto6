@@ -174,7 +174,16 @@ CREATE TABLE evento (
   id_categoria   INT NOT NULL,
   nome           VARCHAR(160) NOT NULL,
   descricao      TEXT,
-  data_hora      DATETIME NOT NULL,
+  -- periodo do evento (pode durar mais de um dia)
+  data_inicio    DATETIME NOT NULL,
+  data_fim       DATETIME NOT NULL,
+  -- cenarios de publico usados no calculo do ticket (FLX-06)
+  publico_minimo   INT NOT NULL CHECK (publico_minimo > 0),
+  publico_maximo   INT NOT NULL,
+  publico_esperado INT NULL,
+  -- margem de lucro sobre a receita, em % (20 = 20%)
+  margem_lucro   DECIMAL(5,2) NOT NULL DEFAULT 0
+                 CHECK (margem_lucro >= 0 AND margem_lucro < 100),
   -- o evento so fica publico depois que um adm aprova
   status         VARCHAR(30)
                 CHECK (status IN ('rascunho','em_analise','aprovado','recusado'))
@@ -189,8 +198,43 @@ CREATE TABLE evento (
     REFERENCES local_evento (id_local),
   CONSTRAINT fk_evento_categoria FOREIGN KEY (id_categoria)
     REFERENCES categoria (id_categoria),
+  CONSTRAINT ck_evento_periodo CHECK (data_fim >= data_inicio),
+  CONSTRAINT ck_evento_publico CHECK (publico_maximo >= publico_minimo),
+  CONSTRAINT ck_evento_esperado CHECK (publico_esperado IS NULL
+    OR publico_esperado BETWEEN publico_minimo AND publico_maximo),
   CONSTRAINT fk_evento_adm FOREIGN KEY (id_adm_revisor)
     REFERENCES usuario (id_usuario) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- Itens que compoem o custo do evento (RF06). Sao eles que os fornecedores
+-- cotam. custo_estimado e o valor total que o organizador espera pagar pelo
+-- item (nao e por unidade).
+CREATE TABLE item_custo (
+  id_item        INT AUTO_INCREMENT PRIMARY KEY,
+  id_evento      INT NOT NULL,
+  categoria      VARCHAR(30)
+                 CHECK (categoria IN ('iluminacao','comida','bebida','seguranca','estrutura','outros'))
+                 NOT NULL,
+  descricao      VARCHAR(200) NOT NULL,
+  quantidade     INT NOT NULL CHECK (quantidade > 0),
+  custo_estimado DECIMAL(12,2) NOT NULL CHECK (custo_estimado >= 0),
+  criado_em      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_item_evento FOREIGN KEY (id_evento)
+    REFERENCES evento (id_evento) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Custos que nao vem de proposta de fornecedor (RF07): impostos, taxas,
+-- equipe propria etc. O custo variavel e lancado como valor total estimado.
+CREATE TABLE custo_evento (
+  id_custo   INT AUTO_INCREMENT PRIMARY KEY,
+  id_evento  INT NOT NULL,
+  tipo       VARCHAR(20)
+             CHECK (tipo IN ('fiscal','operacional','variavel','outro')) NOT NULL,
+  descricao  VARCHAR(200) NOT NULL,
+  valor      DECIMAL(12,2) NOT NULL CHECK (valor >= 0),
+  criado_em  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_custo_evento FOREIGN KEY (id_evento)
+    REFERENCES evento (id_evento) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- O lote cruza os dois eixos de venda:
@@ -360,7 +404,7 @@ CREATE TABLE mensagem (
 -- Indices de apoio as consultas mais usadas
 -- --------------------------------------------------------
 
-CREATE INDEX ix_evento_status    ON evento (status, data_hora);
+CREATE INDEX ix_evento_status    ON evento (status, data_inicio);
 CREATE INDEX ix_lote_evento      ON lote (id_evento, data_inicio, data_fim);
 CREATE INDEX ix_ingresso_lote    ON ingresso (id_lote, status);
 CREATE INDEX ix_ingresso_dono    ON ingresso (id_vendedor, status);
