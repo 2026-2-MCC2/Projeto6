@@ -186,7 +186,9 @@ CREATE TABLE evento (
                  CHECK (margem_lucro >= 0 AND margem_lucro < 100),
   -- o evento so fica publico depois que um adm aprova
   status         VARCHAR(30)
-                CHECK (status IN ('rascunho','em_analise','aprovado','recusado'))
+                -- em_cotacao: fornecedores credenciados veem e mandam propostas (FLX-03)
+                CHECK (status IN ('rascunho','em_cotacao','cotacao_encerrada',
+                                  'em_analise','aprovado','recusado'))
                  NOT NULL DEFAULT 'rascunho',
   motivo_recusa  TEXT,
   id_adm_revisor INT NULL,
@@ -221,6 +223,29 @@ CREATE TABLE item_custo (
   criado_em      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_item_evento FOREIGN KEY (id_evento)
     REFERENCES evento (id_evento) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Proposta de um fornecedor para um item de custo (RF10). Um fornecedor manda
+-- uma proposta por item; enquanto a cotacao esta aberta ele pode editar ou
+-- cancelar. O organizador escolhe as propostas na FLX-05.
+CREATE TABLE proposta (
+  id_proposta   INT AUTO_INCREMENT PRIMARY KEY,
+  id_item       INT NOT NULL,
+  id_fornecedor INT NOT NULL,
+  valor         DECIMAL(12,2) NOT NULL CHECK (valor > 0),
+  descricao     TEXT NOT NULL,
+  validade      DATE NOT NULL,
+  observacoes   TEXT,
+  situacao      VARCHAR(20)
+                CHECK (situacao IN ('enviada','selecionada','nao_selecionada','cancelada'))
+                NOT NULL DEFAULT 'enviada',
+  criado_em     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT uq_proposta UNIQUE (id_item, id_fornecedor),
+  CONSTRAINT fk_proposta_item FOREIGN KEY (id_item)
+    REFERENCES item_custo (id_item) ON DELETE CASCADE,
+  CONSTRAINT fk_proposta_fornecedor FOREIGN KEY (id_fornecedor)
+    REFERENCES fornecedor (id_fornecedor) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- Custos que nao vem de proposta de fornecedor (RF07): impostos, taxas,

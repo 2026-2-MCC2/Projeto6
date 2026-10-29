@@ -30,6 +30,12 @@ export default function Overview({ profile, onNavigate }) {
 
       <div className="stat-grid">
         <StatCard label="Rascunhos" value={porStatus('rascunho')} note="ainda não enviados" icon="file" />
+        <StatCard
+          label="Em cotação"
+          value={porStatus('em_cotacao')}
+          note="recebendo propostas"
+          icon="wallet"
+        />
         <StatCard label="Em análise" value={porStatus('em_analise')} note="com o administrador" icon="check" />
         <StatCard label="Aprovados" value={porStatus('aprovado')} note="liberados pelo administrador" icon="ticket" />
         <StatCard

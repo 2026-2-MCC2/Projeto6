@@ -15,11 +15,13 @@ export const profiles = {
   supplier: {
     label: 'Fornecedor',
     tagline: 'Parceiro credenciado',
-    pitch: 'Cadastre seus serviços, peça credenciamento e aceite ou recuse os pedidos dos organizadores.',
+    pitch: 'Peça credenciamento, veja os eventos em cotação e mande propostas para os itens que você atende.',
     icon: 'briefcase',
     theme: 'role-supplier',
     menu: [
       { id: 'home', label: 'Visão geral', icon: 'home' },
+      { id: 'cotacoes', label: 'Eventos em cotação', icon: 'calendar' },
+      { id: 'propostas', label: 'Minhas propostas', icon: 'wallet' },
       { id: 'requests', label: 'Solicitações', icon: 'file' },
       { id: 'profile', label: 'Meu perfil', icon: 'user' },
     ],

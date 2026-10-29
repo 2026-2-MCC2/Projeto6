@@ -1,5 +1,10 @@
 const tones = {
   'Em análise': 'is-waiting',
+  'Em cotação': 'is-waiting',
+  Enviada: 'is-waiting',
+  Selecionada: 'is-positive',
+  'Não selecionada': 'is-neutral',
+  Cancelada: 'is-negative',
   'Aguardando credenciamento': 'is-waiting',
   Pendente: 'is-waiting',
   'Proposta enviada': 'is-waiting',

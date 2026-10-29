@@ -29,7 +29,13 @@ router.get('/:id/planejamento', soDono, async (req, res) => {
         where l.id_local = ? and c.id_categoria = ?`,
       [evento.id_local, evento.id_categoria],
     ),
-    pool.query('select * from item_custo where id_evento = ? order by id_item', [evento.id_evento]),
+    pool.query(
+      `select i.*,
+              (select count(*) from proposta p
+                where p.id_item = i.id_item and p.situacao <> 'cancelada') as total_propostas
+         from item_custo i where i.id_evento = ? order by i.id_item`,
+      [evento.id_evento],
+    ),
     pool.query('select * from custo_evento where id_evento = ? order by id_custo', [evento.id_evento]),
   ]);
 

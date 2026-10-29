@@ -27,6 +27,8 @@ export const eventos = {
   criarCusto: (id, dados) => post(`/eventos/${id}/custos`, dados),
   editarCusto: (id, idCusto, dados) => put(`/eventos/${id}/custos/${idCusto}`, dados),
   excluirCusto: (id, idCusto) => del(`/eventos/${id}/custos/${idCusto}`),
+  abrirCotacao: (id) => post(`/eventos/${id}/abrir-cotacao`, {}),
+  encerrarCotacao: (id) => post(`/eventos/${id}/encerrar-cotacao`, {}),
   criarLote: (id, dados) => post(`/eventos/${id}/lotes`, dados),
   criarFornecedorExterno: (id, dados) => post(`/eventos/${id}/fornecedores-externos`, dados),
   solicitarServico: (id, dados) => post(`/eventos/${id}/solicitacoes`, dados),
@@ -45,6 +47,19 @@ export const fornecedores = {
 export const credenciamento = {
   meu: () => get('/credenciamento/meu'),
   enviar: (dados) => post('/credenciamento', dados),
+}
+
+// fornecedor credenciado: eventos em cotacao e as proprias propostas
+export const cotacoes = {
+  lista: () => get('/cotacoes'),
+  detalhe: (idEvento) => get(`/cotacoes/${idEvento}`),
+}
+
+export const propostas = {
+  enviar: (idItem, dados) => post(`/itens/${idItem}/propostas`, dados),
+  editar: (id, dados) => put(`/propostas/${id}`, dados),
+  cancelar: (id) => post(`/propostas/${id}/cancelar`, {}),
+  minhas: () => get('/propostas/minhas'),
 }
 
 export const solicitacoes = {

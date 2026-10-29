@@ -27,6 +27,9 @@ export function dataHora(valor) {
 
 export function soData(valor) {
   if (!valor) return '—'
+  // "2027-05-30" (data sem hora) e mostrada como esta, sem passar pelo fuso
+  const so = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(valor))
+  if (so) return `${so[3]}/${so[2]}/${so[1]}`
   return new Date(valor).toLocaleDateString('pt-BR')
 }
 
@@ -44,6 +47,12 @@ const ROTULOS = {
   disponivel: 'Disponível',
   vendido: 'Concluído',
   a_venda: 'Em análise',
+  em_cotacao: 'Em cotação',
+  cotacao_encerrada: 'Cotação encerrada',
+  enviada: 'Enviada',
+  selecionada: 'Selecionada',
+  nao_selecionada: 'Não selecionada',
+  cancelada: 'Cancelada',
 }
 
 export function rotulo(status) {
