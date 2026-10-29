@@ -189,13 +189,22 @@ router.put('/:id', autenticar, permitir('organizador'), async (req, res) => {
   res.json({ id_evento: evento.id_evento, ...dados, status: evento.status });
 });
 
-// excluir (WEB-05). Regra: so enquanto o evento nao foi para o adm
-// (em analise ou aprovado). Itens, custos e propostas saem junto (CASCADE).
+// excluir (WEB-05). Regra: so enquanto o evento nao foi para o adm (em analise
+// ou aprovado) e nao tem proposta selecionada. Itens, custos e propostas saem
+// junto (CASCADE).
 router.delete('/:id', autenticar, permitir('organizador'), async (req, res) => {
   const evento = await eventoDoOrganizador(req, res);
   if (!evento) return;
   if (['em_analise', 'aprovado'].includes(evento.status)) {
     return res.status(409).json({ erro: 'evento em analise ou aprovado nao pode ser excluido' });
+  }
+  const [selecionadas] = await pool.query(
+    `select count(*) as total from proposta p join item_custo i on i.id_item = p.id_item
+      where i.id_evento = ? and p.situacao = 'selecionada'`,
+    [evento.id_evento],
+  );
+  if (selecionadas[0].total) {
+    return res.status(409).json({ erro: 'esse evento tem proposta selecionada; desmarque antes de excluir' });
   }
   await pool.query('delete from evento where id_evento = ?', [evento.id_evento]);
   res.json({ id_evento: evento.id_evento, excluido: true });
@@ -383,6 +392,13 @@ router.post('/:id/abrir-cotacao', autenticar, permitir('organizador'), credencia
     return res.status(400).json({ erro: 'cadastre pelo menos um item de custo antes de publicar para cotacao' });
   }
   await pool.query("update evento set status = 'em_cotacao' where id_evento = ?", [evento.id_evento]);
+  // reabrir desfaz as escolhas: as propostas voltam a "enviada" e podem mudar
+  await pool.query(
+    `update proposta set situacao = 'enviada', atualizado_em = now()
+      where situacao in ('selecionada', 'nao_selecionada')
+        and id_item in (select id_item from item_custo where id_evento = ?)`,
+    [evento.id_evento],
+  );
   res.json({ id_evento: evento.id_evento, status: 'em_cotacao' });
 });
 

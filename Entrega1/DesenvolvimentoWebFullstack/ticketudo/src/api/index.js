@@ -29,6 +29,9 @@ export const eventos = {
   excluirCusto: (id, idCusto) => del(`/eventos/${id}/custos/${idCusto}`),
   abrirCotacao: (id) => post(`/eventos/${id}/abrir-cotacao`, {}),
   encerrarCotacao: (id) => post(`/eventos/${id}/encerrar-cotacao`, {}),
+  // FLX-05: propostas de cada item e orcamento consolidado (so o dono)
+  propostas: (id) => get(`/eventos/${id}/propostas`),
+  orcamento: (id) => get(`/eventos/${id}/orcamento`),
   criarLote: (id, dados) => post(`/eventos/${id}/lotes`, dados),
   criarFornecedorExterno: (id, dados) => post(`/eventos/${id}/fornecedores-externos`, dados),
   solicitarServico: (id, dados) => post(`/eventos/${id}/solicitacoes`, dados),
@@ -60,6 +63,9 @@ export const propostas = {
   editar: (id, dados) => put(`/propostas/${id}`, dados),
   cancelar: (id) => post(`/propostas/${id}/cancelar`, {}),
   minhas: () => get('/propostas/minhas'),
+  // organizador escolhe (FLX-05)
+  selecionar: (id) => post(`/propostas/${id}/selecionar`, {}),
+  desmarcar: (id) => post(`/propostas/${id}/desmarcar`, {}),
 }
 
 export const solicitacoes = {
@@ -90,7 +96,11 @@ export const chats = {
 }
 
 export const admin = {
+  // status: em_analise, em_cotacao, aprovado... ou 'todos'
   eventos: (status = 'em_analise') => get(`/admin/eventos?status=${status}`),
+  evento: (id) => get(`/admin/eventos/${id}`),
+  relatorios: () => get('/admin/relatorios'),
+  aprovacoes: () => get('/admin/aprovacoes'),
   aprovarEvento: (id) => post(`/admin/eventos/${id}/aprovar`, {}),
   recusarEvento: (id, motivo) => post(`/admin/eventos/${id}/recusar`, { motivo }),
   // perfil: 'organizador' ou 'fornecedor'

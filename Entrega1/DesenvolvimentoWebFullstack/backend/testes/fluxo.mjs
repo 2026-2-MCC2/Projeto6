@@ -360,6 +360,12 @@ check('segundo fornecedor envia e cancela', p2.status === 201 && p3c.body.situac
 const p3r = await api('POST', `/itens/${item2.body.id_item}/propostas`, prop(9100), forn2)
 check('proposta cancelada pode ser enviada de novo', p3r.status === 201 && p3r.body.id_proposta === p3.body.id_proposta)
 
+// uma proposta cancelada, para conferir depois que ela nao pode ser escolhida
+const pCanc = await api('POST', `/itens/${item2.body.id_item}/propostas`, prop(9500), forn)
+await api('POST', `/propostas/${pCanc.body.id_proposta}/cancelar`, {}, forn)
+const selAberta = await api('POST', `/propostas/${p1.body.id_proposta}/selecionar`, {}, org)
+check('com a cotacao aberta ainda nao escolhe proposta', selAberta.status === 409, selAberta.body.erro)
+
 const analiseNaCotacao = await api('POST', `/eventos/${evId}/enviar-analise`, {}, org)
 check('com a cotacao aberta nao vai para analise', analiseNaCotacao.status === 409)
 const planoCot = await api('GET', `/eventos/${evId}/planejamento`, null, org)
@@ -371,6 +377,47 @@ const pEditDepois = await api('PUT', `/propostas/${p1.body.id_proposta}`, prop(1
 check('com a cotacao encerrada nao envia nem edita', pDepois.status === 409 && pEditDepois.status === 409)
 const minhas = await api('GET', '/propostas/minhas', null, forn2)
 check('historico mostra as propostas com a situacao', minhas.body.length === 2 && minhas.body.every((p) => p.situacao === 'enviada' && p.evento))
+
+// 6c. comparar, selecionar e consolidar (FLX-05)
+const comp = await api('GET', `/eventos/${evId}/propostas`, null, org)
+const comp1 = comp.body.itens?.find((i) => i.id_item === item1.body.id_item)
+check('organizador compara as propostas do item, da menor para a maior',
+  comp1?.propostas.length === 2 && Number(comp1.propostas[0].valor) === 9800 && Number(comp1.propostas[1].valor) === 10500,
+  JSON.stringify(comp1?.propostas.map((p) => p.valor)))
+check('proposta cancelada nao aparece na comparacao',
+  !comp.body.itens?.find((i) => i.id_item === item2.body.id_item)?.propostas.some((p) => p.id_proposta === pCanc.body.id_proposta))
+const compAlheio = await api('GET', `/eventos/${evId}/propostas`, null, org2)
+check('outro organizador nao ve as propostas', compAlheio.status === 403)
+const selAlheio = await api('POST', `/propostas/${p2.body.id_proposta}/selecionar`, {}, org2)
+check('outro organizador nao seleciona', selAlheio.status === 403)
+const selCanc = await api('POST', `/propostas/${pCanc.body.id_proposta}/selecionar`, {}, org)
+check('proposta cancelada nao pode ser selecionada', selCanc.status === 409, selCanc.body.erro)
+
+const sel = await api('POST', `/propostas/${p1.body.id_proposta}/selecionar`, {}, org)
+const sel2 = await api('POST', `/propostas/${p2.body.id_proposta}/selecionar`, {}, org)
+const depoisSel = await api('GET', `/eventos/${evId}/propostas`, null, org)
+const situacoes = Object.fromEntries(depoisSel.body.itens.find((i) => i.id_item === item1.body.id_item).propostas.map((p) => [p.id_proposta, p.situacao]))
+check('selecionar outra proposta do item troca a escolha',
+  sel.status === 200 && sel2.status === 200 && situacoes[p2.body.id_proposta] === 'selecionada' && situacoes[p1.body.id_proposta] === 'nao_selecionada',
+  JSON.stringify(situacoes))
+const desm = await api('POST', `/propostas/${p2.body.id_proposta}/desmarcar`, {}, org)
+const depoisDesm = await api('GET', `/eventos/${evId}/propostas`, null, org)
+check('desmarcar volta todas para enviada',
+  desm.status === 200 && depoisDesm.body.itens.find((i) => i.id_item === item1.body.id_item).propostas.every((p) => p.situacao === 'enviada'))
+await api('POST', `/propostas/${p2.body.id_proposta}/selecionar`, {}, org)
+
+// item1 pela proposta (9.800) + item2 pelo custo estimado (10.000) + outros custos (7.500,50)
+const orc = await api('GET', `/eventos/${evId}/orcamento`, null, org)
+check('orcamento consolidado soma selecionada, estimado e outros custos',
+  orc.body.totais?.custo_total === 27300.5 && orc.body.totais.propostas_selecionadas === 9800 && orc.body.totais.itens_sem_proposta === 10000,
+  JSON.stringify(orc.body.totais))
+const minhasForn2 = await api('GET', '/propostas/minhas', null, forn2)
+const minhasForn = await api('GET', '/propostas/minhas', null, forn)
+check('fornecedor ve a proposta selecionada ou nao selecionada',
+  minhasForn2.body.some((p) => p.id_proposta === p2.body.id_proposta && p.situacao === 'selecionada')
+  && minhasForn.body.some((p) => p.id_proposta === p1.body.id_proposta && p.situacao === 'nao_selecionada'))
+const delComSel = await api('DELETE', `/eventos/${evId}`, null, org)
+check('evento com proposta selecionada nao pode ser excluido', delComSel.status === 409, delComSel.body.erro)
 
 // 7. aprovacao do evento
 await api('POST', `/eventos/${evId}/enviar-analise`, {}, org)
@@ -387,6 +434,27 @@ const aprov = await api('POST', `/admin/eventos/${evId}/aprovar`, {}, adm)
 check('aprovacao gera os ingressos dos 3 lotes', aprov.body.ingressos_gerados === 20, `${aprov.body.ingressos_gerados}`)
 const publicoDepois = await api('GET', '/eventos')
 check('evento aprovado fica publico', publicoDepois.body.some((e) => e.id_evento === evId))
+
+// 7b. visao do adm e relatorios (FLX-07)
+const todos = await api('GET', '/admin/eventos?status=todos', null, adm)
+const noPainel = todos.body.find((e) => e.id_evento === evId)
+check('adm ve todos os eventos com custo consolidado e andamento',
+  Number(noPainel?.custo_consolidado) === 27300.5 && Number(noPainel.propostas_recebidas) === 3 && Number(noPainel.propostas_selecionadas) === 1 && Number(noPainel.total_itens) === 2,
+  JSON.stringify({ c: noPainel?.custo_consolidado, r: noPainel?.propostas_recebidas, s: noPainel?.propostas_selecionadas }))
+const detAdm = await api('GET', `/admin/eventos/${evId}`, null, adm)
+check('detalhe do adm traz itens, custos e orcamento', detAdm.body.orcamento?.totais.custo_total === 27300.5 && detAdm.body.custos?.length === 2 && detAdm.body.revisado_por === 'Administrador')
+const rel = await api('GET', '/admin/relatorios', null, adm)
+const somaStatus = Object.values(rel.body.eventos || {}).reduce((a, b) => a + b, 0)
+check('relatorio bate com a lista de eventos', somaStatus === todos.body.length && rel.body.valores?.eventos === todos.body.length,
+  `${somaStatus} x ${todos.body.length}`)
+check('relatorio traz usuarios, credenciamentos e propostas',
+  rel.body.usuarios?.organizador >= 2 && rel.body.credenciamento?.fornecedor?.credenciado >= 2 && rel.body.propostas?.selecionada >= 1)
+const hist = await api('GET', '/admin/aprovacoes', null, adm)
+check('historico mostra quem aprovou o evento e os credenciamentos',
+  hist.body.some((h) => h.tipo === 'evento' && h.id === evId && h.decisao === 'aprovado' && h.decidido_por === 'Administrador')
+  && hist.body.some((h) => h.tipo === 'credenciamento' && h.decisao === 'recusado' && h.motivo))
+const relOrg = await api('GET', '/admin/relatorios', null, org)
+check('outros perfis nao veem relatorios', relOrg.status === 403)
 
 // 8. compra
 const compra = await api('POST', '/pedidos', { id_lote: lote.body.id_lote, quantidade: 2, metodo: 'pix' }, c1)

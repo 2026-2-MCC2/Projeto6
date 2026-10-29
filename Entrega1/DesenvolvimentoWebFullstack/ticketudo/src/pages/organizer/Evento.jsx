@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Carregando from '../../components/Carregando'
 import PageHeading from '../../components/PageHeading'
 import StatusBadge from '../../components/StatusBadge'
+import CompararPropostas from './CompararPropostas'
 import EventoForm from './EventoForm'
 import PlanilhaCustos from './PlanilhaCustos'
 import { catalogo, eventos } from '../../api'
@@ -50,6 +51,8 @@ export default function Evento({ parametro, onNavigate }) {
   const [editando, setEditando] = useState(!!parametro?.editar)
   const [excluindo, setExcluindo] = useState(false)
   const [erro, setErro] = useState(null)
+  // muda a cada acao, para a comparacao de propostas buscar de novo
+  const [versao, setVersao] = useState(0)
 
   if (!id) {
     return (
@@ -65,7 +68,9 @@ export default function Evento({ parametro, onNavigate }) {
 
   const ev = plano.dados
   const pode = (parte) => EDITAVEL[parte].includes(ev.status)
-  const totalEstimado = ev.totais.itens_estimado + ev.totais.custos
+  const orc = ev.orcamento
+  const temPropostas = ev.itens.some((i) => Number(i.total_propostas) > 0)
+  const mostraPropostas = temPropostas || ev.status !== 'rascunho'
 
   async function acao(fn, aviso) {
     setErro(null)
@@ -73,6 +78,7 @@ export default function Evento({ parametro, onNavigate }) {
       await fn()
       if (aviso) dispatch({ type: 'aviso', texto: aviso })
       plano.recarregar()
+      setVersao((v) => v + 1)
     } catch (e) {
       setErro(e.message)
     }
@@ -177,6 +183,19 @@ export default function Evento({ parametro, onNavigate }) {
             />
           </section>
 
+          {mostraPropostas ? (
+            <section className="bloco">
+              <div className="bloco-cab">
+                <h3>Propostas recebidas</h3>
+              </div>
+              <p>
+                Compare as propostas de cada item e escolha uma por item. O orçamento ao lado usa a
+                proposta escolhida; item sem escolha entra pelo custo estimado.
+              </p>
+              <CompararPropostas idEvento={ev.id_evento} versao={versao} onMudou={plano.recarregar} />
+            </section>
+          ) : null}
+
           <section className="bloco">
             <div className="bloco-cab">
               <h3>Outros custos</h3>
@@ -201,19 +220,23 @@ export default function Evento({ parametro, onNavigate }) {
         </div>
 
         <aside className="estimate-card">
-          <small className="eyebrow">Custo estimado</small>
-          <h3>{moeda(totalEstimado)}</h3>
-          <p>itens de custo + outros custos</p>
+          <small className="eyebrow">Orçamento consolidado</small>
+          <h3>{moeda(orc.totais.custo_total)}</h3>
+          <p>custo total do evento, usado no cálculo do ticket</p>
           <dl>
             <div>
-              <dt>Itens de custo ({ev.itens.length})</dt>
-              <dd>{moeda(ev.totais.itens_estimado)}</dd>
+              <dt>Propostas escolhidas ({orc.contagem.itens_com_proposta})</dt>
+              <dd>{moeda(orc.totais.propostas_selecionadas)}</dd>
+            </div>
+            <div>
+              <dt>Itens pelo custo estimado ({orc.contagem.itens_sem_proposta})</dt>
+              <dd>{moeda(orc.totais.itens_sem_proposta)}</dd>
             </div>
             {TIPOS_CUSTO.map((t) =>
-              ev.totais.custos_por_tipo[t.id] ? (
+              orc.totais.custos_por_tipo[t.id] ? (
                 <div key={t.id}>
                   <dt>{t.label}</dt>
-                  <dd>{moeda(ev.totais.custos_por_tipo[t.id])}</dd>
+                  <dd>{moeda(orc.totais.custos_por_tipo[t.id])}</dd>
                 </div>
               ) : null,
             )}
