@@ -30,7 +30,7 @@ export default function Overview({ profile, onNavigate }) {
         <StatCard
           label="Eventos na fila"
           value={dados.fila.length}
-          note="aguardando aprovação"
+          note="aguardando sua decisão"
           icon="calendar"
         />
         <StatCard

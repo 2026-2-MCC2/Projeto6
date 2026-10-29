@@ -34,8 +34,10 @@ export const profiles = {
     theme: 'role-admin',
     menu: [
       { id: 'home', label: 'Visão geral', icon: 'home' },
-      { id: 'events', label: 'Eventos para análise', icon: 'calendar' },
+      { id: 'events', label: 'Eventos', icon: 'calendar' },
       { id: 'requests', label: 'Credenciamentos', icon: 'check' },
+      { id: 'relatorios', label: 'Relatórios', icon: 'trend' },
+      { id: 'aprovacoes', label: 'Histórico de aprovações', icon: 'file' },
     ],
   },
 }

@@ -3,10 +3,13 @@
 //   GET    /api/eventos/:id/planejamento
 //   POST   /api/eventos/:id/itens          PUT/DELETE /api/eventos/:id/itens/:idItem
 //   POST   /api/eventos/:id/custos         PUT/DELETE /api/eventos/:id/custos/:idCusto
+//   GET    /api/eventos/:id/propostas      propostas de cada item (FLX-05)
+//   GET    /api/eventos/:id/orcamento      orcamento consolidado (FLX-05)
 const express = require('express');
 const pool = require('../config/bd');
 const { autenticar, permitir } = require('../middleware/auth');
 const { eventoDoOrganizador, podeMexer } = require('../lib/eventos');
+const { orcamentoDoEvento } = require('../lib/orcamento');
 const { texto } = require('../lib/validacao');
 
 const router = express.Router();
@@ -49,12 +52,53 @@ router.get('/:id/planejamento', soDono, async (req, res) => {
     local: local[0],
     itens,
     custos,
+    orcamento: await orcamentoDoEvento(evento.id_evento),
     totais: {
       itens_estimado: somar(itens, 'custo_estimado'),
       custos: somar(custos, 'valor'),
       custos_por_tipo: porTipo,
     },
   });
+});
+
+// --- comparar propostas e orcamento (FLX-05) -------------------------------
+
+// por item, as propostas validas (nao canceladas e dentro da validade), da
+// menor para a maior. A selecionada aparece mesmo que a validade tenha passado.
+router.get('/:id/propostas', soDono, async (req, res) => {
+  const evento = await eventoDoOrganizador(req, res);
+  if (!evento) return;
+
+  const [itens] = await pool.query(
+    'select id_item, categoria, descricao, quantidade, custo_estimado from item_custo where id_evento = ? order by id_item',
+    [evento.id_evento],
+  );
+  const [propostas] = await pool.query(
+    `select p.id_proposta, p.id_item, p.valor, p.descricao, p.validade::text as validade,
+            p.observacoes, p.situacao, p.atualizado_em,
+            f.id_fornecedor, f.nome_empresa as fornecedor, f.cidade, f.estado
+       from proposta p
+       join item_custo i on i.id_item = p.id_item
+       join fornecedor f on f.id_fornecedor = p.id_fornecedor
+      where i.id_evento = ? and p.situacao <> 'cancelada'
+        and (p.validade >= current_date or p.situacao = 'selecionada')
+      order by p.valor, p.atualizado_em`,
+    [evento.id_evento],
+  );
+
+  res.json({
+    id_evento: evento.id_evento,
+    status: evento.status,
+    // selecionar e desmarcar so com a cotacao encerrada
+    pode_selecionar: evento.status === 'cotacao_encerrada',
+    itens: itens.map((i) => ({ ...i, propostas: propostas.filter((p) => p.id_item === i.id_item) })),
+  });
+});
+
+router.get('/:id/orcamento', soDono, async (req, res) => {
+  const evento = await eventoDoOrganizador(req, res);
+  if (!evento) return;
+  res.json({ id_evento: evento.id_evento, ...(await orcamentoDoEvento(evento.id_evento)) });
 });
 
 // --- itens de custo --------------------------------------------------------
