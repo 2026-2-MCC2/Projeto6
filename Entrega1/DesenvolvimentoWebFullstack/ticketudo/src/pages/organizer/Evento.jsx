@@ -24,6 +24,7 @@ const COLUNAS_ITEM = [
   { campo: 'categoria', rotulo: 'Categoria', tipo: 'select', opcoes: AREAS_FORNECEDOR },
   { campo: 'descricao', rotulo: 'Descrição', tipo: 'texto', exemplo: 'Iluminação de palco' },
   { campo: 'quantidade', rotulo: 'Qtd.', tipo: 'inteiro', exemplo: '1' },
+  { campo: 'total_propostas', rotulo: 'Propostas', tipo: 'leitura' },
   { campo: 'custo_estimado', rotulo: 'Custo estimado (R$)', tipo: 'dinheiro', exemplo: '0,00' },
 ]
 
@@ -218,7 +219,44 @@ export default function Evento({ parametro, onNavigate }) {
             )}
           </dl>
 
-          {['rascunho', 'recusado'].includes(ev.status) ? (
+          <div className="cotacao-card">
+            <small className="eyebrow">Cotação com fornecedores</small>
+            {ev.status === 'em_cotacao' ? (
+              <>
+                <p>
+                  Os fornecedores credenciados estão vendo os itens e mandando propostas. Encerre
+                  quando quiser comparar.
+                </p>
+                <button
+                  className="btn-secondary btn-block"
+                  onClick={() => acao(() => eventos.encerrarCotacao(ev.id_evento), 'Cotação encerrada.')}
+                >
+                  Encerrar cotação
+                </button>
+              </>
+            ) : ['rascunho', 'recusado', 'cotacao_encerrada'].includes(ev.status) ? (
+              <>
+                <p>
+                  {ev.status === 'cotacao_encerrada'
+                    ? 'Cotação encerrada. Dá para reabrir se precisar de mais propostas.'
+                    : 'Publique os itens para os fornecedores credenciados mandarem propostas.'}
+                </p>
+                <button
+                  className="btn-secondary btn-block"
+                  disabled={ev.itens.length === 0}
+                  onClick={() =>
+                    acao(() => eventos.abrirCotacao(ev.id_evento), 'Evento publicado para cotação.')
+                  }
+                >
+                  {ev.status === 'cotacao_encerrada' ? 'Reabrir cotação' : 'Publicar para cotação'}
+                </button>
+              </>
+            ) : (
+              <p>Com o evento nesta situação, a cotação não muda.</p>
+            )}
+          </div>
+
+          {['rascunho', 'recusado', 'cotacao_encerrada'].includes(ev.status) ? (
             <button
               className="btn-primary btn-block"
               disabled={ev.itens.length === 0}

@@ -2,11 +2,14 @@ import { Fragment, useState } from 'react'
 import { moeda, numero } from '../../utils/format'
 
 // Tabela editavel usada nos itens de custo e nos outros custos do evento.
-// colunas: [{ campo, rotulo, tipo: 'select' | 'texto' | 'inteiro' | 'dinheiro', opcoes }]
+// colunas: [{ campo, rotulo, tipo: 'select' | 'texto' | 'inteiro' | 'dinheiro' | 'leitura', opcoes }]
+// 'leitura' so aparece na tabela (ex.: quantas propostas o item recebeu).
 // Cada linha pode ser editada ali mesmo; a ultima linha da tabela e a de adicionar.
 
+const editaveis = (colunas) => colunas.filter((c) => c.tipo !== 'leitura')
+
 function vazio(colunas) {
-  return Object.fromEntries(colunas.map((c) => [c.campo, c.tipo === 'select' ? c.opcoes[0].id : '']))
+  return Object.fromEntries(editaveis(colunas).map((c) => [c.campo, c.tipo === 'select' ? c.opcoes[0].id : '']))
 }
 
 function Celula({ coluna, valor }) {
@@ -17,6 +20,7 @@ function Celula({ coluna, valor }) {
 }
 
 function Entrada({ coluna, valor, onChange, id }) {
+  if (coluna.tipo === 'leitura') return valor
   if (coluna.tipo === 'select') {
     return (
       <select id={id} value={valor} onChange={(e) => onChange(e.target.value)} aria-label={coluna.rotulo}>
@@ -46,7 +50,7 @@ function Entrada({ coluna, valor, onChange, id }) {
 // converte os valores do formulario para o que a API espera
 function paraApi(colunas, linha) {
   return Object.fromEntries(
-    colunas.map((c) => [c.campo, c.tipo === 'inteiro' || c.tipo === 'dinheiro' ? Number(linha[c.campo]) : linha[c.campo]]),
+    editaveis(colunas).map((c) => [c.campo, c.tipo === 'inteiro' || c.tipo === 'dinheiro' ? Number(linha[c.campo]) : linha[c.campo]]),
   )
 }
 
@@ -116,7 +120,7 @@ export default function PlanilhaCustos({
                         <Entrada
                           id={`${nome}-${id}-${c.campo}`}
                           coluna={c}
-                          valor={rascunho[c.campo]}
+                          valor={c.tipo === 'leitura' ? linha[c.campo] : rascunho[c.campo]}
                           onChange={(v) => setRascunho({ ...rascunho, [c.campo]: v })}
                         />
                       </td>
@@ -159,7 +163,7 @@ export default function PlanilhaCustos({
                               onClick={() => {
                                 setEditando(id)
                                 setRemovendo(null)
-                                setRascunho(Object.fromEntries(colunas.map((c) => [c.campo, String(linha[c.campo])])))
+                                setRascunho(Object.fromEntries(editaveis(colunas).map((c) => [c.campo, String(linha[c.campo])])))
                               }}
                             >
                               Editar
@@ -188,7 +192,7 @@ export default function PlanilhaCustos({
 
       {podeEditar ? (
         <form className="planilha-nova" onSubmit={adicionar}>
-          {colunas.map((c) => (
+          {editaveis(colunas).map((c) => (
             <label key={c.campo} htmlFor={`${nome}-novo-${c.campo}`}>
               <span>{c.rotulo}</span>
               <Entrada

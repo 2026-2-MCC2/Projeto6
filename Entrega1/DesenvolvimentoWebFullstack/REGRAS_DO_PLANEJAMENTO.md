@@ -13,15 +13,35 @@ Decisões do grupo sobre como o planejamento funciona. Cada regra vale no backen
 | Situação do evento | Dados | Itens de custo | Outros custos | Excluir |
 |---|---|---|---|---|
 | Rascunho | edita | edita | edita | pode |
+| Em cotação | — | — | edita | pode |
+| Cotação encerrada | — | — | edita | pode |
 | Recusado | edita | edita | edita | pode |
 | Em análise | — | — | — | — |
 | Aprovado | — | — | — | — |
+
+Caminho do evento: **rascunho → em cotação → cotação encerrada → em análise → aprovado** (ou recusado, que volta a poder ser editado). A cotação é opcional: um evento em rascunho pode ir direto para análise.
 
 ## Itens de custo (FLX-02)
 
 - Cada item tem categoria (iluminação, comida, bebida, segurança, estrutura ou outros), descrição, quantidade e **custo estimado**.
 - O custo estimado é o **valor total** que o organizador espera pagar pelo item, não o valor por unidade.
 - Para enviar o evento ao administrador, ele precisa ter pelo menos um item de custo.
+
+## Cotação (FLX-03)
+
+- O organizador **publica o evento para cotação** quando ele tem pelo menos um item de custo e o credenciamento do organizador está aprovado.
+- Durante a cotação, os **itens não mudam**, porque os fornecedores estão cotando em cima deles. Os outros custos continuam editáveis.
+- Só **fornecedores credenciados** veem os eventos em cotação. Eles veem os itens, mas **não** o custo estimado do organizador.
+- O organizador **encerra** a cotação quando quiser comparar. Dá para reabrir. Com a cotação aberta, o evento não vai para análise.
+
+## Propostas (FLX-04)
+
+- Cada fornecedor manda **uma proposta por item**, com valor total, o que está incluso, validade e observações.
+- A **validade** não pode ser anterior ao dia em que a proposta é enviada ou editada.
+- O fornecedor **edita ou cancela** a própria proposta enquanto ela está "enviada" e a cotação está aberta. Depois que a cotação encerra, nada muda.
+- Proposta cancelada pode ser **enviada de novo** para o mesmo item enquanto a cotação estiver aberta.
+- **Situações:** enviada, selecionada, não selecionada e cancelada.
+- O **pedido direto de serviço** (organizador escolhe um serviço da vitrine e abre o chat) continua como extra. O fluxo principal de cotação é por proposta.
 
 ## Outros custos (FLX-02)
 

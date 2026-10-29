@@ -526,3 +526,78 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* --- cotacao (FLX-03) ----------------------------------------------------- */
+
+.cotacao-card {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.cotacao-card p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.cotacao-card .btn-block {
+  margin-top: 4px;
+}
+
+/* --- propostas do fornecedor (FLX-04) ------------------------------------- */
+
+.cotacao-itens {
+  display: grid;
+  gap: 12px;
+}
+
+.cotacao-item {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.cotacao-item-cab {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cotacao-item-cab strong {
+  display: block;
+  margin: 4px 0 2px;
+  font-size: 14px;
+}
+
+.cotacao-item-cab span,
+.cotacao-minha p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12.5px;
+}
+
+.cotacao-minha {
+  display: grid;
+  gap: 6px;
+}
+
+.cotacao-minha .request-actions span {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.proposta-form .field {
+  margin-bottom: 12px;
+}
+
+.texto-perigo {
+  color: var(--negative);
+}

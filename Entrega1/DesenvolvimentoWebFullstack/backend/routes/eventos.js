@@ -349,6 +349,9 @@ router.post('/:id/enviar-analise', autenticar, permitir('organizador'), credenci
   if (evento.status === 'aprovado') {
     return res.status(409).json({ erro: 'esse evento ja foi aprovado' });
   }
+  if (evento.status === 'em_cotacao') {
+    return res.status(409).json({ erro: 'encerre a cotacao antes de enviar o evento para analise' });
+  }
 
   const [itens] = await pool.query('select count(*) as total from item_custo where id_evento = ?', [
     evento.id_evento,
@@ -362,6 +365,35 @@ router.post('/:id/enviar-analise', autenticar, permitir('organizador'), credenci
     [evento.id_evento],
   );
   res.json({ id_evento: evento.id_evento, status: 'em_analise' });
+});
+
+// --- cotacao (FLX-03) ---------------------------------------------------------
+// Publicar o evento para cotacao: os fornecedores credenciados passam a ver o
+// evento e os itens e mandam propostas. So o dono, credenciado, com 1 item ou mais.
+const credenciadoParaCotar = exigirCredenciamento(['credenciado'], 'publicar o evento para cotacao');
+
+router.post('/:id/abrir-cotacao', autenticar, permitir('organizador'), credenciadoParaCotar, async (req, res) => {
+  const evento = await eventoDoOrganizador(req, res);
+  if (!evento) return;
+  if (!['rascunho', 'recusado', 'cotacao_encerrada'].includes(evento.status)) {
+    return res.status(409).json({ erro: 'so da pra publicar para cotacao um evento em rascunho, recusado ou com a cotacao encerrada' });
+  }
+  const [itens] = await pool.query('select count(*) as total from item_custo where id_evento = ?', [evento.id_evento]);
+  if (!itens[0].total) {
+    return res.status(400).json({ erro: 'cadastre pelo menos um item de custo antes de publicar para cotacao' });
+  }
+  await pool.query("update evento set status = 'em_cotacao' where id_evento = ?", [evento.id_evento]);
+  res.json({ id_evento: evento.id_evento, status: 'em_cotacao' });
+});
+
+router.post('/:id/encerrar-cotacao', autenticar, permitir('organizador'), async (req, res) => {
+  const evento = await eventoDoOrganizador(req, res);
+  if (!evento) return;
+  if (evento.status !== 'em_cotacao') {
+    return res.status(409).json({ erro: 'esse evento nao esta em cotacao' });
+  }
+  await pool.query("update evento set status = 'cotacao_encerrada' where id_evento = ?", [evento.id_evento]);
+  res.json({ id_evento: evento.id_evento, status: 'cotacao_encerrada' });
 });
 
 module.exports = router;

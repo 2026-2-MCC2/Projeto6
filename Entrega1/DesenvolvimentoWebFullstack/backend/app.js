@@ -59,6 +59,7 @@ api.use('/auth', require('./routes/auth'));
 api.use('/', require('./routes/catalogo'));
 api.use('/eventos', require('./routes/eventos'));
 api.use('/eventos', require('./routes/planejamento'));
+api.use('/', require('./routes/cotacoes'));
 api.use('/credenciamento', require('./routes/credenciamento'));
 api.use('/fornecedores', require('./routes/fornecedores'));
 api.use('/solicitacoes', require('./routes/solicitacoes'));
