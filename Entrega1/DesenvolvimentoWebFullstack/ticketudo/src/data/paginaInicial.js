@@ -1,14 +1,16 @@
-// Textos e números FIXOS da página inicial (pages/Home.jsx).
+// Textos FIXOS da página inicial (pages/Home.jsx).
 // Não vêm do banco de dados nem da API: para mudar o que aparece na Home,
 // edite este arquivo. Os dados dinâmicos do site são buscados na API.
+//
+// Regra desta página: cada frase precisa ser verdade sobre o que o sistema
+// faz hoje. Se uma função ainda não existe no código, ela não entra aqui.
 
-export const platformStats = {
-  clients: 2846,
-  suppliers: 384,
-  organizers: 196,
-  validated: 99.4,
-  settlement: 'D+1',
-}
+// os três destaques do topo (valor numérico anima no Contador; texto aparece como está)
+export const destaques = [
+  { id: 'perfis', rotulo: 'Perfis', valor: 3, texto: 'administrador, organizador e fornecedor' },
+  { id: 'etapas', rotulo: 'Etapas', valor: 4, texto: 'do cadastro à revisão do evento' },
+  { id: 'negociacao', rotulo: 'Negociação', valor: 'Chat', texto: 'entre organizador e fornecedor' },
+]
 
 export const testimonials = [
   {
@@ -27,29 +29,34 @@ export const testimonials = [
   },
 ]
 
+// as quatro regras da plataforma (cada uma confere com uma rota do backend)
 export const guarantees = [
   {
-    id: 'gar-qr',
-    title: 'QR Code antigo invalidado',
-    detail: 'A transferência revoga o código do vendedor no mesmo instante em que emite o do comprador.',
+    id: 'reg-cadastro',
+    title: 'Cadastro aprovado por um administrador',
+    detail:
+      'Organizadores e fornecedores enviam o credenciamento, e o administrador aprova ou recusa. A recusa sempre vem com o motivo.',
     icon: 'check',
   },
   {
-    id: 'gar-custodia',
-    title: 'Custódia em padrão bancário',
-    detail: 'O valor fica retido em conta garantida e só é liberado depois da entrada confirmada.',
-    icon: 'wallet',
+    id: 'reg-fornecedor',
+    title: 'Só fornecedor aprovado aparece',
+    detail:
+      'A lista de fornecedores e de serviços que o organizador vê é só de quem já passou pelo credenciamento.',
+    icon: 'users',
   },
   {
-    id: 'gar-liquidacao',
-    title: 'Liquidação em D+1',
-    detail: 'O repasse ao vendedor acontece no dia seguinte à confirmação, sem intermediário manual.',
-    icon: 'trend',
-  },
-  {
-    id: 'gar-bots',
-    title: 'Bloqueio de bots e verificação de CPF',
-    detail: 'Cada conta passa por checagem biométrica antes de anunciar ou comprar em evento esgotado.',
+    id: 'reg-retido',
+    title: 'Pedido retido até a aprovação',
+    detail:
+      'Se o organizador ainda não foi aprovado, o pedido de serviço fica guardado e o fornecedor só o vê depois da aprovação.',
     icon: 'shield',
+  },
+  {
+    id: 'reg-revisao',
+    title: 'Evento liberado só depois da revisão',
+    detail:
+      'O administrador confere o custo com fornecedores e aprova ou recusa o evento, informando o motivo.',
+    icon: 'calendar',
   },
 ]
