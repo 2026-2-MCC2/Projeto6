@@ -11,7 +11,8 @@
     "build": "npm run build -w ticketudo",
     "lint": "npm run lint -w ticketudo",
     "test": "npm test -w backend",
-    "db:reset": "npm run db:reset -w backend"
+    "db:reset": "npm run db:reset -w backend",
+    "db:demo": "npm run db:demo -w backend"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
