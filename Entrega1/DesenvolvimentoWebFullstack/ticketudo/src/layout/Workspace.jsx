@@ -53,6 +53,8 @@ export default function Workspace({ onSignOut }) {
   const { state } = useApp()
   const [page, setPage] = useState('home')
   const [panel, setPanel] = useState(null)
+  // dado extra da pagina aberta (ex.: o id do evento na tela do evento)
+  const [parametro, setParametro] = useState(null)
 
   const papel = state.sessao.papel
   const profile = profiles[papel]
@@ -63,13 +65,20 @@ export default function Workspace({ onSignOut }) {
 
   // criar evento depende do credenciamento: sem ele, abre o pop-up e so
   // depois de enviar segue para a tela do evento
-  function navegar(destino) {
+  function navegar(destino, valor = null) {
     if (papel === 'organizer' && destino === 'new') {
-      exigir('Para criar eventos, faça um credenciamento simples.', () => setPage('new'))
+      exigir('Para criar eventos, faça um credenciamento simples.', () => {
+        setParametro(null)
+        setPage('new')
+      })
       return
     }
+    setParametro(valor)
     setPage(destino)
   }
+
+  // paginas que nao estao no menu acendem o item do menu "pai"
+  const paginaDoMenu = { evento: 'events' }[page] ?? page
 
   const CurrentPage = pages?.[page] ?? pages?.home
 
@@ -77,7 +86,7 @@ export default function Workspace({ onSignOut }) {
     <div className="app">
       <Sidebar
         profile={profile}
-        page={page}
+        page={paginaDoMenu}
         contadores={contadores}
         onNavigate={navegar}
         onOpenPanel={setPanel}
@@ -88,6 +97,7 @@ export default function Workspace({ onSignOut }) {
         <div className="page">
           <CurrentPage
             page={page}
+            parametro={parametro}
             profile={profile}
             onNavigate={navegar}
             onOpenPanel={setPanel}

@@ -62,3 +62,18 @@ export function telefone(valor) {
   if (d.length === 10) return d.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3')
   return valor || '—'
 }
+
+// "14/03/2027, 20:00 até 15/03/2027, 04:00" (ou só a hora final se for no mesmo dia)
+export function periodo(inicio, fim) {
+  if (!inicio) return '—'
+  if (!fim) return dataHora(inicio)
+  const a = new Date(inicio)
+  const b = new Date(fim)
+  const mesmoDia = a.toDateString() === b.toDateString()
+  const hora = b.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+  return `${dataHora(inicio)} até ${mesmoDia ? hora : dataHora(fim)}`
+}
+
+export function numero(valor) {
+  return Number(valor || 0).toLocaleString('pt-BR')
+}

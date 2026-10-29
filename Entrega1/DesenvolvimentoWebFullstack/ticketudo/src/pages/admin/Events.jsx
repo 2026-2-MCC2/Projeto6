@@ -7,7 +7,7 @@ import StatusBadge from '../../components/StatusBadge'
 import Tabs from '../../components/Tabs'
 import { admin, eventos as apiEventos } from '../../api'
 import { useRecurso } from '../../hooks/useRecurso'
-import { dataHora, moeda, rotulo } from '../../utils/format'
+import { dataHora, moeda, periodo, rotulo } from '../../utils/format'
 import { useApp } from '../../state/useApp'
 
 const abas = [
@@ -157,7 +157,7 @@ export default function Events({ profile, onMudou }) {
                   </div>
                   <div>
                     <dt>Data do evento</dt>
-                    <dd>{dataHora(evento.data_hora)}</dd>
+                    <dd>{periodo(evento.data_inicio, evento.data_fim)}</dd>
                   </div>
                   <div>
                     <dt>Lotes</dt>

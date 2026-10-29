@@ -12,13 +12,13 @@ function tetoRevenda(lote) {
 router.get('/meus', autenticar, async (req, res) => {
   const [linhas] = await pool.query(
     `select i.id_ingresso, i.codigo, i.status, i.preco,
-            e.nome as evento, e.data_hora, lo.setor, lo.nome as lote,
+            e.nome as evento, e.data_inicio, lo.setor, lo.nome as lote,
             lo.preco as preco_original, lo.margem_revenda
        from ingresso i
        join evento e on e.id_evento = i.id_evento
        join lote lo on lo.id_lote = i.id_lote
       where i.id_vendedor = ? and i.status in ('vendido', 'a_venda')
-      order by e.data_hora`,
+      order by e.data_inicio`,
     [req.usuario.id],
   );
   res.json(linhas.map((l) => ({ ...l, teto_revenda: tetoRevenda(l) })));
