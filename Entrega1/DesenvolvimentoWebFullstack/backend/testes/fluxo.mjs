@@ -3,6 +3,7 @@
 const base = process.env.API || 'http://localhost:3000/api'
 let ok = 0, fail = 0
 const linhas = []
+const avisos = []
 
 function check(nome, cond, extra = '') {
   linhas.push(`${cond ? 'OK   ' : 'FALHA'} ${nome}${extra ? ' :: ' + extra : ''}`)
@@ -532,6 +533,49 @@ check('nao duplica a conversa direta', denovo.body.id_chat === direto.body.id_ch
 const doAdm = await api('GET', '/chats', null, adm)
 check('conversa direta aparece na lista do adm', doAdm.body.some((c) => c.id_chat === direto.body.id_chat))
 
+// 10. cenario de ponta a ponta do documento do PI (secao 10), do zero (FLX-08)
+{
+  const passo = (nr, nome, cond, extra) => check(`cenario ${nr}: ${nome}`, cond, extra)
+  // 1. organizador faz o autocadastro e e aprovado pelo administrador
+  const orgC = await criar('organizador', 'Cenario Organizador')
+  const credC = await api('POST', '/credenciamento', { ...dadosOrg, nome_organizacao: `Cenario Producoes ${n}` }, orgC)
+  const aprovC = await api('POST', `/admin/credenciamentos/${credC.body.id_credenciamento}/aprovar`, {}, adm)
+  const meuC = await api('GET', '/credenciamento/meu', null, orgC)
+  passo(1, 'organizador se cadastra e e aprovado', aprovC.status === 200 && meuC.body.situacao === 'credenciado')
+  // 2. cria um evento e seus itens de custo
+  const evC = await api('POST', '/eventos', { ...baseEv, nome: 'Cenario do PI', ...periodo('2027-10-10 19:00:00') }, orgC)
+  const itC = await api('POST', `/eventos/${evC.body.id_evento}/itens`, { categoria: 'estrutura', descricao: 'Palco', quantidade: 1, custo_estimado: 40000 }, orgC)
+  await api('POST', `/eventos/${evC.body.id_evento}/custos`, { tipo: 'fiscal', descricao: 'Impostos', valor: 10000 }, orgC)
+  passo(2, 'cria o evento e os itens de custo', evC.status === 201 && itC.status === 201)
+  // 3. um fornecedor aprovado ve o evento e envia uma proposta
+  await api('POST', `/eventos/${evC.body.id_evento}/abrir-cotacao`, {}, orgC)
+  const vistoC = await api('GET', '/cotacoes', null, forn)
+  const propC = await api('POST', `/itens/${itC.body.id_item}/propostas`, prop(38000), forn)
+  passo(3, 'fornecedor aprovado ve o evento e envia proposta', vistoC.body.some((e) => e.id_evento === evC.body.id_evento) && propC.status === 201)
+  // 4. o organizador consulta e seleciona a proposta
+  await api('POST', `/eventos/${evC.body.id_evento}/encerrar-cotacao`, {}, orgC)
+  const compC = await api('GET', `/eventos/${evC.body.id_evento}/propostas`, null, orgC)
+  const selC = await api('POST', `/propostas/${propC.body.id_proposta}/selecionar`, {}, orgC)
+  passo(4, 'organizador consulta e seleciona a proposta', compC.body.itens?.[0]?.propostas.length === 1 && selC.status === 200)
+  // 5. os custos sao consolidados
+  const orcC = await api('GET', `/eventos/${evC.body.id_evento}/orcamento`, null, orgC)
+  passo(5, 'custos consolidados (38.000 + 10.000)', orcC.body.totais?.custo_total === 48000, JSON.stringify(orcC.body.totais))
+  // 6. a plataforma calcula o ticket estimado (FLX-06)
+  const ticketC = await api('GET', `/eventos/${evC.body.id_evento}/ticket`, null, orgC)
+  if (ticketC.status === 404 && ticketC.body.erro === 'rota nao encontrada') {
+    avisos.push('cenario 6: o calculo do ticket ainda depende da FLX-06 (#42); este passo vira um check quando a rota existir')
+  } else {
+    passo(6, 'calcula o ticket estimado', ticketC.status === 200, JSON.stringify(ticketC.body).slice(0, 120))
+  }
+  // 7. o administrador ve o evento e as informacoes gerenciais
+  await api('POST', `/eventos/${evC.body.id_evento}/enviar-analise`, {}, orgC)
+  const vistoAdm = await api('GET', `/admin/eventos/${evC.body.id_evento}`, null, adm)
+  const relC = await api('GET', '/admin/relatorios', null, adm)
+  passo(7, 'administrador ve o evento e os relatorios',
+    vistoAdm.body.orcamento?.totais.custo_total === 48000 && vistoAdm.body.status === 'em_analise' && relC.status === 200)
+}
+
 console.log(linhas.join('\n'))
+if (avisos.length) console.log('\n' + avisos.map((a) => 'AVISO ' + a).join('\n'))
 console.log(`\n${ok} ok / ${fail} falha(s)`)
 process.exit(fail ? 1 : 0)

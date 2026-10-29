@@ -7,7 +7,8 @@
     "dev": "nodemon --ignore .banco-local server.js",
     "start": "node server.js",
     "test": "node testes/fluxo.mjs",
-    "db:reset": "node scripts/reset-db.js"
+    "db:reset": "node scripts/reset-db.js",
+    "db:demo": "node scripts/demo-db.js"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.11",

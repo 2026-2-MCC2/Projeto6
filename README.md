@@ -105,6 +105,12 @@ nem URL de API para configurar.
 |-->Entrega2<br>
 &emsp;|-->Cálculo<br>
 &emsp;&emsp;|MaximosMinimos_TrocaTicket_Grupo_Ticketudo.pdf<br>
+&emsp;|-->DesenvolvimentoWebFullstack<br>
+&emsp;&emsp;|README.md <i>(como demonstrar)</i><br>
+&emsp;&emsp;|-->evidencias<br>
+&emsp;|-->GestãoEmpresarial<br>
+&emsp;&emsp;|Fluxograma Mapa de Processos.png<br>
+&emsp;&emsp;|Mapa de Processos Grupo Ticketudo.docx<br>
 &emsp;|-->Proj.BancodeDados<br>
 &emsp;&emsp;|README.md<br>
 &emsp;&emsp;|seed_mysql.sql<br>
@@ -128,6 +134,10 @@ A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do pr
 <b>Entrega1/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados, com o diagrama entidade-relacionamento (DER) do projeto.
 
 <b>Entrega2/Cálculo</b>: Entrega da disciplina de Cálculo II (máximos, mínimos e concavidade da função de engajamento com notificações, com quadros de sinais e gráficos).
+
+<b>Entrega2/DesenvolvimentoWebFullstack</b>: Roteiro para demonstrar o cenário de ponta a ponta do PI (cadastro e aprovação, evento e itens de custo, cotação e propostas, orçamento consolidado e visão do administrador), com as contas de demonstração e as evidências. Veja [Como demonstrar](Entrega2/DesenvolvimentoWebFullstack/README.md).
+
+<b>Entrega2/GestãoEmpresarial</b>: Mapa de Processos do planejamento e cotação de um evento: justificativa, fluxograma em raias, etapas, gargalos e melhorias. Veja o [documento](Entrega2/GestãoEmpresarial/Mapa%20de%20Processos%20Grupo%20Ticketudo.docx) e o [fluxograma](Entrega2/GestãoEmpresarial/Fluxograma%20Mapa%20de%20Processos.png).
 
 <b>Entrega2/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados: script do banco em MySQL, com as tabelas, chaves primárias e estrangeiras e o diagrama. Veja o [README do banco](Entrega2/Proj.BancodeDados/README.md).
 
