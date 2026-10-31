@@ -272,6 +272,35 @@
   line-height: 1.6;
 }
 
+.ticket-card {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.ticket-card h4 {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.ticket-card p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.ticket-tabela {
+  min-width: 430px;
+}
+
+.ticket-formula {
+  color: var(--text-dim) !important;
+}
+
 .empty-state {
   display: grid;
   justify-items: center;
