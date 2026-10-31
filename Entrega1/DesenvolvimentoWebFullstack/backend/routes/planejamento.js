@@ -10,6 +10,7 @@ const pool = require('../config/bd');
 const { autenticar, permitir } = require('../middleware/auth');
 const { eventoDoOrganizador, podeMexer } = require('../lib/eventos');
 const { orcamentoDoEvento } = require('../lib/orcamento');
+const { calcularTicket } = require('../regras/ticket');
 const { texto } = require('../lib/validacao');
 
 const router = express.Router();
@@ -99,6 +100,40 @@ router.get('/:id/orcamento', soDono, async (req, res) => {
   const evento = await eventoDoOrganizador(req, res);
   if (!evento) return;
   res.json({ id_evento: evento.id_evento, ...(await orcamentoDoEvento(evento.id_evento)) });
+});
+
+router.get('/:id/ticket', soDono, async (req, res) => {
+  const evento = await eventoDoOrganizador(req, res);
+  if (!evento) return;
+
+  const orcamento = await orcamentoDoEvento(evento.id_evento);
+  const margem = Number(evento.margem_lucro) / 100;
+  const cenarios = [
+    { nome: 'mínimo', publico: evento.publico_minimo },
+    { nome: 'máximo', publico: evento.publico_maximo },
+  ];
+  if (evento.publico_esperado) {
+    cenarios.push({ nome: 'esperado', publico: evento.publico_esperado });
+  }
+
+  try {
+    res.json({
+      id_evento: evento.id_evento,
+      custo_total: Number(orcamento.totais.custo_total),
+      margem: Number(evento.margem_lucro),
+      cenarios: cenarios.map((cenario) => ({
+        ...cenario,
+        custo_total: Number(orcamento.totais.custo_total),
+        ...calcularTicket({
+          custoTotal: orcamento.totais.custo_total,
+          publico: cenario.publico,
+          margem,
+        }),
+      })),
+    });
+  } catch (erro) {
+    return res.status(422).json({ erro: erro.message });
+  }
 });
 
 // --- itens de custo --------------------------------------------------------

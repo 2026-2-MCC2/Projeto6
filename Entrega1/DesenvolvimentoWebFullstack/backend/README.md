@@ -115,6 +115,21 @@ Todas as rotas ficam em `/api` (ex.: `POST /api/auth/login`). Tudo que pede logi
 | POST | `/eventos/:id/fornecedores-externos` | organizador |
 | POST | `/eventos/:id/solicitacoes` | organizador |
 | POST | `/eventos/:id/enviar-analise` | organizador |
+| GET | `/eventos/:id/ticket` | organizador dono |
+
+`GET /eventos/:id/ticket` calcula o ticket estimado para os cenários de
+público mínimo, máximo e esperado (quando informado). A rota é exclusiva do
+organizador dono do evento e usa o custo total consolidado da FLX-05:
+
+- ticket de equilíbrio = `custo total / público`;
+- ticket-alvo = `custo total / [público x (1 - margem)]`.
+
+A margem do banco é percentual (20 significa 20%), convertida para fração
+antes da conta. O custo variável atualmente é o valor total lançado em
+`custo_evento`, portanto é igual em todos os cenários. Os dois resultados são
+arredondados para cima ao centavo para que o preço não fique abaixo do custo.
+Público precisa ser maior que zero, custo não pode ser negativo e a margem
+precisa estar entre 0% (inclusive) e 100% (exclusive).
 
 ### Ingresso e pedido
 | metodo | rota | quem |

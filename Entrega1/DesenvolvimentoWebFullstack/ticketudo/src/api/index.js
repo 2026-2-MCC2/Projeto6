@@ -32,6 +32,7 @@ export const eventos = {
   // FLX-05: propostas de cada item e orcamento consolidado (so o dono)
   propostas: (id) => get(`/eventos/${id}/propostas`),
   orcamento: (id) => get(`/eventos/${id}/orcamento`),
+  ticket: (id) => get(`/eventos/${id}/ticket`),
   criarLote: (id, dados) => post(`/eventos/${id}/lotes`, dados),
   criarFornecedorExterno: (id, dados) => post(`/eventos/${id}/fornecedores-externos`, dados),
   solicitarServico: (id, dados) => post(`/eventos/${id}/solicitacoes`, dados),

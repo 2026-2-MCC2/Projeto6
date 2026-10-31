@@ -53,6 +53,7 @@ export default function Evento({ parametro, onNavigate }) {
   const [erro, setErro] = useState(null)
   // muda a cada acao, para a comparacao de propostas buscar de novo
   const [versao, setVersao] = useState(0)
+  const ticket = useRecurso(() => eventos.ticket(id), `${id}:${versao}`)
 
   if (!id) {
     return (
@@ -277,6 +278,42 @@ export default function Evento({ parametro, onNavigate }) {
             ) : (
               <p>Com o evento nesta situação, a cotação não muda.</p>
             )}
+          </div>
+
+          <div className="ticket-card">
+            <small className="eyebrow">Ticket estimado</small>
+            <h4>Equilíbrio e alvo por cenário</h4>
+            {ticket.carregando ? <p>Calculando os tickets…</p> : null}
+            {ticket.erro ? <p className="form-erro">{ticket.erro.message}</p> : null}
+            {ticket.dados ? (
+              <>
+                <div className="tabela-rolagem">
+                  <table className="tabela ticket-tabela">
+                    <thead>
+                      <tr>
+                        <th>Cenário</th>
+                        <th className="num">Público</th>
+                        <th className="num">Equilíbrio</th>
+                        <th className="num">Alvo</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ticket.dados.cenarios.map((cenario) => (
+                        <tr key={cenario.nome}>
+                          <td>{cenario.nome}</td>
+                          <td className="num">{numero(cenario.publico)}</td>
+                          <td className="num">{moeda(cenario.ticketEquilibrio)}</td>
+                          <td className="num">{moeda(cenario.ticketAlvo)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="ticket-formula">
+                  Equilíbrio = custo total ÷ público · Alvo = custo total ÷ [público × (1 − margem)]
+                </p>
+              </>
+            ) : null}
           </div>
 
           {['rascunho', 'recusado', 'cotacao_encerrada'].includes(ev.status) ? (

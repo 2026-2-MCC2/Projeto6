@@ -565,7 +565,15 @@ check('conversa direta aparece na lista do adm', doAdm.body.some((c) => c.id_cha
   if (ticketC.status === 404 && ticketC.body.erro === 'rota nao encontrada') {
     avisos.push('cenario 6: o calculo do ticket ainda depende da FLX-06 (#42); este passo vira um check quando a rota existir')
   } else {
-    passo(6, 'calcula o ticket estimado', ticketC.status === 200, JSON.stringify(ticketC.body).slice(0, 120))
+    const minimo = ticketC.body.cenarios?.find((c) => c.nome === 'mínimo')
+    const maximo = ticketC.body.cenarios?.find((c) => c.nome === 'máximo')
+    passo(6, 'calcula o ticket estimado',
+      ticketC.status === 200
+      && minimo?.ticketEquilibrio === 96
+      && minimo?.ticketAlvo === 120
+      && maximo?.ticketEquilibrio === 48
+      && maximo?.ticketAlvo === 60,
+      JSON.stringify(ticketC.body).slice(0, 120))
   }
   // 7. o administrador ve o evento e as informacoes gerenciais
   await api('POST', `/eventos/${evC.body.id_evento}/enviar-analise`, {}, orgC)
