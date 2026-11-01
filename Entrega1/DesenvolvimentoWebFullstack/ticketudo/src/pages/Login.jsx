@@ -7,6 +7,7 @@ import { guardarToken } from '../api/client'
 import { profiles, roleOrder } from '../data/profiles'
 import { TIPO_POR_PAPEL } from '../state/reducer'
 import { useApp } from '../state/useApp'
+import './Login.css'
 
 const formVazio = { nome: '', email: '', cpf: '', telefone: '', senha: '' }
 

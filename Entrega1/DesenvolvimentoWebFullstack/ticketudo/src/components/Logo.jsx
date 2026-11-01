@@ -1,4 +1,5 @@
 import Icon from './Icon'
+import './Shared.css'
 
 export default function Logo() {
   return (
