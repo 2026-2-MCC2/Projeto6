@@ -1,0 +1,314 @@
+﻿{
+  "info": {
+    "_postman_id": "trocaticket-web06",
+    "name": "TrocaTicket",
+    "description": "ColeÃ§Ã£o WEB-06. Importe tambÃ©m o ambiente TrocaTicket - Local. Configure as contas de teste sem salvar senhas reais no Git. A sequÃªncia recomendada Ã© AutenticaÃ§Ã£o, credenciamentos, Organizador, Fornecedor e Administrador.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api" },
+    { "key": "token", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": ["pm.request.headers.upsert({ key: 'Content-Type', value: 'application/json' });"]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "AutenticaÃ§Ã£o",
+      "item": [
+        {
+          "name": "Login - sucesso (captura token)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": { "mode": "raw", "raw": "{\"email\":\"{{email}}\",\"senha\":\"{{senha}}\"}" },
+            "url": "{{baseUrl}}/auth/login",
+            "description": "Esperado: 200. O script salva token e usuario.tipo para as prÃ³ximas requisiÃ§Ãµes."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('login retorna 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json(); pm.environment.set('token', body.token);",
+            "if (body.usuario && body.usuario.tipo === 'organizador') pm.environment.set('organizadorToken', body.token);",
+            "if (body.usuario && body.usuario.tipo === 'fornecedor') pm.environment.set('fornecedorToken', body.token);"
+          ] } }]
+        },
+        {
+          "name": "Login - 401 credencial invÃ¡lida",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"email\":\"nao-existe@exemplo.com\",\"senha\":\"senha-incorreta\"}" }, "url": "{{baseUrl}}/auth/login" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 401', () => pm.response.to.have.status(401));"] } }]
+        },
+        {
+          "name": "Cadastro - 400 dados invÃ¡lidos",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"nome\":\"\",\"email\":\"invalido\",\"cpf\":\"\",\"senha\":\"123\"}" }, "url": "{{baseUrl}}/auth/cadastro" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 400', () => pm.response.to.have.status(400));"] } }]
+        },
+        {
+          "name": "Minha conta - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/auth/eu" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Minha conta - 401 sem token",
+          "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/auth/eu" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 401', () => pm.response.to.have.status(401));"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Organizador",
+      "item": [
+        {
+          "name": "Listar eventos pÃºblicos - 200",
+          "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/eventos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Criar evento - sucesso (captura eventoId)",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"nome\":\"Evento Postman {{randomInt}}\",\"descricao\":\"Evento de teste WEB-06\",\"data_inicio\":\"2027-12-01T18:00:00.000Z\",\"data_fim\":\"2027-12-01T23:00:00.000Z\",\"id_categoria\":1,\"publico_minimo\":10,\"publico_maximo\":100,\"publico_esperado\":50,\"margem_lucro\":20,\"local\":{\"nome\":\"Local Postman\",\"cidade\":\"SÃ£o Paulo\",\"estado\":\"SP\",\"endereco\":\"Rua de teste, 100\"}}" }, "url": "{{baseUrl}}/eventos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 201', () => pm.response.to.have.status(201));", "pm.environment.set('eventoId', pm.response.json().id_evento);"] } }]
+        },
+        {
+          "name": "Criar evento - 400 dados invÃ¡lidos",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"nome\":\"\",\"data_inicio\":\"data-invalida\",\"data_fim\":\"data-invalida\"}" }, "url": "{{baseUrl}}/eventos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 400', () => pm.response.to.have.status(400));"] } }]
+        },
+        {
+          "name": "Meus eventos - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/eventos/meus" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Detalhar evento - 200",
+          "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/eventos/{{eventoId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Detalhar evento inexistente - 404",
+          "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/eventos/999999999" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 404', () => pm.response.to.have.status(404));"] } }]
+        },
+        {
+          "name": "Adicionar lote - sucesso (captura loteId)",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"setor\":\"Pista\",\"nome\":\"1o lote {{randomInt}}\",\"preco\":100,\"quantidade\":20,\"margem_revenda\":20,\"data_inicio\":\"2027-11-01T00:00:00.000Z\",\"data_fim\":\"2027-11-30T23:59:59.000Z\"}" }, "url": "{{baseUrl}}/eventos/{{eventoId}}/lotes" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 201', () => pm.response.to.have.status(201));", "pm.environment.set('loteId', pm.response.json().id_lote);"] } }]
+        },
+        {
+          "name": "Adicionar lote duplicado - 409",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"setor\":\"Pista\",\"nome\":\"1o lote\",\"preco\":100,\"quantidade\":20,\"data_inicio\":\"2027-11-01T00:00:00.000Z\",\"data_fim\":\"2027-11-30T23:59:59.000Z\"}" }, "url": "{{baseUrl}}/eventos/{{eventoId}}/lotes" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 409', () => pm.response.to.have.status(409));"] } }]
+        },
+        {
+          "name": "Adicionar item de custo - sucesso (captura itemId)",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"categoria\":\"estrutura\",\"descricao\":\"Palco\",\"quantidade\":1,\"custo_estimado\":5000}" }, "url": "{{baseUrl}}/eventos/{{eventoId}}/itens" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 201', () => pm.response.to.have.status(201));", "pm.environment.set('itemId', pm.response.json().id_item);"] } }]
+        },
+        {
+          "name": "Adicionar item de custo - 400",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"categoria\":\"nao-existe\",\"quantidade\":0}" }, "url": "{{baseUrl}}/eventos/{{eventoId}}/itens" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 400', () => pm.response.to.have.status(400));"] } }]
+        },
+        {
+          "name": "Atualizar item - 200",
+          "request": { "method": "PUT", "body": { "mode": "raw", "raw": "{\"categoria\":\"estrutura\",\"descricao\":\"Palco atualizado\",\"quantidade\":2,\"custo_estimado\":5500}" }, "url": "{{baseUrl}}/eventos/{{eventoId}}/itens/{{itemId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Excluir item inexistente - 404",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/eventos/{{eventoId}}/itens/999999999" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 404', () => pm.response.to.have.status(404));"] } }]
+        },
+        {
+          "name": "Adicionar custo - sucesso (captura custoId)",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"tipo\":\"operacional\",\"descricao\":\"Taxa\",\"valor\":250}" }, "url": "{{baseUrl}}/eventos/{{eventoId}}/custos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 201', () => pm.response.to.have.status(201));", "pm.environment.set('custoId', pm.response.json().id_custo);"] } }]
+        },
+        {
+          "name": "Adicionar custo - 400",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"tipo\":\"invalido\",\"valor\":-1}" }, "url": "{{baseUrl}}/eventos/{{eventoId}}/custos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 400', () => pm.response.to.have.status(400));"] } }]
+        },
+        {
+          "name": "Atualizar custo - 200",
+          "request": { "method": "PUT", "body": { "mode": "raw", "raw": "{\"tipo\":\"operacional\",\"descricao\":\"Taxa atualizada\",\"valor\":300}" }, "url": "{{baseUrl}}/eventos/{{eventoId}}/custos/{{custoId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Planejamento - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/eventos/{{eventoId}}/planejamento" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "OrÃ§amento - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/eventos/{{eventoId}}/orcamento" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Ticket estimado - 200 ou 422",
+          "request": { "method": "GET", "url": "{{baseUrl}}/eventos/{{eventoId}}/ticket" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('cÃ³digo documentado', () => pm.expect([200, 422]).to.include(pm.response.code));"] } }]
+        },
+        {
+          "name": "Excluir custo - 200",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/eventos/{{eventoId}}/custos/{{custoId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Sem token - 401",
+          "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/eventos/meus" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 401', () => pm.response.to.have.status(401));"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Fornecedor (cotaÃ§Ãµes, propostas)",
+      "item": [
+        {
+          "name": "Fornecedores credenciados - 200",
+          "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/fornecedores" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Meu perfil - 200 ou 404",
+          "request": { "method": "GET", "url": "{{baseUrl}}/fornecedores/perfil" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('cÃ³digo documentado', () => pm.expect([200, 404]).to.include(pm.response.code));"] } }]
+        },
+        {
+          "name": "Cadastrar serviÃ§o - 201",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"nome\":\"Som Postman {{randomInt}}\",\"descricao\":\"ServiÃ§o de Ã¡udio\",\"preco\":1000}" }, "url": "{{baseUrl}}/fornecedores/servicos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 201', () => pm.response.to.have.status(201));", "pm.environment.set('servicoId', pm.response.json().id_servico);"] } }]
+        },
+        {
+          "name": "Cadastrar serviÃ§o - 400",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"nome\":\"\",\"preco\":null}" }, "url": "{{baseUrl}}/fornecedores/servicos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 400', () => pm.response.to.have.status(400));"] } }]
+        },
+        {
+          "name": "Minhas cotaÃ§Ãµes - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/cotacoes" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Detalhar cotaÃ§Ã£o - 404",
+          "request": { "method": "GET", "url": "{{baseUrl}}/cotacoes/999999999" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 404', () => pm.response.to.have.status(404));"] } }]
+        },
+        {
+          "name": "Enviar proposta - 400",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"valor\":0,\"descricao\":\"\",\"validade\":\"ontem\"}" }, "url": "{{baseUrl}}/itens/{{itemId}}/propostas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 400', () => pm.response.to.have.status(400));"] } }]
+        },
+        {
+          "name": "Editar proposta inexistente - 404",
+          "request": { "method": "PUT", "body": { "mode": "raw", "raw": "{\"valor\":100,\"descricao\":\"ServiÃ§o\",\"validade\":\"2099-12-31\"}" }, "url": "{{baseUrl}}/propostas/999999999" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 404', () => pm.response.to.have.status(404));"] } }]
+        },
+        {
+          "name": "Minhas propostas - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/propostas/minhas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "SolicitaÃ§Ãµes recebidas - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/solicitacoes" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Aceitar solicitaÃ§Ã£o inexistente - 404",
+          "request": { "method": "POST", "url": "{{baseUrl}}/solicitacoes/999999999/aceitar" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 404', () => pm.response.to.have.status(404));"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Administrador",
+      "item": [
+        {
+          "name": "Eventos em anÃ¡lise - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/admin/eventos?status=em_analise" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Credenciamentos em anÃ¡lise - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/admin/credenciamentos?status=em_analise&perfil=fornecedor" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Aprovar evento inexistente - 404",
+          "request": { "method": "POST", "url": "{{baseUrl}}/admin/eventos/999999999/aprovar" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 404', () => pm.response.to.have.status(404));"] } }]
+        },
+        {
+          "name": "Recusar evento sem motivo - 400",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/admin/eventos/{{eventoId}}/recusar" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 400', () => pm.response.to.have.status(400));"] } }]
+        },
+        {
+          "name": "RelatÃ³rios - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/admin/relatorios" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "HistÃ³rico de aprovaÃ§Ãµes - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/admin/aprovacoes" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Rota administrativa com perfil errado - 403",
+          "request": { "method": "GET", "url": "{{baseUrl}}/admin/relatorios", "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{organizadorToken}}", "type": "string" }] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 403', () => pm.response.to.have.status(403));"] } }]
+        },
+        {
+          "name": "Rota administrativa sem token - 401",
+          "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/admin/relatorios" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 401', () => pm.response.to.have.status(401));"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Fluxos complementares",
+      "item": [
+        {
+          "name": "Ingressos do usuÃ¡rio - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/ingressos/meus" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Compra sem id_lote - 400",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"quantidade\":1,\"metodo\":\"pix\"}" }, "url": "{{baseUrl}}/pedidos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 400', () => pm.response.to.have.status(400));"] } }]
+        },
+        {
+          "name": "Pedidos do usuÃ¡rio - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/pedidos/meus" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Revenda pÃºblica por evento - 200",
+          "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/ingressos/revenda/{{eventoId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Chats do usuÃ¡rio - 200",
+          "request": { "method": "GET", "url": "{{baseUrl}}/chats" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 200', () => pm.response.to.have.status(200));"] } }]
+        },
+        {
+          "name": "Mensagem vazia - 400",
+          "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\"texto\":\"\"}" }, "url": "{{baseUrl}}/chats/{{chatId}}/mensagens" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('retorna 400', () => pm.response.to.have.status(400));"] } }]
+        }
+      ]
+    }
+  ]
+}
+

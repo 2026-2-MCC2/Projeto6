@@ -76,11 +76,9 @@ router.get('/cotacoes/:idEvento', soFornecedorCredenciado, async (req, res) => {
   res.json({ ...eventos[0], itens });
 });
 
-// data de hoje no fuso do servidor (o processo roda no horario de Brasilia)
+// Use UTC because proposal dates and API payloads are ISO calendar dates.
 function hoje() {
-  const d = new Date();
-  const p = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  return new Date().toISOString().slice(0, 10);
 }
 
 function validarProposta(corpo) {
