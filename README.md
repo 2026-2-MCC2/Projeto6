@@ -69,63 +69,61 @@ nem URL de API para configurar.
 
 ## 🛠 Estrutura de pastas
 
-|-->Entrega1<br>
-&emsp;|-->Cálculo<br>
-&emsp;&emsp;|Taylor_TrocaTicket_Grupo_Ticketudo.docx<br>
-&emsp;|-->DesenvolvimentoWebFullstack<br>
-&emsp;&emsp;|-->ticketudo <i>(app React + Vite)</i><br>
-&emsp;&emsp;&emsp;|-->public<br>
-&emsp;&emsp;&emsp;|-->src<br>
-&emsp;&emsp;&emsp;&emsp;|-->assets<br>
-&emsp;&emsp;&emsp;&emsp;|-->components <i>(peças reutilizáveis de interface)</i><br>
-&emsp;&emsp;&emsp;&emsp;&emsp;|-->panels<br>
-&emsp;&emsp;&emsp;&emsp;|-->data <i>(dados de exemplo)</i><br>
-&emsp;&emsp;&emsp;&emsp;|-->layout <i>(barra lateral, barra superior e workspace)</i><br>
-&emsp;&emsp;&emsp;&emsp;|-->pages <i>(telas por perfil)</i><br>
-&emsp;&emsp;&emsp;&emsp;&emsp;|-->admin<br>
-&emsp;&emsp;&emsp;&emsp;&emsp;|-->organizer<br>
-&emsp;&emsp;&emsp;&emsp;&emsp;|-->supplier<br>
-&emsp;&emsp;&emsp;&emsp;|-->styles <i>(CSS organizado por camada)</i><br>
-&emsp;&emsp;&emsp;&emsp;|-->utils<br>
-&emsp;&emsp;&emsp;&emsp;|App.jsx<br>
-&emsp;&emsp;&emsp;&emsp;|main.jsx<br>
-&emsp;&emsp;&emsp;|index.html<br>
-&emsp;&emsp;&emsp;|package.json<br>
-&emsp;&emsp;&emsp;|vite.config.js<br>
-&emsp;|-->GestãoEmpresarial<br>
-&emsp;&emsp;|Entrega Gestão Empresarial Grupo Ticketudo.docx<br>
-&emsp;&emsp;|TrocaTicket_Individual_Caio_Moraes.docx<br>
-&emsp;&emsp;|TrocaTicket_Individual_GM.docx<br>
-&emsp;&emsp;|TrocaTicket_Individual_Gabriel_Visao.docx<br>
-&emsp;&emsp;|TrocaTicket_Individual_Otavio_Sanches.docx<br>
-&emsp;|-->PI<br>
-&emsp;&emsp;|README.md<br>
-&emsp;|-->Proj.BancodeDados<br>
-&emsp;&emsp;|DER_TT.pdf<br>
-|-->Entrega2<br>
-&emsp;|-->Cálculo<br>
-&emsp;&emsp;|MaximosMinimos_TrocaTicket_Grupo_Ticketudo.pdf<br>
-&emsp;|-->DesenvolvimentoWebFullstack<br>
-&emsp;&emsp;|README.md <i>(como demonstrar)</i><br>
-&emsp;&emsp;|-->evidencias<br>
-&emsp;|-->GestãoEmpresarial<br>
-&emsp;&emsp;|Fluxograma Mapa de Processos.png<br>
-&emsp;&emsp;|Mapa de Processos Grupo Ticketudo.docx<br>
-&emsp;|-->Proj.BancodeDados<br>
-&emsp;&emsp;|README.md<br>
-&emsp;&emsp;|seed_mysql.sql<br>
-&emsp;&emsp;|trocaticket_mysql.sql<br>
-|-->api <i>(entrada da API na Vercel)</i><br>
-|.gitignore<br>
-|package.json <i>(comandos do projeto todo)</i><br>
-|README.md<br>
-|vercel.json<br>
+```text
+.
+├── .github/                                  # template de pull request
+├── api/                                      # entrada da API na Vercel
+├── Entrega1/                                 # primeira entrega do projeto
+│   ├── Cálculo/                              # documento de Séries de Taylor
+│   ├── DesenvolvimentoWebFullstack/         # código do sistema web
+│   │   ├── backend/                          # API Express e regras do servidor
+│   │   │   ├── config/                       # configuração do banco
+│   │   │   ├── lib/                          # serviços e regras reutilizáveis
+│   │   │   ├── middleware/                   # middlewares da API
+│   │   │   ├── regras/                       # regras de negócio
+│   │   │   ├── routes/                       # rotas HTTP
+│   │   │   ├── scripts/                      # scripts de banco e demonstração
+│   │   │   └── testes/                       # testes de fluxo da API
+│   │   └── ticketudo/                        # site React com Vite
+│   │       ├── public/                        # arquivos públicos do site
+│   │       └── src/                           # código-fonte do frontend
+│   │           ├── api/                       # clientes das chamadas à API
+│   │           ├── assets/                    # imagens e outros recursos
+│   │           ├── components/                # componentes reutilizáveis
+│   │           │   └── panels/                # painéis de interface
+│   │           ├── data/                      # dados auxiliares usados pelas telas; dados reais vêm da API
+│   │           ├── hooks/                     # hooks de acesso e estado assíncrono
+│   │           ├── layout/                    # sidebar, topbar e workspace
+│   │           ├── pages/                     # telas por perfil
+│   │           │   ├── admin/                 # telas administrativas
+│   │           │   ├── organizer/             # telas do organizador
+│   │           │   └── supplier/              # telas do fornecedor
+│   │           ├── state/                     # contexto e estado global
+│   │           ├── styles/                    # estilos CSS
+│   │           └── utils/                     # funções auxiliares
+│   ├── GestãoEmpresarial/                    # documentos de Gestão Empresarial
+│   ├── PI/                                    # materiais do projeto integrador
+│   ├── Proj.BancodeDados/                    # diagrama entidade-relacionamento
+│   └── tabelas_bd/                            # scripts SQL de tabelas e seeds
+├── Entrega2/                                 # segunda entrega do projeto
+│   ├── Cálculo/                              # materiais de Cálculo II
+│   ├── DesenvolvimentoWebFullstack/         # roteiro e evidências de demonstração
+│   │   └── evidencias/                       # evidências da demonstração
+│   ├── GestãoEmpresarial/                   # mapa de processos e documentos
+│   └── Proj.BancodeDados/                   # scripts e documentação MySQL
+├── .gitignore                                # arquivos ignorados pelo Git
+├── package.json                              # comandos e workspaces do projeto
+├── README.md                                 # guia geral do projeto
+└── vercel.json                               # configuração de publicação
+```
 
 A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do projeto, o mesmo que você está lendo agora) e as pastas <b>Entrega1</b> e <b>Entrega2</b>, que reúnem as entregas do projeto organizadas por disciplina:
 
 <b>Entrega1/Cálculo</b>: Entrega da disciplina de Cálculo (documento sobre Séries de Taylor aplicado ao projeto).
 
-<b>Entrega1/DesenvolvimentoWebFullstack</b>: Código-fonte do front-end em `ticketudo`, uma aplicação React criada com Vite. Dentro de `src` o código é separado em camadas: `components` (peças reutilizáveis de interface), `layout` (barra lateral, barra superior e a estrutura do workspace), `pages` (telas divididas por perfil — admin, organizer e supplier), `data` (dados de exemplo), `styles` (CSS por camada) e `utils` (funções auxiliares).
+<b>Entrega1/DesenvolvimentoWebFullstack</b>: Código-fonte do sistema web. O frontend fica em `ticketudo`, uma aplicação React criada com Vite, e a API fica em `backend`. Dentro de `ticketudo/src`, `api` concentra as chamadas ao backend, `hooks` os hooks reutilizáveis, `state` o estado global, `components` as peças de interface, `layout` a estrutura do workspace, `pages` as telas por perfil, `data` os dados auxiliares das telas, `styles` o CSS e `utils` as funções auxiliares.
+
+<b>Entrega1/tabelas_bd</b>: Scripts SQL do banco, incluindo a criação das tabelas e os seeds usados pelo backend.
 
 <b>Entrega1/GestãoEmpresarial</b>: Entregas da disciplina de Gestão Empresarial, incluindo o documento do grupo e as análises individuais de cada integrante.
 
