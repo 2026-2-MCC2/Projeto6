@@ -33,11 +33,6 @@
   color: var(--text);
 }
 
-.login-art .brand b {
-  background: var(--accent);
-  color: var(--bg);
-}
-
 .login-art-copy {
   position: absolute;
   z-index: 1;
