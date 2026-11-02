@@ -391,21 +391,6 @@
   font-size: 10px;
 }
 
-.topbar-actions button {
-  position: relative;
-}
-
-
-.event-name > span {
-  display: block;
-}
-
-.event-name small {
-  display: block;
-  color: var(--text-dim);
-  font-size: 10px;
-}
-
 @media (max-width: 900px) {
   .create-layout {
     grid-template-columns: minmax(0, 1fr);

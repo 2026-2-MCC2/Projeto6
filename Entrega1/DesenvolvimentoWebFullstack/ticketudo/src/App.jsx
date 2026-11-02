@@ -1,3 +1,7 @@
+// Ordem do CSS das telas e componentes. Ela importa: quando duas regras tem a
+// mesma prioridade, vale a que carrega por ultimo (o WorkspaceResponsive fica
+// no fim para os ajustes de celular ganharem). Os componentes tambem importam
+// o proprio CSS, mas e esta lista que define a ordem final.
 import './layout/Workspace.css'
 import './components/Shared.css'
 import './layout/WorkspacePages.css'

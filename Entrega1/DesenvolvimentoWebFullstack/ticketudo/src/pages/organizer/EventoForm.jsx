@@ -1,9 +1,12 @@
 import { useState } from 'react'
-import Field from '../../components/Field'
-import { UFS } from '../../utils/validacao'
+import DadosEvento from './DadosEvento'
+import LocalEvento from './LocalEvento'
+import PublicoEvento from './PublicoEvento'
 
 // Formulario dos dados do evento (FLX-02). Serve para criar (NewEvent) e
-// para editar (tela do evento, WEB-05).
+// para editar (tela do evento, WEB-05). Cada bloco do formulario fica num
+// arquivo proprio (DadosEvento, LocalEvento e PublicoEvento); este arquivo
+// guarda o estado, a validacao e o envio.
 
 // o input datetime-local usa "2027-03-14T20:00"; o banco grava "2027-03-14 20:00:00"
 function paraBanco(valor) {
@@ -114,86 +117,9 @@ export default function EventoForm({ evento, categorias, rotuloBotao, onSalvar, 
 
   return (
     <form className="form-card" onSubmit={enviar} noValidate>
-      <h3>Dados do evento</h3>
-      {erroGeral ? <p className="form-erro">{erroGeral}</p> : null}
-
-      <Field label="Nome do evento" error={erros.nome}>
-        <input id="event-name" value={f.nome} onChange={mudar('nome')} />
-      </Field>
-
-      <Field label="Descrição">
-        <textarea id="event-desc" rows={3} value={f.descricao} onChange={mudar('descricao')} />
-      </Field>
-
-      <div className="field-row">
-        <Field label="Começa" error={erros.data_inicio}>
-          <input id="event-inicio" type="datetime-local" value={f.data_inicio} onChange={mudar('data_inicio')} />
-        </Field>
-        <Field label="Termina" error={erros.data_fim}>
-          <input id="event-fim" type="datetime-local" value={f.data_fim} onChange={mudar('data_fim')} />
-        </Field>
-        <Field label="Categoria" error={erros.id_categoria}>
-          <select id="event-categoria" value={f.id_categoria} onChange={mudar('id_categoria')}>
-            <option value="">Escolha…</option>
-            {categorias.map((c) => (
-              <option value={c.id_categoria} key={c.id_categoria}>
-                {c.nome}
-              </option>
-            ))}
-          </select>
-        </Field>
-      </div>
-
-      <h3>Onde vai acontecer</h3>
-
-      <Field label="Nome do local" error={erros.local_nome}>
-        <input
-          id="event-venue"
-          value={f.local_nome}
-          onChange={mudar('local_nome')}
-          placeholder="Arena da Barra, Clube XV, Chácara do Zé…"
-        />
-      </Field>
-
-      <div className="field-row">
-        <Field label="Cidade" error={erros.cidade}>
-          <input id="event-city" value={f.cidade} onChange={mudar('cidade')} />
-        </Field>
-        <Field label="UF" error={erros.estado}>
-          <select id="event-uf" value={f.estado} onChange={mudar('estado')}>
-            <option value="">—</option>
-            {UFS.map((uf) => (
-              <option key={uf}>{uf}</option>
-            ))}
-          </select>
-        </Field>
-      </div>
-
-      <Field label="Endereço">
-        <input id="event-address" value={f.endereco} onChange={mudar('endereco')} placeholder="Rua, número, bairro" />
-      </Field>
-
-      <h3>Público e margem</h3>
-      <p className="form-nota">
-        O público mínimo e o máximo são os dois cenários do cálculo do ticket. A margem é o lucro
-        desejado sobre a receita.
-      </p>
-
-      <div className="field-row">
-        <Field label="Público mínimo" error={erros.publico_minimo}>
-          <input id="event-pub-min" type="number" min="1" step="1" value={f.publico_minimo} onChange={mudar('publico_minimo')} />
-        </Field>
-        <Field label="Público máximo" error={erros.publico_maximo}>
-          <input id="event-pub-max" type="number" min="1" step="1" value={f.publico_maximo} onChange={mudar('publico_maximo')} />
-        </Field>
-        <Field label="Público esperado" hint="opcional" error={erros.publico_esperado}>
-          <input id="event-pub-esp" type="number" min="1" step="1" value={f.publico_esperado} onChange={mudar('publico_esperado')} />
-        </Field>
-        <Field label="Margem de lucro (%)" error={erros.margem_lucro}>
-          <input id="event-margem" type="number" min="0" max="99.99" step="0.01" value={f.margem_lucro} onChange={mudar('margem_lucro')} placeholder="20" />
-        </Field>
-      </div>
-
+      <DadosEvento f={f} erros={erros} categorias={categorias} mudar={mudar} erroGeral={erroGeral} />
+      <LocalEvento f={f} erros={erros} mudar={mudar} />
+      <PublicoEvento f={f} erros={erros} mudar={mudar} />
       <div className="request-actions">
         {onCancelar ? (
           <button className="btn-secondary" type="button" onClick={onCancelar}>

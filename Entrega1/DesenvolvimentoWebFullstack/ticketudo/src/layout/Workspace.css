@@ -117,6 +117,7 @@
 }
 
 .topbar-actions button {
+  position: relative;
   display: flex;
   padding: 0;
   border: 0;
@@ -136,7 +137,21 @@
 }
 
 .page {
+  position: relative;
   max-width: 1220px;
   margin: auto;
   padding: 48px 52px 80px;
+}
+
+/* a area de conteudo tambem ganha um respiro de luz no topo */
+.page::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  width: 900px;
+  height: 320px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, #ffffff0a, transparent);
+  pointer-events: none;
 }

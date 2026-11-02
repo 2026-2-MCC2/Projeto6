@@ -71,50 +71,53 @@ nem URL de API para configurar.
 
 ```text
 .
-├── .github/                                  # template de pull request
-├── api/                                      # entrada da API na Vercel
-├── Entrega1/                                 # primeira entrega do projeto
-│   ├── Cálculo/                              # documento de Séries de Taylor
-│   ├── DesenvolvimentoWebFullstack/         # código do sistema web
-│   │   ├── backend/                          # API Express e regras do servidor
-│   │   │   ├── config/                       # configuração do banco
-│   │   │   ├── lib/                          # serviços e regras reutilizáveis
-│   │   │   ├── middleware/                   # middlewares da API
-│   │   │   ├── regras/                       # regras de negócio
-│   │   │   ├── routes/                       # rotas HTTP
-│   │   │   ├── scripts/                      # scripts de banco e demonstração
-│   │   │   └── testes/                       # testes de fluxo da API
-│   │   └── ticketudo/                        # site React com Vite
-│   │       ├── public/                        # arquivos públicos do site
-│   │       └── src/                           # código-fonte do frontend
-│   │           ├── api/                       # clientes das chamadas à API
-│   │           ├── assets/                    # imagens e outros recursos
-│   │           ├── components/                # componentes reutilizáveis
-│   │           │   └── panels/                # painéis de interface
-│   │           ├── data/                      # dados auxiliares usados pelas telas; dados reais vêm da API
-│   │           ├── hooks/                     # hooks de acesso e estado assíncrono
-│   │           ├── layout/                    # sidebar, topbar e workspace
-│   │           ├── pages/                     # telas por perfil
-│   │           │   ├── admin/                 # telas administrativas
-│   │           │   ├── organizer/             # telas do organizador
-│   │           │   └── supplier/              # telas do fornecedor
-│   │           ├── state/                     # contexto e estado global
-│   │           ├── styles/                    # estilos CSS
-│   │           └── utils/                     # funções auxiliares
-│   ├── GestãoEmpresarial/                    # documentos de Gestão Empresarial
-│   ├── PI/                                    # materiais do projeto integrador
-│   ├── Proj.BancodeDados/                    # diagrama entidade-relacionamento
-│   └── tabelas_bd/                            # scripts SQL de tabelas e seeds
-├── Entrega2/                                 # segunda entrega do projeto
-│   ├── Cálculo/                              # materiais de Cálculo II
-│   ├── DesenvolvimentoWebFullstack/         # roteiro e evidências de demonstração
-│   │   └── evidencias/                       # evidências da demonstração
-│   ├── GestãoEmpresarial/                   # mapa de processos e documentos
-│   └── Proj.BancodeDados/                   # scripts e documentação MySQL
-├── .gitignore                                # arquivos ignorados pelo Git
-├── package.json                              # comandos e workspaces do projeto
-├── README.md                                 # guia geral do projeto
-└── vercel.json                               # configuração de publicação
+├── .github/                          # template de pull request
+├── api/                              # entrada da API na Vercel
+├── Entrega1/                         # primeira entrega do projeto
+│   ├── Cálculo/                      # documento de Séries de Taylor
+│   ├── DesenvolvimentoWebFullstack/  # código do sistema web
+│   │   ├── backend/                  # API Express e regras do servidor
+│   │   │   ├── config/               # configuração do banco
+│   │   │   ├── lib/                  # serviços e regras reutilizáveis
+│   │   │   ├── middleware/           # middlewares da API
+│   │   │   ├── regras/               # regras de negócio
+│   │   │   ├── routes/               # rotas HTTP
+│   │   │   ├── scripts/              # scripts de banco e demonstração
+│   │   │   └── testes/               # testes de fluxo da API e do cálculo do ticket
+│   │   └── ticketudo/                # site React com Vite
+│   │       ├── public/               # arquivos públicos do site
+│   │       └── src/                  # código-fonte do frontend
+│   │           ├── api/              # clientes das chamadas à API
+│   │           ├── assets/           # imagens e outros recursos
+│   │           ├── components/       # componentes reutilizáveis
+│   │           │   └── panels/       # painéis de interface
+│   │           ├── data/             # textos fixos das telas; dados reais vêm da API
+│   │           ├── hooks/            # hooks de acesso e estado assíncrono
+│   │           ├── layout/           # sidebar, topbar e workspace
+│   │           ├── pages/            # telas por perfil
+│   │           │   ├── admin/        # telas administrativas
+│   │           │   ├── organizer/    # telas do organizador
+│   │           │   └── supplier/     # telas do fornecedor
+│   │           ├── state/            # contexto e estado global
+│   │           ├── styles/           # estilos CSS
+│   │           └── utils/            # funções auxiliares
+│   ├── GestãoEmpresarial/            # documentos de Gestão Empresarial
+│   ├── PI/                           # materiais do projeto integrador
+│   ├── Proj.BancodeDados/            # diagrama entidade-relacionamento
+│   └── tabelas_bd/                   # scripts SQL de tabelas e seeds
+├── Entrega2/                         # segunda entrega do projeto
+│   ├── Cálculo/                      # materiais de Cálculo II
+│   ├── DesenvolvimentoWebFullstack/  # roteiro e evidências de demonstração
+│   │   └── evidencias/               # evidências da demonstração
+│   ├── GestãoEmpresarial/            # mapa de processos e documentos
+│   └── Proj.BancodeDados/            # scripts e documentação MySQL
+├── .gitignore                        # arquivos ignorados pelo Git
+├── .nvmrc                            # versão do Node usada no projeto
+├── CONTRIBUTING.md                   # padrão de branches, commits e PRs
+├── package.json                      # comandos e workspaces do projeto
+├── README.md                         # guia geral do projeto
+├── TERMO_DE_USO_DE_IA.md             # onde e como a IA foi usada no projeto
+└── vercel.json                       # configuração de publicação
 ```
 
 A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do projeto, o mesmo que você está lendo agora) e as pastas <b>Entrega1</b> e <b>Entrega2</b>, que reúnem as entregas do projeto organizadas por disciplina:
@@ -138,6 +141,8 @@ A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do pr
 <b>Entrega2/GestãoEmpresarial</b>: Mapa de Processos do planejamento e cotação de um evento: justificativa, fluxograma em raias, etapas, gargalos e melhorias. Veja o [documento](Entrega2/GestãoEmpresarial/Mapa%20de%20Processos%20Grupo%20Ticketudo.docx) e o [fluxograma](Entrega2/GestãoEmpresarial/Fluxograma%20Mapa%20de%20Processos.png).
 
 <b>Entrega2/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados: script do banco em MySQL, com as tabelas, chaves primárias e estrangeiras e o diagrama. Veja o [README do banco](Entrega2/Proj.BancodeDados/README.md).
+
+<b>TERMO_DE_USO_DE_IA.md</b>: Registro de onde e como ferramentas de inteligência artificial foram usadas no projeto. Veja o [termo](TERMO_DE_USO_DE_IA.md).
 
 ## 🎓 Referências
 

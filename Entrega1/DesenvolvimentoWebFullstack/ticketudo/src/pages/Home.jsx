@@ -2,7 +2,7 @@ import Contador from '../components/Contador'
 import Icon from '../components/Icon'
 import Logo from '../components/Logo'
 import Revela from '../components/Revela'
-import { destaques, guarantees, testimonials } from '../data/paginaInicial'
+import { destaques, guarantees } from '../data/paginaInicial'
 import { profiles, todosOsPapeis } from '../data/profiles'
 import './Home.css'
 
@@ -191,31 +191,17 @@ export default function Home({ onEnter }) {
         <div className="wrap historia-grade">
           <Revela>
             <p className="eyebrow">Quem somos</p>
-            <h2>Nascemos em 2021 para acabar com o golpe do ingresso</h2>
+            <h2>Uma plataforma para planejar eventos com mais clareza</h2>
             <p className="lead">
-              A plataforma foi criada por programadores e entusiastas de música depois de verem
-              amigos barrados em festivais lotados com ingressos duplicados.
+              A TrocaTicket nasceu com o objetivo de facilitar a troca e a revenda de ingressos
+              para festas universitárias e, com a evolução do negócio, passou a atender também
+              outros tipos de eventos.
             </p>
             <p>
-              No lugar da confiança cega em um desconhecido de grupo de rede social, entram
-              identidade verificada e código validado. A cobrança acontece só quando a transação se
-              conclui: a plataforma só ganha quando comprador e vendedor conseguem fechar negócio.
+              Incubada e mentorada pela FECAP, a empresa pretende ampliar sua plataforma para
+              apoiar organizadores ainda na etapa de planejamento.
             </p>
           </Revela>
-
-          <div className="depoimentos">
-            {testimonials.map((item, i) => (
-              <Revela atraso={i * 90} key={item.id}>
-                <blockquote>
-                  <p>{item.quote}</p>
-                  <footer>
-                    <strong>{item.author}</strong>
-                    <span>{item.detail}</span>
-                  </footer>
-                </blockquote>
-              </Revela>
-            ))}
-          </div>
         </div>
       </section>
 

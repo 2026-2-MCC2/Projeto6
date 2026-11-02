@@ -171,47 +171,6 @@
   font-size: 12.5px;
 }
 
-.page-heading-actions .status {
-  align-self: center;
-}
-
-/* ------------------------------------------------------------------
-   Profundidade
-
-   Toda superficie que fica "em cima" do fundo recebe a mesma receita:
-   um degrade de cima pra baixo, uma linha clara na borda superior
-   (o realce, que simula a luz batendo) e uma sombra embaixo.
-   E isso que faz o card parecer levantado em vez de pintado.
-   ------------------------------------------------------------------ */
-
-.form-card,
-.panel,
-.login-form .role-options button {
-  background: linear-gradient(168deg, #171717, #101010 68%) !important;
-  box-shadow: var(--realce), var(--sombra-rasa);
-}
-
-.login-form .role-options button.is-selected {
-  box-shadow: var(--realce-forte), 0 0 0 1px #ffffff2e, var(--sombra);
-}
-
-/* a area de conteudo tambem ganha um respiro de luz no topo */
-.page {
-  position: relative;
-}
-
-.page::before {
-  content: '';
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  width: 900px;
-  height: 320px;
-  transform: translateX(-50%);
-  background: radial-gradient(closest-side, #ffffff0a, transparent);
-  pointer-events: none;
-}
-
 /* ------------------------------------------------------------------
    Escolha de fornecedor dentro da criacao do evento
    ------------------------------------------------------------------ */

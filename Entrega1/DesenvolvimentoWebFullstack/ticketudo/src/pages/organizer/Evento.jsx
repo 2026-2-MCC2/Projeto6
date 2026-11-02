@@ -85,11 +85,17 @@ export default function Evento({ parametro, onNavigate }) {
     }
   }
 
+  // o ticket depende do orcamento, do publico e da margem: recalcula junto
+  function recarregarTudo() {
+    plano.recarregar()
+    setVersao((v) => v + 1)
+  }
+
   async function salvarDados(dados) {
     await eventos.editar(ev.id_evento, dados)
     setEditando(false)
     dispatch({ type: 'aviso', texto: 'Evento atualizado.' })
-    plano.recarregar()
+    recarregarTudo()
   }
 
   async function excluir() {
@@ -193,7 +199,7 @@ export default function Evento({ parametro, onNavigate }) {
                 Compare as propostas de cada item e escolha uma por item. O orçamento ao lado usa a
                 proposta escolhida; item sem escolha entra pelo custo estimado.
               </p>
-              <CompararPropostas idEvento={ev.id_evento} versao={versao} onMudou={plano.recarregar} />
+              <CompararPropostas idEvento={ev.id_evento} versao={versao} onMudou={recarregarTudo} />
             </section>
           ) : null}
 

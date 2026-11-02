@@ -33,11 +33,6 @@
   color: var(--text);
 }
 
-.login-art .brand b {
-  background: var(--accent);
-  color: var(--bg);
-}
-
 .login-art-copy {
   position: absolute;
   z-index: 1;
@@ -71,7 +66,7 @@
 }
 
 .login-form h2 {
-  margin: 12px 0 6px;
+  margin: 4px 0 6px;
   color: #fff;
   font-family: var(--font-serif);
   font-size: 32px;
@@ -195,6 +190,11 @@
   color: var(--accent);
 }
 
-.login-form h2 {
-  margin-top: 4px;
+.login-form .role-options button {
+  background: var(--superficie-elevada) !important;
+  box-shadow: var(--realce), var(--sombra-rasa);
+}
+
+.login-form .role-options button.is-selected {
+  box-shadow: var(--realce-forte), 0 0 0 1px #ffffff2e, var(--sombra);
 }
