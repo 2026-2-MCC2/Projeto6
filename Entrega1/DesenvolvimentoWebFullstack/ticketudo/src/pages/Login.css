@@ -8,7 +8,7 @@
 .login-art {
   position: relative;
   padding: 46px 8%;
-  background: linear-gradient(160deg, #141414, #0a0a0a 55%);
+  background: linear-gradient(160deg, var(--tt-cinza-13), var(--tt-preto) 55%);
   border-right: 1px solid var(--border);
   color: var(--text);
 }
@@ -22,7 +22,7 @@
   width: 420px;
   height: 420px;
   border-radius: 50%;
-  background: #1e5cb333;
+  background: var(--marca-brilho);
   filter: blur(70px);
   pointer-events: none;
 }
@@ -52,7 +52,7 @@
 
 .login-art p {
   max-width: 330px;
-  color: #c3c3c3;
+  color: var(--tt-cinza-c3);
   font-size: 13px;
   line-height: 1.65;
 }
@@ -67,7 +67,7 @@
 
 .login-form h2 {
   margin: 4px 0 6px;
-  color: #fff;
+  color: var(--text);
   font-family: var(--font-serif);
   font-size: 32px;
 }
@@ -92,7 +92,7 @@
   padding: 0 5px 12px;
   border: 0;
   background: none;
-  color: #9c9c9c;
+  color: var(--tt-cinza-9c);
   font-size: 12px;
 }
 
@@ -122,8 +122,8 @@
 }
 
 .role-options button:hover {
-  background: var(--blue-soft);
-  border-color: var(--blue);
+  background: var(--surface-muted);
+  border-color: var(--marca);
 }
 
 .role-options b {
@@ -139,13 +139,13 @@
 }
 
 .role-options small {
-  color: #a0a0a0;
+  color: var(--tt-cinza-9c);
   font-size: 8px;
 }
 
 .role-admin {
   background: var(--surface-hover);
-  color: #848484;
+  color: var(--tt-cinza-84);
 }
 
 .role-supplier {
@@ -155,7 +155,7 @@
 
 .role-organizer {
   background: var(--accent-bg);
-  color: #747474;
+  color: var(--tt-cinza-74);
 }
 
 .login-legal {
@@ -183,7 +183,7 @@
 
 .role-options button.is-selected {
   border-color: var(--accent);
-  background: var(--blue-soft);
+  background: var(--surface-muted);
 }
 
 .role-options button.is-selected strong {
@@ -196,5 +196,5 @@
 }
 
 .login-form .role-options button.is-selected {
-  box-shadow: var(--realce-forte), 0 0 0 1px #ffffff2e, var(--sombra);
+  box-shadow: var(--realce-forte), 0 0 0 1px var(--tt-branco-18), var(--sombra);
 }

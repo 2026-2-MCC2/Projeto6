@@ -1,56 +1,162 @@
-/* Paleta medida no site publicado (trocaticket.com.br), lendo as cores
-   computadas no navegador.
+/* ==================================================================
+   Cores do TrocaTicket: o unico lugar do site com cor escrita.
 
-   O desenho e quase preto com texto branco e um cinza-azulado palido
-   (#D7E2EA) no texto secundario. As superficies sao branco translucido
-   em cima do preto, nao cinza solido. A acao principal e uma pilula
-   branca com texto escuro. Verde so aparece como status. */
+   Origem das cores:
+   - preto, branco e o palido (#d7e2ea) foram medidos no site publicado
+     (trocaticket.com.br), lendo as cores computadas no navegador;
+   - azul, roxo, rosa e laranja sao da logo oficial (VIS-02). Os valores
+     sao aproximados, tirados da imagem da logo: falta o grupo confirmar
+     com o arquivo original;
+   - o azul profundo e o azul claro aparecem em brilhos e destaques do
+     site; verde, ambar e vermelho so aparecem como status.
+
+   Como usar:
+   1. Paleta da marca: so as cores, com nome proprio. Nao diz onde usar.
+   2. Tokens de uso: dizem PARA QUE a cor serve (fundo, texto, borda...).
+      Os arquivos de tela e componente usam estes nomes.
+   3. Faixas: classes que redefinem os tokens de uso num trecho da
+      pagina (entram com a VIS-01).
+
+   Para mudar uma cor do site, mude a linha dela aqui.
+   ================================================================== */
 
 :root {
+  /* ----------------------------------------------------------------
+     1. Paleta da marca
+     ---------------------------------------------------------------- */
+
+  --tt-preto: #0c0c0c;
+  --tt-branco: #ffffff;
+  --tt-palido: #d7e2ea;
+
+  /* cores da logo (aproximadas, a confirmar com o arquivo original) */
+  --tt-azul: #23aafb;
+  --tt-roxo: #6a4cff;
+  --tt-rosa: #ed0092;
+  --tt-laranja: #ff8e1e;
+
+  /* azuis dos brilhos e destaques */
+  --tt-azul-profundo: #1e5cb3;
+  --tt-azul-claro: #5b9bf0;
+
+  /* escala de cinzas: o numero e o valor hexadecimal de cada canal
+     (--tt-cinza-17 = #171717). Do mais escuro para o mais claro. */
+  --tt-cinza-08: #080808;
+  --tt-cinza-10: #101010;
+  --tt-cinza-13: #131313;
+  --tt-cinza-17: #171717;
+  --tt-cinza-1c: #1c1c1c;
+  --tt-cinza-26: #262626;
+  --tt-cinza-48: #484848;
+  --tt-cinza-6d: #6d6d6d;
+  --tt-cinza-74: #747474;
+  --tt-cinza-84: #848484;
+  --tt-cinza-9c: #9c9c9c;
+  --tt-cinza-c3: #c3c3c3;
+  --tt-cinza-de: #dedede;
+  --tt-cinza-e8: #e8e8e8;
+  --tt-cinza-f2: #f2f2f2;
+
+  /* branco translucido por cima do preto (o numero e a opacidade em %).
+     E assim que o site desenha superficies e bordas. */
+  --tt-branco-1: #ffffff03;
+  --tt-branco-2: #ffffff05;
+  --tt-branco-3: #ffffff08;
+  --tt-branco-4: #ffffff0a;
+  --tt-branco-6: #ffffff0f;
+  --tt-branco-8: #ffffff14;
+  --tt-branco-10: #ffffff1a;
+  --tt-branco-12: #ffffff1f;
+  --tt-branco-18: #ffffff2e;
+  --tt-branco-20: #ffffff33;
+
+  /* preto translucido, para sombras (o numero e a opacidade em %) */
+  --tt-sombra-35: #00000059;
+  --tt-sombra-40: #00000066;
+  --tt-sombra-50: #00000080;
+  --tt-sombra-60: #00000099;
+  --tt-sombra-65: #000000a6;
+  --tt-sombra-70: #000000b3;
+  --tt-sombra-80: #000000cc;
+  --tt-sombra-85: #000000d9;
+  --tt-sombra-100: #000000;
+
+  /* status. Contraste medido sobre o fundo --tt-preto:
+     verde 7,7:1, ambar 11:1, vermelho 7,1:1 (todos passam do AA, 4,5:1) */
+  --tt-verde: #10b981;
+  --tt-verde-escuro: #0c2b22;
+  --tt-verde-medio: #0f3a2e;
+  --tt-verde-borda: #16614a;
+  --tt-ambar: #f5b84b;
+  --tt-vermelho: #f87171;
+  --tt-vermelho-escuro: #2b1316;
+  --tt-vermelho-medio: #3a1a1e;
+  --tt-vermelho-borda: #5c2429;
+
+  /* ----------------------------------------------------------------
+     2. Tokens de uso
+     ---------------------------------------------------------------- */
+
   /* diz ao navegador que a pagina e escura: sem isso ele desenha a
      lista do select e o calendario do date com fundo branco */
   color-scheme: dark;
 
-  --bg: #0c0c0c;
-  --surface: #101010;
-  --surface-raised: #161616;
-  --surface-hover: #1d1d1d;
-  --field-bg: #080808;
+  --bg: var(--tt-preto);
+  --surface: var(--tt-cinza-10);
+  --surface-raised: var(--tt-cinza-17);
+  --surface-hover: var(--tt-cinza-1c);
+  /* superficie um degrau abaixo (botoes de escolha, linhas de lista) */
+  --surface-muted: var(--tt-cinza-13);
+  --field-bg: var(--tt-cinza-08);
 
   /* no site as bordas sao branco com alpha, nao cinza chapado */
-  --border: #ffffff1a;
-  --border-soft: #ffffff0f;
-  --border-strong: #ffffff33;
+  --border: var(--tt-branco-10);
+  --border-soft: var(--tt-branco-6);
+  --border-strong: var(--tt-branco-20);
 
-  --text: #ffffff;
+  /* texto: branco e o palido com tres opacidades.
+     Contraste sobre --bg: texto 19,6:1, muted 9,6:1, dim 5,2:1, faint 4:1.
+     O faint fica abaixo do AA (4,5:1): usar so em texto de apoio, nunca
+     em informacao que a pessoa precisa ler para usar a tela. */
+  --text: var(--tt-branco);
   --text-muted: #d7e2eacc;
   --text-dim: #d7e2ea8f;
   --text-faint: #d7e2ea7a;
 
   /* o palido da marca, usado em destaque e estado ativo */
-  --accent: #d7e2ea;
-  --accent-bg: #ffffff0f;
+  --accent: var(--tt-palido);
+  --accent-bg: var(--tt-branco-6);
 
   /* o azul que aparece em gradiente e borda no site */
-  --marca: #1e5cb3;
-  --marca-clara: #5b9bf0;
+  --marca: var(--tt-azul-profundo);
+  --marca-clara: var(--tt-azul-claro);
+  --marca-brilho: #1e5cb333;
+  --marca-brilho-suave: #1e5cb31a;
+  --marca-clara-halo: #5b9bf026;
 
   /* acao principal: pilula branca com texto escuro */
-  --acao: #ffffff;
-  --acao-texto: #0c0c0c;
+  --acao: var(--tt-branco);
+  --acao-texto: var(--tt-preto);
+  --acao-texto-fundo: #0c0c0c1f;
 
-  /* nomes antigos, mantidos pra nao quebrar quem ja usa */
-  --blue: #1e5cb3;
-  --blue-light: #d7e2ea;
-  --blue-deep: #12294a;
-  --blue-soft: #121212;
+  /* barras fixas com fundo de vidro (o conteudo aparece borrado atras) */
+  --vidro-topbar: #0f0f0fd9;
+  --vidro-site: #0a0a0acc;
 
-  --positive: #10b981;
-  --positive-bg: #0c2b22;
+  --positive: var(--tt-verde);
+  --positive-bg: var(--tt-verde-escuro);
+  --positive-hover: var(--tt-verde-medio);
+  --positive-border: var(--tt-verde-borda);
+  --positive-halo: #10b98126;
 
-  --negative: #f87171;
-  --negative-bg: #2b1316;
-  --negative-border: #5c2429;
+  --waiting: var(--tt-ambar);
+  --waiting-halo: #f5b84b26;
+
+  --negative: var(--tt-vermelho);
+  --negative-bg: var(--tt-vermelho-escuro);
+  --negative-hover: var(--tt-vermelho-medio);
+  --negative-border: var(--tt-vermelho-borda);
+  --negative-halo: #f8717126;
 
   /* ----------------------------------------------------------------
      Escala
@@ -93,22 +199,29 @@
   /* profundidade: luz de cima, sombra embaixo.
      o realce e a linha clara na borda superior, que e o que faz
      a superficie parecer levantada em vez de pintada */
-  --realce: inset 0 1px 0 #ffffff14;
-  --realce-forte: inset 0 1px 0 #ffffff1f;
+  --realce: inset 0 1px 0 var(--tt-branco-8);
+  --realce-forte: inset 0 1px 0 var(--tt-branco-12);
 
-  --sombra-rasa: 0 1px 2px #00000080, 0 4px 12px #00000059;
-  --sombra: 0 2px 4px #0009, 0 12px 28px -6px #000000a6;
-  --sombra-alta: 0 4px 8px #000000a6, 0 24px 56px -12px #000000d9;
+  --sombra-rasa: 0 1px 2px var(--tt-sombra-50), 0 4px 12px var(--tt-sombra-35);
+  --sombra: 0 2px 4px var(--tt-sombra-60), 0 12px 28px -6px var(--tt-sombra-65);
+  --sombra-alta: 0 4px 8px var(--tt-sombra-65), 0 24px 56px -12px var(--tt-sombra-85);
   --shadow: var(--sombra);
 
   /* receita das superficies levantadas: degrade de cima pra baixo.
      usada junto com --realce e --sombra-rasa */
-  --superficie-elevada: linear-gradient(168deg, #171717, #101010 68%);
+  --superficie-elevada: linear-gradient(168deg, var(--tt-cinza-17), var(--tt-cinza-10) 68%);
 
   /* superficies em degrade: o topo um pouco mais claro que a base */
-  --camada: linear-gradient(180deg, #ffffff0a, #ffffff03 38%, #ffffff00);
-  --camada-forte: linear-gradient(180deg, #ffffff14, #ffffff05 45%, #ffffff00);
+  --camada: linear-gradient(180deg, var(--tt-branco-4), var(--tt-branco-1) 38%, transparent);
+  --camada-forte: linear-gradient(180deg, var(--tt-branco-8), var(--tt-branco-2) 45%, transparent);
 
   --font-sans: 'DM Sans', 'Segoe UI', sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
 }
+
+/* ------------------------------------------------------------------
+   3. Faixas
+
+   Trechos da pagina que trocam os tokens de uso (ex.: faixa clara na
+   pagina inicial). Entram com a VIS-01 (#29).
+   ------------------------------------------------------------------ */

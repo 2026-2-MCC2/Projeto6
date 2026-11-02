@@ -4,7 +4,7 @@
   z-index: 5;
   display: flex;
   justify-content: flex-end;
-  background: #00000066;
+  background: var(--tt-sombra-40);
 }
 
 .panel {
