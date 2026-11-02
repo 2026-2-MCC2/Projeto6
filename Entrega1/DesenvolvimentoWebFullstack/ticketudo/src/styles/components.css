@@ -67,6 +67,10 @@
   gap: 10px;
 }
 
+.page-heading-actions .status {
+  align-self: center;
+}
+
 .stat {
   position: relative;
   padding: 20px 22px;
@@ -186,6 +190,18 @@
   display: block;
   margin-top: 4px;
   color: var(--text-faint);
+  font-size: 10px;
+}
+
+/* ficam DEPOIS de .data-list de proposito: tem a mesma especificidade e,
+   dentro de .data-list, precisam ganhar dele (cor e display do nome do evento) */
+.event-name > span {
+  display: block;
+}
+
+.event-name small {
+  display: block;
+  color: var(--text-dim);
   font-size: 10px;
 }
 

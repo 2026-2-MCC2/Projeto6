@@ -101,6 +101,10 @@
   --sombra-alta: 0 4px 8px #000000a6, 0 24px 56px -12px #000000d9;
   --shadow: var(--sombra);
 
+  /* receita das superficies levantadas: degrade de cima pra baixo.
+     usada junto com --realce e --sombra-rasa */
+  --superficie-elevada: linear-gradient(168deg, #171717, #101010 68%);
+
   /* superficies em degrade: o topo um pouco mais claro que a base */
   --camada: linear-gradient(180deg, #ffffff0a, #ffffff03 38%, #ffffff00);
   --camada-forte: linear-gradient(180deg, #ffffff14, #ffffff05 45%, #ffffff00);
