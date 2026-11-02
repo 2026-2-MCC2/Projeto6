@@ -70,6 +70,13 @@
   --tt-branco-18: #ffffff2e;
   --tt-branco-20: #ffffff33;
 
+  /* o preto do site translucido por cima do branco (o numero e a
+     opacidade em %). E o par do --tt-branco-N para as faixas claras. */
+  --tt-tinta-6: #0c0c0c0f;
+  --tt-tinta-10: #0c0c0c1a;
+  --tt-tinta-12: #0c0c0c1f;
+  --tt-tinta-20: #0c0c0c33;
+
   /* preto translucido, para sombras (o numero e a opacidade em %) */
   --tt-sombra-35: #00000059;
   --tt-sombra-40: #00000066;
@@ -137,7 +144,17 @@
   /* acao principal: pilula branca com texto escuro */
   --acao: var(--tt-branco);
   --acao-texto: var(--tt-preto);
-  --acao-texto-fundo: #0c0c0c1f;
+  --acao-texto-fundo: var(--tt-tinta-12);
+  --acao-degrade: linear-gradient(180deg, var(--tt-branco), var(--tt-cinza-e8));
+  --acao-degrade-hover: linear-gradient(180deg, var(--tt-branco), var(--tt-cinza-f2));
+  --acao-realce: inset 0 1px 0 var(--tt-branco);
+  --acao-sombra: 0 2px 6px -1px var(--tt-sombra-60), 0 8px 20px -8px var(--tt-sombra-70);
+  --acao-sombra-hover: 0 4px 10px -2px var(--tt-sombra-70), 0 12px 26px -8px var(--tt-sombra-80);
+
+  /* acao secundaria: botao escuro com borda */
+  --secundario-degrade: linear-gradient(180deg, var(--tt-cinza-1c), var(--tt-cinza-13));
+  --secundario-degrade-hover: linear-gradient(180deg, var(--tt-cinza-26), var(--tt-cinza-1c));
+  --secundario-sombra: 0 2px 6px -2px var(--tt-sombra-65);
 
   /* barras fixas com fundo de vidro (o conteudo aparece borrado atras) */
   --vidro-topbar: #0f0f0fd9;
@@ -222,6 +239,58 @@
 /* ------------------------------------------------------------------
    3. Faixas
 
-   Trechos da pagina que trocam os tokens de uso (ex.: faixa clara na
-   pagina inicial). Entram com a VIS-01 (#29).
+   Trechos da pagina inicial que trocam os tokens de uso (VIS-01). Tudo
+   o que fica dentro da faixa usa os tokens, entao troca de cor junto.
+   Para a faixa clara virar uma cor da marca no futuro, basta mudar os
+   valores da .faixa-clara.
    ------------------------------------------------------------------ */
+
+/* faixa escura: os tokens padrao do site, por cima do fundo da pagina */
+.faixa-escura {
+  color-scheme: dark;
+}
+
+/* faixa clara: fundo branco e texto preto.
+   Contraste sobre o branco: texto 19,6:1, muted 9,1:1, dim e faint
+   5,2:1 (4,6:1 sobre o cinza do pe do cartao), accent 6,5:1. */
+.faixa-clara {
+  color-scheme: light;
+
+  --bg: var(--tt-branco);
+  --surface: var(--tt-cinza-f2);
+  --surface-raised: var(--tt-branco);
+  --surface-hover: var(--tt-cinza-e8);
+
+  --border: var(--tt-tinta-10);
+  --border-soft: var(--tt-tinta-6);
+  --border-strong: var(--tt-tinta-20);
+
+  --text: var(--tt-preto);
+  --text-muted: var(--tt-cinza-48);
+  --text-dim: var(--tt-cinza-6d);
+  --text-faint: var(--tt-cinza-6d);
+
+  --accent: var(--tt-azul-profundo);
+  --accent-bg: var(--tt-tinta-6);
+
+  /* a pilula de acao vira preta com texto branco */
+  --acao: var(--tt-preto);
+  --acao-texto: var(--tt-branco);
+  --acao-degrade: linear-gradient(180deg, var(--tt-cinza-26), var(--tt-preto));
+  --acao-degrade-hover: linear-gradient(180deg, var(--tt-cinza-48), var(--tt-cinza-13));
+  --acao-realce: inset 0 1px 0 var(--tt-branco-12);
+  --acao-sombra: 0 2px 6px -1px var(--tt-tinta-20), 0 8px 20px -8px var(--tt-tinta-20);
+  --acao-sombra-hover: 0 4px 10px -2px var(--tt-tinta-20), 0 12px 26px -8px var(--tt-tinta-20);
+
+  /* sombras e realce mais leves: no branco a sombra preta pesa */
+  --realce: inset 0 1px 0 var(--tt-branco);
+  --realce-forte: inset 0 1px 0 var(--tt-branco);
+  --sombra-rasa: 0 1px 2px var(--tt-tinta-10), 0 4px 12px var(--tt-tinta-6);
+  --sombra-alta: 0 4px 8px var(--tt-tinta-10), 0 24px 56px -12px var(--tt-tinta-20);
+  --superficie-elevada: linear-gradient(168deg, var(--tt-branco), var(--tt-cinza-f2) 68%);
+
+  /* a cor do texto e calculada no body: aqui ela precisa ser aplicada
+     de novo para valer o --text da faixa */
+  background: var(--bg);
+  color: var(--text);
+}

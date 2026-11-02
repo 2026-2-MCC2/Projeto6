@@ -247,12 +247,6 @@
   padding: var(--secao) 0;
 }
 
-.secao-alt {
-  background: linear-gradient(180deg, var(--tt-branco-2), transparent 60%);
-  border-top: 1px solid var(--border-soft);
-  border-bottom: 1px solid var(--border-soft);
-}
-
 .secao-topo {
   max-width: 62ch;
   margin-bottom: var(--espaco-6);
@@ -330,7 +324,7 @@
 .cartoes article {
   height: 100%;
   padding: var(--espaco-4);
-  background: linear-gradient(168deg, var(--tt-cinza-17), var(--tt-cinza-10) 68%);
+  background: var(--superficie-elevada);
   border: 1px solid var(--border);
   border-radius: var(--raio-lg);
   box-shadow: var(--realce), var(--sombra-rasa);
@@ -353,7 +347,7 @@
   height: 38px;
   margin-bottom: var(--espaco-3);
   border-radius: var(--raio-md);
-  background: var(--tt-branco-6);
+  background: var(--accent-bg);
   border: 1px solid var(--border);
   color: var(--accent);
 }
@@ -364,7 +358,9 @@
 
 /* --- historia --- */
 
-.historia-grade {
+/* limita a largura do texto, nao do bloco: assim ele fica alinhado a
+   esquerda com as outras secoes */
+.historia-grade > * {
   max-width: 760px;
 }
 
