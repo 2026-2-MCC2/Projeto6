@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --ignore .banco-local server.js",
     "start": "node server.js",
-    "test": "node testes/fluxo.mjs",
+    "test": "node --test testes/ticket.mjs && node testes/fluxo.mjs",
     "db:reset": "node scripts/reset-db.js",
     "db:demo": "node scripts/demo-db.js"
   },

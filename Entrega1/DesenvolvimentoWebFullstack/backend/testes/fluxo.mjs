@@ -323,8 +323,12 @@ const forn2 = await criar('fornecedor', 'Luz & Cia')
 const cred2 = await api('POST', '/credenciamento', { ...dadosForn, nome_empresa: `Luz e Cia ${n}`, cnpj: cnpjValido(String(n + 7).slice(-12)) }, forn2)
 await api('POST', `/admin/credenciamentos/${cred2.body.id_credenciamento}/aprovar`, {}, adm)
 const fornSemCred = await criar('fornecedor', 'Sem Credenciamento')
-const amanha = new Date(Date.now() + 30 * dia).toISOString().slice(0, 10)
-const ontem = new Date(Date.now() - dia).toISOString().slice(0, 10)
+// datas no horario de Brasilia, como o servidor. Com toISOString (UTC), das 21h
+// a meia-noite o "ontem" do teste ainda seria "hoje" para o servidor.
+const diaEmBrasilia = (ms) =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(new Date(Date.now() + ms))
+const amanha = diaEmBrasilia(30 * dia)
+const ontem = diaEmBrasilia(-dia)
 
 const cotAlheia = await api('POST', `/eventos/${evId}/abrir-cotacao`, {}, org2)
 check('outro organizador nao abre a cotacao', cotAlheia.status === 403)
