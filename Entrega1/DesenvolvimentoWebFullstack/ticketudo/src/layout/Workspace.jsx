@@ -8,6 +8,9 @@ import { profiles } from '../data/profiles'
 import { useCredenciamento } from '../hooks/useCredenciamento'
 import { pagesByRole } from '../pages'
 import { useApp } from '../state/useApp'
+import './Workspace.css'
+import './WorkspaceData.css'
+import './WorkspacePages.css'
 
 async function buscarContadores(papel) {
   if (papel === 'admin') {

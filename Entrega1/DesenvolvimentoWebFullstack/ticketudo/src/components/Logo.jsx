@@ -1,3 +1,5 @@
+import './Shared.css'
+
 export default function Logo() {
   return (
     <div className="brand" aria-label="TrocaTicket">

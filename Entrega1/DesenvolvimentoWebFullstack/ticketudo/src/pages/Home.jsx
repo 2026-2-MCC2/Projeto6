@@ -4,6 +4,7 @@ import Logo from '../components/Logo'
 import Revela from '../components/Revela'
 import { destaques, guarantees } from '../data/paginaInicial'
 import { profiles, todosOsPapeis } from '../data/profiles'
+import './Home.css'
 
 const passos = [
   {

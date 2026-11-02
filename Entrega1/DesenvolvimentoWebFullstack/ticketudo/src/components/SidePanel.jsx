@@ -1,4 +1,5 @@
 import ChatPanel from './panels/ChatPanel'
+import './SidePanel.css'
 
 const panels = {
   chat: { title: 'Mensagens', Body: ChatPanel },

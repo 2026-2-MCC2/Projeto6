@@ -1,3 +1,17 @@
+// Ordem do CSS das telas e componentes. Ela importa: quando duas regras tem a
+// mesma prioridade, vale a que carrega por ultimo (o WorkspaceResponsive fica
+// no fim para os ajustes de celular ganharem). Os componentes tambem importam
+// o proprio CSS, mas e esta lista que define a ordem final.
+import './layout/Workspace.css'
+import './components/Shared.css'
+import './layout/WorkspacePages.css'
+import './components/Field.css'
+import './pages/Home.css'
+import './pages/Login.css'
+import './components/SidePanel.css'
+import './layout/WorkspaceData.css'
+import './components/CredenciamentoFlutuante.css'
+import './layout/WorkspaceResponsive.css'
 import { useEffect, useState } from 'react'
 import Toaster from './components/Toaster'
 import Workspace from './layout/Workspace'

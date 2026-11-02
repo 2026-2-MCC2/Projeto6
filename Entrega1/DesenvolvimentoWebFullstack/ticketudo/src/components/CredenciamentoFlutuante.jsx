@@ -5,6 +5,7 @@ import { AREAS_FORNECEDOR, DECLARACAO } from '../data/credenciamento'
 import { useApp } from '../state/useApp'
 import { cnpj, soData, telefone } from '../utils/format'
 import { UFS, cnpjValido, soDigitos, telefoneValido } from '../utils/validacao'
+import './CredenciamentoFlutuante.css'
 
 // Pop-up de credenciamento no canto da tela (FLX-09). Aparece para
 // organizador e fornecedor ainda nao credenciados. Minimizado mostra a
