@@ -157,6 +157,71 @@ precisa estar entre 0% (inclusive) e 100% (exclusive).
 | GET | `/admin/credenciamentos?status=em_analise` | adm |
 | POST | `/admin/credenciamentos/:id/aprovar` `/recusar` | adm |
 
+### Matriz completa de endpoints (WEB-06)
+
+Os códigos abaixo são os retornos previstos para entrada válida e para as
+validações de cada rota. Erros inesperados retornam `500`.
+
+| método | rota | perfil | sucesso | erros de negócio |
+|---|---|---|---|---|
+| GET | `/health` | público | 200 | 500 |
+| POST | `/auth/cadastro` | público | 201 | 400, 409 |
+| POST | `/auth/login` | público | 200 | 400, 401 |
+| GET | `/auth/eu` | logado | 200 | 401, 404 |
+| GET | `/categorias`, `/locais` | público | 200 | 500 |
+| POST | `/categorias` | adm | 201 | 400, 401, 403 |
+| POST | `/locais` | organizador, adm | 201 | 400, 401, 403 |
+| GET | `/fornecedores`, `/fornecedores/:id/servicos` | público | 200 | 500 |
+| GET | `/fornecedores/perfil` | fornecedor | 200 | 401, 403, 404 |
+| POST | `/fornecedores/servicos` | fornecedor credenciado/em análise | 201 | 400, 401, 403, 404 |
+| GET | `/fornecedores/meus-servicos` | fornecedor | 200 | 401, 403 |
+| GET | `/credenciamento/meu` | organizador, fornecedor | 200 | 401, 403 |
+| POST | `/credenciamento` | organizador, fornecedor | 201 | 400, 401, 403, 409 |
+| GET | `/eventos`, `/eventos/:id` | público | 200 | 404 |
+| GET | `/eventos/meus` | organizador | 200 | 401, 403 |
+| POST | `/eventos` | organizador credenciado/em análise | 201 | 400, 401, 403 |
+| PUT/DELETE | `/eventos/:id` | organizador dono | 200 | 400, 401, 403, 404, 409 |
+| POST | `/eventos/:id/lotes` | organizador dono | 201 | 400, 401, 403, 404, 409 |
+| POST | `/eventos/:id/fornecedores-externos` | organizador dono | 201 | 400, 401, 403, 404 |
+| POST | `/eventos/:id/solicitacoes` | organizador dono | 201 | 400, 401, 403, 404, 409 |
+| POST | `/eventos/:id/enviar-analise`, `/abrir-cotacao`, `/encerrar-cotacao` | organizador dono | 200 | 400, 401, 403, 404, 409 |
+| GET | `/eventos/:id/planejamento`, `/propostas`, `/orcamento`, `/ticket` | organizador dono | 200 | 401, 403, 404, 422 |
+| POST/PUT/DELETE | `/eventos/:id/itens[/:idItem]` | organizador dono | 200/201 | 400, 401, 403, 404, 409 |
+| POST/PUT/DELETE | `/eventos/:id/custos[/:idCusto]` | organizador dono | 200/201 | 400, 401, 403, 404, 409 |
+| GET | `/cotacoes`, `/cotacoes/:idEvento` | fornecedor credenciado | 200 | 401, 403, 404 |
+| POST/PUT | `/itens/:id/propostas`, `/propostas/:id` | fornecedor credenciado, dono | 200/201 | 400, 401, 403, 404, 409 |
+| POST/GET | `/propostas/:id/cancelar`, `/propostas/minhas` | fornecedor credenciado | 200 | 401, 403, 404, 409 |
+| POST | `/propostas/:id/selecionar`, `/desmarcar` | organizador dono | 200 | 401, 403, 404, 409 |
+| GET/POST | `/solicitacoes`, `/solicitacoes/:id/aceitar`, `/recusar` | fornecedor | 200 | 401, 403, 404, 409 |
+| GET/POST/DELETE | `/ingressos/meus`, `/ingressos/:id/anunciar`, `/ingressos/:id/anuncio` | logado/dono | 200 | 400, 401, 403, 404, 409, 422 |
+| GET | `/ingressos/revenda/:idEvento` | público | 200 | 500 |
+| POST/GET | `/pedidos`, `/pedidos/revenda`, `/pedidos/meus` | logado | 200/201 | 400, 401, 404, 409 |
+| GET/POST | `/chats`, `/chats/usuarios`, `/chats/:id/mensagens` | participante/adm | 200/201 | 400, 401, 403, 404 |
+| GET | `/admin/eventos`, `/admin/eventos/:id` | adm | 200 | 401, 403, 404 |
+| POST | `/admin/eventos/:id/aprovar`, `/recusar` | adm | 200 | 400, 401, 403, 404, 409 |
+| GET | `/admin/credenciamentos`, `/relatorios`, `/aprovacoes` | adm | 200 | 400, 401, 403 |
+| POST | `/admin/credenciamentos/:id/aprovar`, `/recusar` | adm | 200 | 400, 401, 403, 404, 409 |
+
+`400` = corpo inválido; `401` = token ausente, inválido ou expirado;
+`403` = perfil sem permissão ou usuário sem acesso ao recurso; `404` =
+recurso inexistente; `409` = conflito de estado ou duplicidade; `422` =
+regra de negócio com dados bem formados, mas inviáveis.
+
+A coleção exportada e o ambiente ficam em
+`Entrega2/DesenvolvimentoWebFullstack/postman/`. Para rodar:
+
+1. Na raiz do repositório: `npm run db:reset`, `npm run db:demo` e `npm run dev`.
+2. Importe os dois arquivos no Postman, escolha o ambiente "TrocaTicket - Local" e
+   preencha `admSenha` (no banco local, a senha do administrador do seed). As contas de
+   organizador e fornecedor já vêm com as contas de demonstração (`demo1234`).
+3. Rode a coleção inteira, na ordem das pastas (Collection Runner), ou pelo terminal:
+   `npx newman run TrocaTicket.postman_collection.json -e TrocaTicket.postman_environment.json --env-var admSenha=SUA_SENHA`.
+
+A pasta "1. Autenticação" faz o login dos três perfis e guarda `organizadorToken`,
+`fornecedorToken` e `admToken`; cada pasta usa o token do seu perfil. As pastas
+seguintes repetem o fluxo do PI: evento e custos, cotação, proposta, escolha,
+envio para análise e aprovação. Cada execução cria um evento novo.
+
 ## Como funciona o lote
 
 O lote cruza os dois eixos de venda numa linha so:
