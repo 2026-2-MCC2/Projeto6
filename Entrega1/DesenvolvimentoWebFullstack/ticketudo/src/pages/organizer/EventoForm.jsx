@@ -3,10 +3,17 @@ import DadosEvento from './DadosEvento'
 import LocalEvento from './LocalEvento'
 import PublicoEvento from './PublicoEvento'
 
+// Formulario dos dados do evento (FLX-02). Serve para criar (NewEvent) e
+// para editar (tela do evento, WEB-05). Cada bloco do formulario fica num
+// arquivo proprio (DadosEvento, LocalEvento e PublicoEvento); este arquivo
+// guarda o estado, a validacao e o envio.
+
+// o input datetime-local usa "2027-03-14T20:00"; o banco grava "2027-03-14 20:00:00"
 function paraBanco(valor) {
   return valor ? valor.replace('T', ' ') + ':00' : ''
 }
 
+// data que veio da API -> valor do input datetime-local, no horario local
 function paraInput(valor) {
   if (!valor) return ''
   const d = new Date(valor)
@@ -39,6 +46,7 @@ function inicial(evento) {
   }
 }
 
+// mesmas regras do backend, para avisar antes de enviar
 function validar(f, editando) {
   const erros = {}
   const inteiro = (v) => Number.isInteger(Number(v)) && v !== ''

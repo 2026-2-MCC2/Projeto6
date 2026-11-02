@@ -32,7 +32,6 @@ export default function DadosEvento({ f, erros, categorias, mudar, erroGeral }) 
           </select>
         </Field>
       </div>
-
     </>
   )
 }
