@@ -1,4 +1,4 @@
-// Validacoes usadas no credenciamento.
+// Validacoes de campos (CNPJ, UF, telefone) usadas por varias rotas.
 
 const UFS = [
   'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA',

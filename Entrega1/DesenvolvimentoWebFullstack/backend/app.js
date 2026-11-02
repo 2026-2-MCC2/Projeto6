@@ -33,7 +33,7 @@ function segredoLocal() {
   }
 }
 
-const pool = require('./config/bd'); // pool seria para nos utilizarmos o banco sem ter que ficar chamando ele toda hora
+const { bancoResponde } = require('./repositorios/saude');
 
 const app = express();
 
@@ -51,7 +51,7 @@ api.get('/', (req, res) => {
 });
 
 api.get('/health', async (req, res) => { //teste conexão com o banco
-  await pool.query('select 1');
+  await bancoResponde();
   res.json({ ok: true });
 });
 

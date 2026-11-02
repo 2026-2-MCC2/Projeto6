@@ -64,6 +64,31 @@ O seed ja cria o administrador do banco local:
 `admin@trocaticket.com.br` / `admin123` (so vale no banco local; no site
 publicado a senha foi trocada). A rota de cadastro **nao** aceita `tipo: adm`, entao administrador so entra pelo seed ou direto no banco.
 
+## Como o codigo esta organizado
+
+Cada camada tem uma responsabilidade so (ORG-10):
+
+| pasta | o que fica la | exemplo |
+|---|---|---|
+| `routes/` | recebe o pedido, chama as regras e o repositorio e devolve a resposta. Nao tem SQL. | `routes/eventos.js` |
+| `regras/` | validacoes e calculos, sem banco nem HTTP. Da pra testar sozinho. | `regras/ticket.js`, `regras/orcamento.js` |
+| `repositorios/` | todo o SQL, uma funcao por consulta. Quem precisa de transacao passa a `conexao`. | `repositorios/propostas.js` |
+| `lib/` | ajudantes das rotas: buscam e ja respondem o erro (404, 403, 409) e juntam repositorio com regra. | `lib/eventos.js` |
+| `middleware/` | login (`autenticar`) e perfil (`permitir`). | `middleware/auth.js` |
+| `config/` | conexao com o banco (Supabase ou banco local). | `config/bd.js` |
+
+Transacao (varios comandos que entram juntos ou nenhum entra):
+
+```js
+const { emTransacao } = require('../repositorios/transacao');
+
+await emTransacao(async (conexao) => {
+  await propostas.selecionar(proposta, conexao);
+});
+```
+
+Se der erro dentro da funcao, tudo e desfeito (rollback).
+
 ## Perfis
 
 | tipo | o que faz |
