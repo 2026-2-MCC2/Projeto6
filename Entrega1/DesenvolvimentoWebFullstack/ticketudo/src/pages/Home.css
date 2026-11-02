@@ -61,7 +61,7 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: #0a0a0acc;
+  background: var(--vidro-site);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
 }
@@ -110,8 +110,8 @@
   height: 620px;
   transform: translateX(-50%);
   background:
-    radial-gradient(closest-side, #1e5cb333, transparent 72%),
-    radial-gradient(closest-side at 70% 40%, #ffffff0f, transparent 70%);
+    radial-gradient(closest-side, var(--marca-brilho), transparent 72%),
+    radial-gradient(closest-side at 70% 40%, var(--tt-branco-6), transparent 70%);
   pointer-events: none;
 }
 
@@ -125,7 +125,7 @@
   gap: var(--espaco-1);
   margin: 0 0 var(--espaco-3);
   padding: 7px 15px;
-  background: #ffffff0a;
+  background: var(--tt-branco-4);
   border: 1px solid var(--border);
   border-radius: var(--raio-pill);
   color: var(--text-muted);
@@ -138,7 +138,7 @@
   height: 7px;
   border-radius: 50%;
   background: var(--positive);
-  box-shadow: 0 0 0 4px #10b98126;
+  box-shadow: 0 0 0 4px var(--positive-halo);
 }
 
 .site-hero h1 {
@@ -248,7 +248,7 @@
 }
 
 .secao-alt {
-  background: linear-gradient(180deg, #ffffff05, transparent 60%);
+  background: linear-gradient(180deg, var(--tt-branco-2), transparent 60%);
   border-top: 1px solid var(--border-soft);
   border-bottom: 1px solid var(--border-soft);
 }
@@ -330,7 +330,7 @@
 .cartoes article {
   height: 100%;
   padding: var(--espaco-4);
-  background: linear-gradient(168deg, #171717, #101010 68%);
+  background: linear-gradient(168deg, var(--tt-cinza-17), var(--tt-cinza-10) 68%);
   border: 1px solid var(--border);
   border-radius: var(--raio-lg);
   box-shadow: var(--realce), var(--sombra-rasa);
@@ -353,7 +353,7 @@
   height: 38px;
   margin-bottom: var(--espaco-3);
   border-radius: var(--raio-md);
-  background: #ffffff0f;
+  background: var(--tt-branco-6);
   border: 1px solid var(--border);
   color: var(--accent);
 }

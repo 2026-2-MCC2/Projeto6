@@ -14,7 +14,7 @@
   align-items: center;
   gap: 10px;
   padding: 13px 18px;
-  background: linear-gradient(180deg, #1c1c1c, #131313);
+  background: linear-gradient(180deg, var(--tt-cinza-1c), var(--tt-cinza-13));
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   box-shadow: var(--realce), var(--sombra-alta);
@@ -45,17 +45,17 @@
   height: 8px;
   border-radius: 50%;
   background: var(--marca-clara);
-  box-shadow: 0 0 0 4px #5b9bf026;
+  box-shadow: 0 0 0 4px var(--marca-clara-halo);
 }
 
 .cred-em_analise .cred-ponto {
-  background: #f5b84b;
-  box-shadow: 0 0 0 4px #f5b84b26;
+  background: var(--waiting);
+  box-shadow: 0 0 0 4px var(--waiting-halo);
 }
 
 .cred-recusado .cred-ponto {
   background: var(--negative);
-  box-shadow: 0 0 0 4px #f8717126;
+  box-shadow: 0 0 0 4px var(--negative-halo);
 }
 
 .cred-painel {
@@ -186,7 +186,7 @@
 .cred-grupo legend {
   margin-bottom: 8px;
   padding: 0;
-  color: #6d6d6d;
+  color: var(--tt-cinza-6d);
   font-size: 11px;
   font-weight: 700;
 }

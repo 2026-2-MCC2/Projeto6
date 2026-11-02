@@ -20,8 +20,8 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #dedede;
-  color: #484848;
+  background: var(--tt-cinza-de);
+  color: var(--tt-cinza-48);
   font-size: 12px;
   font-style: normal;
   font-weight: 700;
@@ -67,7 +67,7 @@
 .stat {
   position: relative;
   padding: 20px 22px;
-  background: linear-gradient(170deg, #181818, #0f0f0f 70%);
+  background: linear-gradient(170deg, var(--tt-cinza-17), var(--tt-cinza-10) 70%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--realce), var(--sombra);

@@ -144,6 +144,30 @@ A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do pr
 
 <b>TERMO_DE_USO_DE_IA.md</b>: Registro de onde e como ferramentas de inteligência artificial foram usadas no projeto. Veja o [termo](TERMO_DE_USO_DE_IA.md).
 
+## 🎨 Paleta de cores
+
+Todas as cores do site ficam num arquivo só: [`tokens.css`](Entrega1/DesenvolvimentoWebFullstack/ticketudo/src/styles/tokens.css). Nenhum outro arquivo de CSS escreve cor direto; eles usam os nomes abaixo. Para mudar uma cor, mude a linha dela no `tokens.css`.
+
+| Nome | Cor | Para que serve |
+|---|---|---|
+| `--tt-preto` | `#0c0c0c` | Fundo do site |
+| `--tt-branco` | `#ffffff` | Texto principal e botão de ação |
+| `--tt-palido` | `#d7e2ea` | Destaque e texto secundário (com opacidade) |
+| `--tt-azul` | `#23aafb` | Cor da logo (aproximada, a confirmar) |
+| `--tt-roxo` | `#6a4cff` | Cor da logo (aproximada, a confirmar) |
+| `--tt-rosa` | `#ed0092` | Cor da logo (aproximada, a confirmar) |
+| `--tt-laranja` | `#ff8e1e` | Cor da logo (aproximada, a confirmar) |
+| `--tt-azul-profundo` | `#1e5cb3` | Brilhos do fundo e borda de destaque |
+| `--tt-azul-claro` | `#5b9bf0` | Destaques do pop-up de credenciamento |
+| `--tt-cinza-08` a `--tt-cinza-f2` | `#080808` a `#f2f2f2` | Superfícies, campos e textos de apoio (o número é o valor de cada canal) |
+| `--tt-branco-1` a `--tt-branco-20` | branco com 1% a 20% de opacidade | Bordas e superfícies translúcidas |
+| `--tt-sombra-35` a `--tt-sombra-100` | preto com 35% a 100% de opacidade | Sombras |
+| `--tt-verde` | `#10b981` | Status positivo (aprovado, credenciado) |
+| `--tt-ambar` | `#f5b84b` | Status em análise |
+| `--tt-vermelho` | `#f87171` | Status negativo e erros |
+
+As telas e componentes não usam a paleta direto: usam os **tokens de uso** do mesmo arquivo, que dizem para que a cor serve (`--bg`, `--surface`, `--text`, `--border`, `--acao`, `--positive`, `--negative`…).
+
 ## 🎓 Referências
 
 Aqui estão as referências usadas no projeto.
