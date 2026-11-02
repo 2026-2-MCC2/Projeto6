@@ -78,10 +78,11 @@ nem URL de API para configurar.
 │   ├── DesenvolvimentoWebFullstack/  # código do sistema web
 │   │   ├── backend/                  # API Express e regras do servidor
 │   │   │   ├── config/               # configuração do banco
-│   │   │   ├── lib/                  # serviços e regras reutilizáveis
+│   │   │   ├── lib/                  # ajudantes das rotas (respostas de erro e orçamento)
 │   │   │   ├── middleware/           # middlewares da API
-│   │   │   ├── regras/               # regras de negócio
-│   │   │   ├── routes/               # rotas HTTP
+│   │   │   ├── regras/               # regras de negócio: validações e cálculos, sem SQL
+│   │   │   ├── repositorios/         # todo o SQL, uma função por consulta
+│   │   │   ├── routes/               # rotas HTTP: recebem o pedido e respondem
 │   │   │   ├── scripts/              # scripts de banco e demonstração
 │   │   │   └── testes/               # testes de fluxo da API e do cálculo do ticket
 │   │   └── ticketudo/                # site React com Vite

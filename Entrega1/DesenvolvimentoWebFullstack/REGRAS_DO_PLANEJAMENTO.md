@@ -51,7 +51,7 @@ Caminho do evento: **rascunho → em cotação → cotação encerrada → em an
 - **Desmarcar** devolve todas as propostas do item para "enviada".
 - Proposta **cancelada** ou **vencida** não pode ser escolhida.
 - **Orçamento consolidado** = propostas escolhidas + itens **sem** proposta escolhida pelo **custo estimado** + outros custos. Os itens sem escolha entram pelo estimado para o custo total nunca ficar abaixo do que o evento vai gastar.
-- Esse custo total é o **C** da fórmula do ticket (FLX-06): equilíbrio = C ÷ P e alvo = C ÷ [P × (1 − M)]. Ele vem de `lib/orcamento.js` (`orcamentoDoEvento`), a mesma função que a tela do organizador e o painel do administrador usam.
+- Esse custo total é o **C** da fórmula do ticket (FLX-06): equilíbrio = C ÷ P e alvo = C ÷ [P × (1 − M)]. Ele vem de `lib/orcamento.js` (`orcamentoDoEvento`), que busca os dados em `repositorios/orcamento.js` e faz a conta em `regras/orcamento.js`. É a mesma função que a tela do organizador e o painel do administrador usam.
 
 ## Visão do administrador (FLX-07)
 

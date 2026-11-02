@@ -1,42 +1,18 @@
 const express = require('express');
-const pool = require('../config/bd');
+const ingressos = require('../repositorios/ingressos');
+const { tetoRevenda } = require('../regras/ingressos');
 const { autenticar } = require('../middleware/auth');
 
 const router = express.Router();
 
-// teto de revenda do lote: preco original + a margem que o organizador liberou
-function tetoRevenda(lote) {
-  return Number((Number(lote.preco) * (1 + Number(lote.margem_revenda) / 100)).toFixed(2));
-}
-
 router.get('/meus', autenticar, async (req, res) => {
-  const [linhas] = await pool.query(
-    `select i.id_ingresso, i.codigo, i.status, i.preco,
-            e.nome as evento, e.data_inicio, lo.setor, lo.nome as lote,
-            lo.preco as preco_original, lo.margem_revenda
-       from ingresso i
-       join evento e on e.id_evento = i.id_evento
-       join lote lo on lo.id_lote = i.id_lote
-      where i.id_vendedor = ? and i.status in ('vendido', 'a_venda')
-      order by e.data_inicio`,
-    [req.usuario.id],
-  );
+  const linhas = await ingressos.doVendedor(req.usuario.id);
   res.json(linhas.map((l) => ({ ...l, teto_revenda: tetoRevenda(l) })));
 });
 
 // vitrine de revenda de um evento
 router.get('/revenda/:idEvento', async (req, res) => {
-  const [linhas] = await pool.query(
-    `select i.id_ingresso, i.codigo, i.setor, i.preco, u.nome as vendedor,
-            lo.nome as lote, lo.preco as preco_original
-       from ingresso i
-       join usuario u on u.id_usuario = i.id_vendedor
-       join lote lo on lo.id_lote = i.id_lote
-      where i.id_evento = ? and i.status = 'a_venda'
-      order by i.preco`,
-    [req.params.idEvento],
-  );
-  res.json(linhas);
+  res.json(await ingressos.aVendaNoEvento(req.params.idEvento));
 });
 
 // poe o ingresso a venda, respeitando o teto do lote
@@ -44,13 +20,7 @@ router.post('/:id/anunciar', autenticar, async (req, res) => {
   const { preco } = req.body;
   if (preco == null) return res.status(400).json({ erro: 'informe o preco do anuncio' });
 
-  const [linhas] = await pool.query(
-    `select i.*, lo.preco as preco_lote, lo.margem_revenda
-       from ingresso i join lote lo on lo.id_lote = i.id_lote
-      where i.id_ingresso = ?`,
-    [req.params.id],
-  );
-  const ingresso = linhas[0];
+  const ingresso = await ingressos.comLote(req.params.id);
 
   if (!ingresso) return res.status(404).json({ erro: 'ingresso nao encontrado' });
   if (ingresso.id_vendedor !== req.usuario.id) {
@@ -73,19 +43,13 @@ router.post('/:id/anunciar', autenticar, async (req, res) => {
     return res.status(400).json({ erro: 'o preco precisa ser maior que zero' });
   }
 
-  await pool.query("update ingresso set status = 'a_venda', preco = ? where id_ingresso = ?", [
-    preco,
-    ingresso.id_ingresso,
-  ]);
+  await ingressos.anunciar(ingresso.id_ingresso, preco);
   res.json({ id_ingresso: ingresso.id_ingresso, status: 'a_venda', preco: Number(preco), teto_revenda: teto });
 });
 
 router.delete('/:id/anuncio', autenticar, async (req, res) => {
-  const [r] = await pool.query(
-    "update ingresso set status = 'vendido' where id_ingresso = ? and id_vendedor = ? and status = 'a_venda'",
-    [req.params.id, req.usuario.id],
-  );
-  if (!r.affectedRows) {
+  const retirou = await ingressos.retirarAnuncio(req.params.id, req.usuario.id);
+  if (!retirou) {
     return res.status(409).json({ erro: 'ingresso nao encontrado, nao e seu, ou nao esta anunciado' });
   }
   res.json({ id_ingresso: Number(req.params.id), status: 'vendido' });

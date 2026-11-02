@@ -1,7 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const pool = require('../config/bd');
+const usuarios = require('../repositorios/usuarios');
+const { ehDuplicado } = require('../repositorios/transacao');
 const { autenticar } = require('../middleware/auth');
 
 const router = express.Router();
@@ -23,7 +24,7 @@ function gerarToken(usuario) {
 }
 
 router.post('/cadastro', async (req, res) => {
-    const { nome, cpf, senha, telefone, tipo } = req.body;
+  const { nome, cpf, senha, telefone, tipo } = req.body;
   const email = normalizarEmail(req.body.email);
 
   if (!nome || !email || !cpf || !senha) {
@@ -39,19 +40,23 @@ router.post('/cadastro', async (req, res) => {
   const senhaHash = await bcrypt.hash(senha, 10);
 
   try {
-    const [resultado] = await pool.query(
-      'insert into usuario (nome, email, cpf, senha_hash, telefone, tipo) values (?, ?, ?, ?, ?, ?)',
-      [nome, email, cpf.replace(/\D/g, ''), senhaHash, telefone || null, tipo || 'comprador'],
-    );
+    const id = await usuarios.criar({
+      nome,
+      email,
+      cpf: cpf.replace(/\D/g, ''),
+      senhaHash,
+      telefone: telefone || null,
+      tipo: tipo || 'comprador',
+    });
     const usuario = {
-      id_usuario: resultado.insertId,
+      id_usuario: id,
       nome,
       email,
       tipo: tipo || 'comprador',
     };
     return res.status(201).json({ usuario, token: gerarToken(usuario) });
   } catch (e) {
-    if (e.code === pool.DUPLICADO) {
+    if (ehDuplicado(e)) {
       const campo = e.message.includes('email') ? 'email' : 'cpf';
       return res.status(409).json({ erro: `ja existe uma conta com esse ${campo}` });
     }
@@ -66,11 +71,7 @@ router.post('/login', async (req, res) => {
     return res.status(400).json({ erro: 'email e senha sao obrigatorios' });
   }
 
-  const [linhas] = await pool.query(
-    'select id_usuario, nome, email, senha_hash, tipo from usuario where email = ?',
-    [email],
-  );
-  const usuario = linhas[0];
+  const usuario = await usuarios.buscarParaLogin(email);
 
   // mesma resposta pros dois casos, pra nao dizer se o email existe ou nao
   if (!usuario || !(await bcrypt.compare(senha, usuario.senha_hash))) {
@@ -82,14 +83,11 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/eu', autenticar, async (req, res) => {
-  const [linhas] = await pool.query(
-    'select id_usuario, nome, email, cpf, telefone, tipo, criado_em from usuario where id_usuario = ?',
-    [req.usuario.id],
-  );
-  if (!linhas.length) {
+  const usuario = await usuarios.buscarPerfil(req.usuario.id);
+  if (!usuario) {
     return res.status(404).json({ erro: 'usuario nao encontrado' });
   }
-  return res.json(linhas[0]);
+  return res.json(usuario);
 });
 
 module.exports = router;
