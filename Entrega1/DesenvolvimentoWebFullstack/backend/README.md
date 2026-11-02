@@ -207,12 +207,20 @@ validações de cada rota. Erros inesperados retornam `500`.
 recurso inexistente; `409` = conflito de estado ou duplicidade; `422` =
 regra de negócio com dados bem formados, mas inviáveis.
 
-A coleção exportada e o ambiente sem segredos ficam em
-`Entrega2/DesenvolvimentoWebFullstack/postman/`. Importe os dois arquivos no
-Postman, selecione o ambiente, preencha as contas de teste localmente e rode
-as pastas na ordem indicada na descrição da coleção. O login grava
-automaticamente `{{token}}`; requests de criação gravam os IDs usados nos
-requests seguintes.
+A coleção exportada e o ambiente ficam em
+`Entrega2/DesenvolvimentoWebFullstack/postman/`. Para rodar:
+
+1. Na raiz do repositório: `npm run db:reset`, `npm run db:demo` e `npm run dev`.
+2. Importe os dois arquivos no Postman, escolha o ambiente "TrocaTicket - Local" e
+   preencha `admSenha` (no banco local, a senha do administrador do seed). As contas de
+   organizador e fornecedor já vêm com as contas de demonstração (`demo1234`).
+3. Rode a coleção inteira, na ordem das pastas (Collection Runner), ou pelo terminal:
+   `npx newman run TrocaTicket.postman_collection.json -e TrocaTicket.postman_environment.json --env-var admSenha=SUA_SENHA`.
+
+A pasta "1. Autenticação" faz o login dos três perfis e guarda `organizadorToken`,
+`fornecedorToken` e `admToken`; cada pasta usa o token do seu perfil. As pastas
+seguintes repetem o fluxo do PI: evento e custos, cotação, proposta, escolha,
+envio para análise e aprovação. Cada execução cria um evento novo.
 
 ## Como funciona o lote
 
