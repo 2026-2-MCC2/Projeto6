@@ -281,7 +281,8 @@
 
 .passos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+  /* cinco colunas no computador; quebra sozinho em telas menores */
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: var(--espaco-3);
   margin: 0;
   padding: 0;

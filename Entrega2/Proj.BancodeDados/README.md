@@ -11,7 +11,7 @@ Diagrama entidade-relacionamento da primeira entrega: [`Entrega1/Proj.BancodeDad
 
 ## Tabelas
 
-O banco tem 20 tabelas. Todas têm chave primária (PK), e as ligações entre elas são feitas por chaves estrangeiras (FK).
+O banco tem 23 tabelas. Todas têm chave primária (PK), e as ligações entre elas são feitas por chaves estrangeiras (FK).
 
 | Tabela | Para que serve | PK | FKs |
 |---|---|---|---|
@@ -25,6 +25,9 @@ O banco tem 20 tabelas. Todas têm chave primária (PK), e as ligações entre e
 | `categoria` | Categorias de evento (show, teatro, festival…) | `id_categoria` | — |
 | `local_evento` | Locais onde os eventos acontecem | `id_local` | — |
 | `evento` | Eventos criados pelos organizadores | `id_evento` | `id_organizador` → `usuario`; `id_local` → `local_evento`; `id_categoria` → `categoria`; `id_adm_revisor` → `usuario` |
+| `item_custo` | Itens de custo do evento (palco, som, segurança…), cada um com o custo estimado; é o que os fornecedores cotam | `id_item` | `id_evento` → `evento` |
+| `custo_evento` | Outros custos do evento que não passam por cotação (fiscal, operacional, variável, outro) | `id_custo` | `id_evento` → `evento` |
+| `proposta` | Proposta de um fornecedor para um item de custo, com valor, validade e situação | `id_proposta` | `id_item` → `item_custo`; `id_fornecedor` → `fornecedor` |
 | `lote` | Lotes de ingresso de um evento (setor, preço, quantidade, janela de venda e margem de revenda) **(extensão)** | `id_lote` | `id_evento` → `evento` |
 | `fornecedor_externo` | Fornecedores que o organizador contratou por fora da plataforma | `id_fornecedor_externo` | `id_evento` → `evento` |
 | `solicitacao_servico` | Pedido de um serviço de fornecedor para um evento | `id_solicitacao` | `id_evento` → `evento`; `id_servico` → `servico` |
@@ -44,7 +47,7 @@ Os tipos abaixo são os do MySQL 8 (`trocaticket_mysql.sql`). **Obrigatório?** 
 
 ### Fluxo principal
 
-As tabelas abaixo sustentam o fluxo do MVP: contas, credenciamento, fornecedores, serviços, eventos, pedidos de serviço e chat.
+As tabelas abaixo sustentam o fluxo do MVP: contas, credenciamento, fornecedores, serviços, eventos, itens de custo, cotação e propostas, pedidos de serviço e chat.
 
 #### `usuario`
 
@@ -195,7 +198,7 @@ Locais onde os eventos acontecem. O mesmo local é reaproveitado entre eventos.
 
 #### `evento`
 
-Eventos criados pelos organizadores. O evento só fica público depois de aprovado por um administrador.
+Eventos criados pelos organizadores, com o período, os cenários de público e a margem usados no cálculo do ticket. O evento só fica público depois de aprovado por um administrador.
 
 | Campo | Tipo | Obrigatório? | Chave | Descrição |
 |---|---|---|---|---|
@@ -205,14 +208,76 @@ Eventos criados pelos organizadores. O evento só fica público depois de aprova
 | `id_categoria` | `INT` | Sim | FK → `categoria.id_categoria` | Categoria do evento. |
 | `nome` | `VARCHAR(160)` | Sim | — | Nome do evento. |
 | `descricao` | `TEXT` | Não | — | Descrição do evento. |
-| `data_hora` | `DATETIME` | Sim | — | Data e hora em que o evento acontece. |
-| `status` | `VARCHAR(30)` | Sim | — | Situação do evento: `rascunho`, `em_analise`, `aprovado` ou `recusado`. Padrão: `'rascunho'`. |
+| `data_inicio` | `DATETIME` | Sim | — | Quando o evento começa. |
+| `data_fim` | `DATETIME` | Sim | — | Quando o evento termina (pode durar mais de um dia). |
+| `publico_minimo` | `INT` | Sim | — | Público do cenário pessimista do cálculo do ticket. |
+| `publico_maximo` | `INT` | Sim | — | Público do cenário otimista do cálculo do ticket. |
+| `publico_esperado` | `INT` | Não | — | Público mais provável, entre o mínimo e o máximo. |
+| `margem_lucro` | `DECIMAL(5,2)` | Sim | — | Margem de lucro desejada sobre a receita, em % (20 = 20%). Padrão: `0`. |
+| `status` | `VARCHAR(30)` | Sim | — | Situação do evento: `rascunho`, `em_cotacao`, `cotacao_encerrada`, `em_analise`, `aprovado` ou `recusado`. Padrão: `'rascunho'`. |
 | `motivo_recusa` | `TEXT` | Não | — | Motivo informado pelo administrador quando recusa. |
 | `id_adm_revisor` | `INT` | Não | FK → `usuario.id_usuario` | Administrador que revisou. Fica nulo até a revisão. |
 | `revisado_em` | `DATETIME` | Não | — | Data e hora da revisão. Fica nulo até a revisão. |
 | `criado_em` | `DATETIME` | Sim | — | Data e hora em que a linha foi criada. |
 
+- `data_fim` não pode ser antes de `data_inicio` (`CHECK`).
+- `publico_minimo` tem que ser maior que zero, `publico_maximo` não pode ser menor que o mínimo e `publico_esperado`, quando informado, fica entre os dois (`CHECK`).
+- `margem_lucro` fica entre 0 e 99,99 (`CHECK`): com 100% de margem o ticket-alvo não teria como ser calculado.
 - Se o administrador revisor for apagado, `id_adm_revisor` volta a nulo (`ON DELETE SET NULL`).
+
+#### `item_custo`
+
+Itens de custo do evento que podem ser cotados com fornecedores (FLX-02). Enquanto o item não tem proposta escolhida, o orçamento usa o custo estimado.
+
+| Campo | Tipo | Obrigatório? | Chave | Descrição |
+|---|---|---|---|---|
+| `id_item` | `INT` | Sim | PK | Identificador do item. |
+| `id_evento` | `INT` | Sim | FK → `evento.id_evento` | Evento a que o item pertence. |
+| `categoria` | `VARCHAR(30)` | Sim | — | Área do item: `iluminacao`, `comida`, `bebida`, `seguranca`, `estrutura` ou `outros`. |
+| `descricao` | `VARCHAR(200)` | Sim | — | O que precisa ser contratado (ex.: palco 10x8 m). |
+| `quantidade` | `INT` | Sim | — | Quantidade necessária. |
+| `custo_estimado` | `DECIMAL(12,2)` | Sim | — | Custo que o organizador estima para o item, em reais. |
+| `criado_em` | `DATETIME` | Sim | — | Data e hora em que a linha foi criada. |
+
+- `quantidade` tem que ser maior que zero e `custo_estimado` não pode ser negativo (`CHECK`).
+- Se o evento for apagado, os itens vão junto (`ON DELETE CASCADE`).
+
+#### `custo_evento`
+
+Outros custos do evento que não passam por cotação (FLX-02). Entram direto no orçamento.
+
+| Campo | Tipo | Obrigatório? | Chave | Descrição |
+|---|---|---|---|---|
+| `id_custo` | `INT` | Sim | PK | Identificador do custo. |
+| `id_evento` | `INT` | Sim | FK → `evento.id_evento` | Evento a que o custo pertence. |
+| `tipo` | `VARCHAR(20)` | Sim | — | Tipo do custo: `fiscal`, `operacional`, `variavel` ou `outro`. |
+| `descricao` | `VARCHAR(200)` | Sim | — | Descrição do custo (ex.: taxa da prefeitura). |
+| `valor` | `DECIMAL(12,2)` | Sim | — | Valor do custo, em reais. |
+| `criado_em` | `DATETIME` | Sim | — | Data e hora em que a linha foi criada. |
+
+- `valor` não pode ser negativo (`CHECK`).
+- Se o evento for apagado, os custos vão junto (`ON DELETE CASCADE`).
+
+#### `proposta`
+
+Propostas que os fornecedores credenciados mandam para os itens de um evento em cotação (FLX-04). O organizador escolhe no máximo uma por item (FLX-05).
+
+| Campo | Tipo | Obrigatório? | Chave | Descrição |
+|---|---|---|---|---|
+| `id_proposta` | `INT` | Sim | PK | Identificador da proposta. |
+| `id_item` | `INT` | Sim | FK → `item_custo.id_item`, UNIQUE (com `id_fornecedor`) | Item que está sendo cotado. |
+| `id_fornecedor` | `INT` | Sim | FK → `fornecedor.id_fornecedor`, UNIQUE (com `id_item`) | Fornecedor que mandou a proposta. |
+| `valor` | `DECIMAL(12,2)` | Sim | — | Valor proposto, em reais. |
+| `descricao` | `TEXT` | Sim | — | O que está incluído na proposta. |
+| `validade` | `DATE` | Sim | — | Até quando a proposta vale. Proposta vencida não pode ser escolhida. |
+| `observacoes` | `TEXT` | Não | — | Condições extras (ex.: forma de pagamento). |
+| `situacao` | `VARCHAR(20)` | Sim | — | `enviada`, `selecionada`, `nao_selecionada` ou `cancelada`. Padrão: `'enviada'`. |
+| `criado_em` | `DATETIME` | Sim | — | Data e hora em que a proposta foi enviada. |
+| `atualizado_em` | `DATETIME` | Sim | — | Data e hora da última alteração. |
+
+- Cada fornecedor manda uma proposta por item: o par `id_item` + `id_fornecedor` não se repete (`UNIQUE`). Para mudar o valor, ele edita a proposta.
+- `valor` tem que ser maior que zero (`CHECK`).
+- Se o item ou o fornecedor for apagado, as propostas vão junto (`ON DELETE CASCADE`).
 
 #### `fornecedor_externo`
 
@@ -372,7 +437,7 @@ Pagamento de um pedido.
 
 ## Exemplo: `evento` e `lote`
 
-**`evento`** guarda o evento. A PK é `id_evento`. Ele aponta para quem organizou (`id_organizador`), onde acontece (`id_local`) e a categoria (`id_categoria`). O campo `status` só aceita `rascunho`, `em_analise`, `aprovado` ou `recusado`.
+**`evento`** guarda o evento. A PK é `id_evento`. Ele aponta para quem organizou (`id_organizador`), onde acontece (`id_local`) e a categoria (`id_categoria`). O campo `status` só aceita `rascunho`, `em_cotacao`, `cotacao_encerrada`, `em_analise`, `aprovado` ou `recusado`.
 
 **`lote`** guarda os lotes de ingresso. A PK é `id_lote` e a FK `id_evento` liga cada lote ao seu evento. Se o evento for apagado, os lotes vão junto (`ON DELETE CASCADE`). Regras:
 
@@ -396,6 +461,10 @@ erDiagram
     usuario ||--o{ evento : "organiza"
     local_evento ||--o{ evento : "recebe"
     categoria ||--o{ evento : "classifica"
+    evento ||--o{ item_custo : "lista"
+    evento ||--o{ custo_evento : "tem"
+    item_custo ||--o{ proposta : "recebe"
+    fornecedor ||--o{ proposta : "envia"
     evento ||--o{ lote : "tem"
     evento ||--o{ fornecedor_externo : "contrata"
     evento ||--o{ solicitacao_servico : "pede"
@@ -418,7 +487,7 @@ erDiagram
 
 1. Abrir o `trocaticket_mysql.sql` no MySQL Workbench e executar tudo (botão do raio).
 2. Abrir o `seed_mysql.sql` e executar.
-3. Conferir com `SHOW TABLES;` no banco `trocaticket`: são 20 tabelas.
+3. Conferir com `SHOW TABLES;` no banco `trocaticket`: são 23 tabelas.
 
 O script apaga e recria o banco `trocaticket` do zero, então pode ser rodado de novo sempre que precisar.
 

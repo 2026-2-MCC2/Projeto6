@@ -8,8 +8,8 @@
 // os três destaques do topo (valor numérico anima no Contador; texto aparece como está)
 export const destaques = [
   { id: 'perfis', rotulo: 'Perfis', valor: 3, texto: 'administrador, organizador e fornecedor' },
-  { id: 'etapas', rotulo: 'Etapas', valor: 4, texto: 'do cadastro à revisão do evento' },
-  { id: 'negociacao', rotulo: 'Negociação', valor: 'Chat', texto: 'entre organizador e fornecedor' },
+  { id: 'etapas', rotulo: 'Etapas', valor: 5, texto: 'do cadastro à aprovação do evento' },
+  { id: 'cenarios', rotulo: 'Cenários', valor: 2, texto: 'de público no cálculo do ticket' },
 ]
 
 // as quatro regras da plataforma (cada uma confere com uma rota do backend)
@@ -22,24 +22,24 @@ export const guarantees = [
     icon: 'check',
   },
   {
-    id: 'reg-fornecedor',
-    title: 'Só fornecedor aprovado aparece',
+    id: 'reg-cotacao',
+    title: 'Só fornecedor aprovado vê as cotações',
     detail:
-      'A lista de fornecedores e de serviços que o organizador vê é só de quem já passou pelo credenciamento.',
+      'Os eventos em cotação e os itens para propor só aparecem para quem já passou pelo credenciamento.',
     icon: 'users',
   },
   {
-    id: 'reg-retido',
-    title: 'Pedido retido até a aprovação',
+    id: 'reg-proposta',
+    title: 'Proposta por item, com validade',
     detail:
-      'Se o organizador ainda não foi aprovado, o pedido de serviço fica guardado e o fornecedor só o vê depois da aprovação.',
-    icon: 'shield',
+      'Cada fornecedor manda uma proposta por item, com valor e validade. Proposta vencida não pode ser escolhida.',
+    icon: 'file',
   },
   {
-    id: 'reg-revisao',
-    title: 'Evento liberado só depois da revisão',
+    id: 'reg-ticket',
+    title: 'Preço calculado com fórmula aberta',
     detail:
-      'O administrador confere o custo com fornecedores e aprova ou recusa o evento, informando o motivo.',
-    icon: 'calendar',
+      'O ticket de equilíbrio e o ticket-alvo saem do orçamento, do público e da margem, e a fórmula aparece na tela.',
+    icon: 'trend',
   },
 ]

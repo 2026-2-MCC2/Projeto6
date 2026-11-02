@@ -15,21 +15,27 @@ const passos = [
   },
   {
     numero: '02',
-    titulo: 'O organizador monta o evento',
+    titulo: 'O organizador planeja o evento',
     texto:
-      'Cadastra o evento e o local, registra os fornecedores próprios com o valor de cada serviço e acompanha o custo total.',
+      'Cadastra data, local, público mínimo e máximo e a margem desejada, lista os itens de custo (palco, som, segurança…) e os outros custos.',
   },
   {
     numero: '03',
-    titulo: 'Os fornecedores respondem',
+    titulo: 'Os fornecedores mandam propostas',
     texto:
-      'O organizador escolhe fornecedores credenciados e pede um serviço, com o valor que propõe. O fornecedor aceita ou recusa, e a conversa acontece no chat.',
+      'O evento é publicado para cotação. Os fornecedores credenciados enviam uma proposta por item, com valor, descrição e validade.',
   },
   {
     numero: '04',
+    titulo: 'O organizador escolhe e vê o preço',
+    texto:
+      'Compara as propostas de cada item e escolhe uma. O orçamento é consolidado e o ticket de equilíbrio e o ticket-alvo são calculados para cada cenário de público.',
+  },
+  {
+    numero: '05',
     titulo: 'O administrador revisa',
     texto:
-      'O evento vai para análise. O administrador confere o custo com fornecedores e aprova ou recusa, informando o motivo. Só eventos aprovados são liberados.',
+      'O evento vai para análise com o orçamento completo. O administrador aprova ou recusa, informando o motivo.',
   },
 ]
 
@@ -57,16 +63,16 @@ export default function Home({ onEnter }) {
             <Revela>
               <p className="pilula">
                 <i aria-hidden="true" />
-                Planejamento de eventos com fornecedores credenciados
+                Planejamento e precificação de eventos
               </p>
             </Revela>
 
             <Revela atraso={80}>
               <h1>
                 <span>Planeje o evento,</span>
-                <span>contrate fornecedores</span>
+                <span>cote com fornecedores</span>
                 <span>
-                  e <em>acompanhe o custo</em>.
+                  e saiba <em>quanto cobrar</em>.
                 </span>
               </h1>
             </Revela>
@@ -74,8 +80,8 @@ export default function Home({ onEnter }) {
             <Revela atraso={160}>
               <p className="lead">
                 A TrocaTicket reúne organizador, fornecedores credenciados e administrador em um só
-                lugar. Você cadastra o evento, pede serviços, conversa pelo chat e vê o custo antes
-                de enviar o evento para análise.
+                lugar. Você lista os custos do evento, recebe propostas por item, escolhe as melhores
+                e vê o preço do ingresso que cobre o custo e garante a sua margem.
               </p>
             </Revela>
 
@@ -111,10 +117,10 @@ export default function Home({ onEnter }) {
         <div className="wrap">
           <Revela className="secao-topo">
             <p className="eyebrow">Como funciona</p>
-            <h2>Quatro etapas entre o cadastro e o evento aprovado</h2>
+            <h2>Cinco etapas entre o cadastro e o evento aprovado</h2>
             <p className="lead">
-              Nenhum evento é liberado sem a revisão do administrador, e só fornecedores
-              credenciados aparecem para o organizador.
+              Do planejamento ao preço do ingresso, com fornecedores credenciados e a revisão do
+              administrador no fim.
             </p>
           </Revela>
 
@@ -224,7 +230,7 @@ export default function Home({ onEnter }) {
           <div>
             <Logo />
             <p>
-              Plataforma para planejar eventos com fornecedores credenciados.
+              Plataforma para planejar e precificar eventos com fornecedores credenciados.
             </p>
           </div>
           <p className="site-footer-nota">
