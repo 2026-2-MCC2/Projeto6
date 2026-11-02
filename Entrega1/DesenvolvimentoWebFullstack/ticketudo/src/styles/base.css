@@ -61,14 +61,14 @@ button {
 
 /* no Figma a acao principal e um botao branco com texto escuro */
 .btn-primary {
-  background: linear-gradient(180deg, var(--tt-branco), var(--tt-cinza-e8));
+  background: var(--acao-degrade);
   color: var(--acao-texto);
-  box-shadow: inset 0 1px 0 var(--tt-branco), 0 2px 6px -1px var(--tt-sombra-60), 0 8px 20px -8px var(--tt-sombra-70);
+  box-shadow: var(--acao-realce), var(--acao-sombra);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(180deg, var(--tt-branco), var(--tt-cinza-f2));
-  box-shadow: inset 0 1px 0 var(--tt-branco), 0 4px 10px -2px var(--tt-sombra-70), 0 12px 26px -8px var(--tt-sombra-80);
+  background: var(--acao-degrade-hover);
+  box-shadow: var(--acao-realce), var(--acao-sombra-hover);
 }
 
 .btn-primary:active {
@@ -82,14 +82,14 @@ button {
 }
 
 .btn-secondary {
-  background: linear-gradient(180deg, var(--tt-cinza-1c), var(--tt-cinza-13));
+  background: var(--secundario-degrade);
   border: 1px solid var(--border-strong);
-  box-shadow: var(--realce), 0 2px 6px -2px var(--tt-sombra-65);
+  box-shadow: var(--realce), var(--secundario-sombra);
   color: var(--text);
 }
 
 .btn-secondary:hover {
-  background: linear-gradient(180deg, var(--tt-cinza-26), var(--tt-cinza-1c));
+  background: var(--secundario-degrade-hover);
 }
 
 .btn-secondary:active {

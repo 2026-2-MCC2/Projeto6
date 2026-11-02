@@ -69,8 +69,9 @@ export default function Home({ onEnter }) {
 
             <Revela atraso={80}>
               <h1>
-                <span>Planeje o evento,</span>
-                <span>cote com fornecedores</span>
+                {/* no celular as linhas ficam lado a lado: o espaco entre elas e explicito */}
+                <span>Planeje o evento,</span>{' '}
+                <span>cote com fornecedores</span>{' '}
                 <span>
                   e saiba <em>quanto cobrar</em>.
                 </span>
@@ -113,7 +114,7 @@ export default function Home({ onEnter }) {
         </div>
       </section>
 
-      <section className="site-secao" id="como-funciona">
+      <section className="site-secao faixa-clara" id="como-funciona">
         <div className="wrap">
           <Revela className="secao-topo">
             <p className="eyebrow">Como funciona</p>
@@ -136,7 +137,7 @@ export default function Home({ onEnter }) {
         </div>
       </section>
 
-      <section className="site-secao secao-alt" id="garantias">
+      <section className="site-secao faixa-escura" id="garantias">
         <div className="wrap">
           <Revela className="secao-topo">
             <p className="eyebrow">Regras da plataforma</p>
@@ -159,7 +160,7 @@ export default function Home({ onEnter }) {
         </div>
       </section>
 
-      <section className="site-secao" id="portais">
+      <section className="site-secao faixa-clara" id="portais">
         <div className="wrap">
           <Revela className="secao-topo">
             <p className="eyebrow">Portais</p>
@@ -193,7 +194,7 @@ export default function Home({ onEnter }) {
         </div>
       </section>
 
-      <section className="site-secao secao-alt" id="historia">
+      <section className="site-secao faixa-escura" id="historia">
         <div className="wrap historia-grade">
           <Revela>
             <p className="eyebrow">Quem somos</p>
@@ -211,7 +212,7 @@ export default function Home({ onEnter }) {
         </div>
       </section>
 
-      <section className="site-chamada">
+      <section className="site-chamada faixa-clara">
         <div className="wrap">
           <Revela>
             <h2>Pronto para entrar?</h2>
