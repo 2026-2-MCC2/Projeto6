@@ -7,9 +7,10 @@
   letter-spacing: -1px;
 }
 
+/* o simbolo acompanha o tamanho do texto da marca em cada tela */
 .brand img {
-  width: 40px;
-  height: 40px;
+  width: 1.4em;
+  height: 1.4em;
   flex: 0 0 auto;
 }
 
