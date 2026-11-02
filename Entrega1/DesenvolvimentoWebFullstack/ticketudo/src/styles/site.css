@@ -361,55 +361,16 @@
   margin-top: var(--espaco-3);
 }
 
-/* --- historia e depoimentos --- */
+/* --- historia --- */
 
 .historia-grade {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--espaco-8);
-  align-items: start;
+  max-width: 760px;
 }
 
 .historia-grade p {
   color: var(--text-muted);
   font-size: var(--text-body);
   line-height: 1.75;
-}
-
-.depoimentos {
-  display: grid;
-  gap: var(--espaco-2);
-}
-
-.depoimentos blockquote {
-  margin: 0;
-  padding: var(--espaco-4);
-  background: linear-gradient(168deg, #171717, #101010 68%);
-  border: 1px solid var(--border);
-  border-left: 2px solid var(--border-strong);
-  border-radius: var(--raio-md);
-  box-shadow: var(--realce), var(--sombra-rasa);
-}
-
-.depoimentos blockquote p {
-  margin: 0 0 var(--espaco-2);
-  color: var(--text);
-  font-size: var(--text-body);
-  line-height: 1.7;
-}
-
-.depoimentos footer {
-  display: grid;
-  gap: 2px;
-}
-
-.depoimentos strong {
-  font-size: var(--text-small);
-}
-
-.depoimentos span {
-  color: var(--text-dim);
-  font-size: var(--text-small);
 }
 
 /* --- chamada final --- */
@@ -461,13 +422,6 @@
 /* --------------------------------------------------------------------------
    Telas pequenas
    -------------------------------------------------------------------------- */
-
-@media (max-width: 860px) {
-  .historia-grade {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--espaco-5);
-  }
-}
 
 @media (max-width: 640px) {
   .site-header nav {
