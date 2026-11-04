@@ -1,200 +1,358 @@
+/* ==========================================================================
+   Login e cadastro (modelo Noite, VIS-05)
+
+   A esquerda, a faixa escura com o recado do portal. A direita, a faixa
+   clara com o formulario num cartao de papel, de contorno grosso e sombra
+   dura em roxo, como o ingresso da pagina inicial.
+   ========================================================================== */
+
 .login {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   min-height: 100vh;
-  background: var(--bg);
+  /* dvh: no celular a altura acompanha a barra do navegador */
+  min-height: 100dvh;
+  line-height: 1.55;
 }
 
+.login :focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Lado escuro
+   -------------------------------------------------------------------------- */
+
+/* no computador o painel fica preso na altura da tela: quando o cadastro
+   e mais alto que a tela, so o formulario rola e o texto continua no meio */
 .login-art {
-  position: relative;
-  padding: 46px 8%;
-  background: linear-gradient(160deg, var(--tt-cinza-13), var(--tt-preto) 55%);
-  border-right: 1px solid var(--border);
-  color: var(--text);
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  height: 100vh;
+  height: 100dvh;
+  padding: clamp(28px, 4vw, 56px) clamp(24px, 6vw, 88px) clamp(40px, 6vw, 88px);
 }
 
-/* o clarao verde atras do texto, como no Figma */
+/* faixa com o degrade da logo no pe do painel: o unico destaque de marca */
 .login-art::after {
   content: '';
   position: absolute;
-  top: -60px;
-  left: -80px;
-  width: 420px;
-  height: 420px;
-  border-radius: 50%;
-  background: var(--marca-brilho);
-  filter: blur(70px);
-  pointer-events: none;
+  inset: auto 0 0;
+  height: 10px;
+  background: var(--degrade-logo);
+}
+
+.login-back {
+  align-self: flex-start;
+  flex: none;
+  padding: 10px 18px;
+  font-size: 15px;
+}
+
+/* margin auto nos dois lados centraliza o texto no espaco que sobra
+   abaixo do botao de voltar */
+.login-art-copy {
+  margin-block: auto;
 }
 
 .login-art .brand {
-  position: relative;
-  z-index: 1;
-  color: var(--text);
-}
-
-.login-art-copy {
-  position: absolute;
-  z-index: 1;
-  top: 28%;
+  margin-bottom: 32px;
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
 .login-art h1 {
-  font-family: var(--font-serif);
-  font-size: 65px;
-  line-height: 1.03;
-  letter-spacing: -2px;
-}
-
-.login-art h1 i {
-  color: var(--accent);
+  max-width: 11ch;
+  margin: 0;
+  font-size: clamp(44px, 5.6vw, 88px);
+  font-weight: 900;
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 
 .login-art p {
-  max-width: 330px;
-  color: var(--tt-cinza-c3);
-  font-size: 13px;
-  line-height: 1.65;
+  max-width: 40ch;
+  margin: 28px 0 0;
+  color: var(--text-muted);
+  font-size: clamp(17px, 1.3vw, 20px);
+  font-weight: 500;
 }
+
+/* o portal escolhido, como o selo do papel nas etapas da pagina inicial */
+.login-portal {
+  display: inline-block;
+  margin-top: 28px;
+  padding: 6px 14px;
+  border: 3px solid var(--contorno);
+  border-radius: 999px;
+  background: var(--destaque);
+  color: var(--destaque-texto);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   Lado claro: o cartao do formulario
+   -------------------------------------------------------------------------- */
 
 .login-form {
-  width: 100%;
-  max-width: 435px;
-  margin: auto;
-  padding: 9vh 7%;
-  color: var(--text);
-}
-
-.login-form h2 {
-  margin: 4px 0 6px;
-  color: var(--text);
-  font-family: var(--font-serif);
-  font-size: 32px;
-}
-
-.login-form > p {
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
-.login-form .field input {
-  font-size: 12px;
-}
-
-.tabs {
   display: flex;
-  gap: 22px;
-  margin: 34px 0 25px;
-  border-bottom: 1px solid var(--border);
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(32px, 5vw, 72px) clamp(20px, 4vw, 56px);
 }
 
-.tabs button {
-  padding: 0 5px 12px;
-  border: 0;
-  background: none;
-  color: var(--tt-cinza-9c);
-  font-size: 12px;
+.login-cartao {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: clamp(24px, 3vw, 36px);
+  background: var(--campo-fundo);
+  color: var(--cartao-texto);
+  border: 3px solid var(--contorno);
+  border-radius: 22px;
+  box-shadow: 8px 8px 0 0 var(--sombra-dura);
 }
 
-.tabs .is-selected {
-  border-bottom: 2px solid var(--accent);
-  color: var(--accent);
+.login-cartao h2 {
+  margin: 0;
+  font-size: clamp(26px, 2.4vw, 32px);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.login-subtitulo {
+  margin: 0 0 12px;
+  font-size: 15px;
   font-weight: 700;
 }
 
+/* --- escolha de portal no cadastro --- */
 
 .role-options {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 7px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
 }
 
 .role-options button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  justify-items: start;
   gap: 4px;
-  padding: 12px 5px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  color: var(--text);
+  padding: 14px;
+  border: 3px solid var(--contorno);
+  border-radius: 16px;
+  background: var(--cartao);
+  color: var(--cartao-texto);
+  text-align: left;
+  transition:
+    transform 160ms var(--suave),
+    box-shadow 160ms var(--suave),
+    background-color 160ms var(--suave);
 }
 
 .role-options button:hover {
-  background: var(--surface-muted);
-  border-color: var(--marca);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
+}
+
+.role-options button.is-selected {
+  background: var(--destaque);
+  color: var(--destaque-texto);
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
 }
 
 .role-options b {
   display: grid;
   place-items: center;
-  width: 25px;
-  height: 25px;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 6px;
+  border: 2px solid var(--contorno);
   border-radius: 50%;
+  background: var(--campo-fundo);
 }
 
 .role-options strong {
-  font-size: 10px;
+  font-size: 16px;
+  font-weight: 800;
 }
 
 .role-options small {
-  color: var(--tt-cinza-9c);
-  font-size: 8px;
+  color: inherit;
+  font-size: 13px;
 }
 
-.role-admin {
-  background: var(--surface-hover);
-  color: var(--tt-cinza-84);
+/* --- abas Entrar / Cadastrar --- */
+
+.login-abas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin: 24px 0;
+  padding: 4px;
+  border: 3px solid var(--contorno);
+  border-radius: 999px;
 }
 
-.role-supplier {
-  background: var(--surface-hover);
-  color: var(--text-muted);
+.login-abas button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--cartao-texto);
+  font-size: 15px;
+  font-weight: 800;
 }
 
-.role-organizer {
-  background: var(--accent-bg);
-  color: var(--tt-cinza-74);
+.login-abas .is-selected {
+  background: var(--acao);
+  color: var(--acao-texto);
+}
+
+/* --- campos: o mesmo desenho da calculadora da pagina inicial --- */
+
+.login .field {
+  margin-bottom: 18px;
+  color: var(--cartao-texto);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.login .field input {
+  margin-top: 6px;
+  padding: 12px 14px;
+  background: var(--campo-fundo);
+  border: 3px solid var(--contorno);
+  border-radius: 12px;
+  box-shadow: none;
+  color: var(--cartao-texto);
+  /* 16px ou mais: o celular nao da zoom ao tocar no campo */
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.login .field input::placeholder {
+  color: var(--cartao-muted);
+  font-weight: 400;
+}
+
+/* preenchimento automatico do navegador: sem isto o campo fica azul */
+.login .field input:-webkit-autofill {
+  -webkit-text-fill-color: var(--cartao-texto);
+  box-shadow: 0 0 0 100px var(--campo-fundo) inset;
+}
+
+.login .field input:focus-visible {
+  border-color: var(--contorno);
+  box-shadow: none;
+  outline: 3px solid var(--cartao-destaque);
+  outline-offset: 2px;
+}
+
+.login .field.has-error input {
+  border-color: var(--negative-border);
+}
+
+.login .field-error,
+.login .field-hint {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.login .field-hint {
+  color: var(--cartao-muted);
+}
+
+.login .form-erro {
+  margin-bottom: 18px;
+  border-left-width: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.login .btn-sticker[type='submit'] {
+  margin-top: 8px;
 }
 
 .login-legal {
   display: block;
-  margin-top: 25px;
-  color: var(--text-dim);
-  font-size: 9px;
-  line-height: 1.6;
+  max-width: 460px;
+  margin: 24px auto 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
   text-align: center;
 }
 
-.login-art-copy .brand {
-  margin-bottom: 26px;
+/* --------------------------------------------------------------------------
+   Tablet e celular
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .login {
+    grid-template-columns: 1fr;
+  }
+
+  /* empilhado, o painel volta a ter a altura do proprio texto */
+  .login-art {
+    position: relative;
+    gap: 32px;
+    height: auto;
+  }
+
+  .login-art h1 {
+    max-width: 14ch;
+  }
 }
 
-.login-art-copy .eyebrow {
-  display: block;
-  margin-bottom: 10px;
-  color: var(--accent);
-}
+@media (max-width: 640px) {
+  .login-art {
+    gap: 24px;
+    padding-bottom: 40px;
+  }
 
-.role-options {
-  margin-bottom: 26px;
-}
+  .login-art .brand {
+    margin-bottom: 20px;
+  }
 
-.role-options button.is-selected {
-  border-color: var(--accent);
-  background: var(--surface-muted);
-}
+  .login-art h1 {
+    font-size: clamp(36px, 11vw, 48px);
+  }
 
-.role-options button.is-selected strong {
-  color: var(--accent);
-}
+  .login-art p {
+    margin-top: 18px;
+    font-size: 16px;
+  }
 
-.login-form .role-options button {
-  background: var(--superficie-elevada) !important;
-  box-shadow: var(--realce), var(--sombra-rasa);
-}
+  .login-portal {
+    margin-top: 18px;
+  }
 
-.login-form .role-options button.is-selected {
-  box-shadow: var(--realce-forte), 0 0 0 1px var(--tt-branco-18), var(--sombra);
+  .login-form {
+    padding: 32px 16px 48px;
+  }
+
+  .login-cartao {
+    padding: 22px 18px;
+    box-shadow: 6px 6px 0 0 var(--sombra-dura);
+  }
+
+  .role-options {
+    gap: 10px;
+  }
+
+  .login .field-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
 }

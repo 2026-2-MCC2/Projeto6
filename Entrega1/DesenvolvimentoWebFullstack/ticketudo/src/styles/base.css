@@ -41,25 +41,31 @@ button {
 }
 
 .eyebrow {
-  color: var(--accent);
-  font-size: 10px;
+  color: var(--text-dim);
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 1.35px;
-  text-transform: uppercase;
 }
 
 .btn-primary,
 .btn-secondary,
 .btn-approve {
-  padding: 12px 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 20px;
   border: 0;
-  border-radius: 7px;
-  font-size: 12px;
-  font-weight: 600;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  touch-action: manipulation;
   transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
 }
 
-/* no Figma a acao principal e um botao branco com texto escuro */
+/* acao principal: a cor vem da faixa. Na plataforma e o roxo com sombra
+   dura lilas, o botao sticker da marca em tamanho de tela de trabalho */
 .btn-primary {
   background: var(--acao-degrade);
   color: var(--acao-texto);
@@ -71,14 +77,21 @@ button {
   box-shadow: var(--acao-realce), var(--acao-sombra-hover);
 }
 
+.btn-primary:hover {
+  transform: translate(-1px, -1px);
+}
+
 .btn-primary:active {
-  transform: translateY(1px);
+  transform: translate(3px, 3px);
+  box-shadow: none;
 }
 
 .btn-primary:disabled {
   background: var(--surface-hover);
+  box-shadow: none;
   color: var(--text-dim);
   cursor: not-allowed;
+  transform: none;
 }
 
 .btn-secondary {
@@ -97,7 +110,8 @@ button {
 }
 
 .btn-approve {
-  padding: 8px 12px;
+  min-height: 40px;
+  padding: 8px 16px;
   background: var(--positive-bg);
   border: 1px solid var(--positive-border);
   color: var(--positive);
@@ -112,10 +126,163 @@ button {
   border: 0;
   background: none;
   color: var(--accent);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
+  text-underline-offset: 4px;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary:hover,
+  .btn-primary:active {
+    transform: none;
+  }
 }
 
 .btn-block {
   width: 100%;
+}
+
+/* texto so para leitor de tela: some da tela mas continua sendo lido */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* botao do modelo Noite (VIS-05): pilula com contorno grosso e sombra
+   dura em roxo, como um adesivo. Pega a cor da faixa em que esta
+   (--acao e --acao-texto) */
+.btn-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border: 3px solid var(--contorno);
+  border-radius: 999px;
+  background: var(--acao);
+  color: var(--acao-texto);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
+  /* sem a espera do toque duplo no celular */
+  touch-action: manipulation;
+  transition:
+    transform 160ms var(--suave),
+    box-shadow 160ms var(--suave);
+}
+
+.btn-sticker:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--sombra-dura);
+}
+
+.btn-sticker:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-sticker,
+  .btn-sticker:hover,
+  .btn-sticker:active {
+    transform: none;
+  }
+}
+
+/* desativado (enviando): sem a sombra e sem o movimento */
+.btn-sticker:disabled {
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+
+.btn-sticker.btn-block {
+  justify-content: center;
+}
+
+/* versao de papel, para a acao secundaria sobre fundo de cor */
+.btn-sticker-claro {
+  background: var(--cartao);
+  color: var(--cartao-texto);
+}
+
+/* botoes dentro da plataforma: todos viram adesivo, como o .btn-sticker.
+   A cor vem da faixa em que o botao esta (--acao e --acao-texto) */
+.plataforma .btn-primary,
+.plataforma .btn-secondary {
+  border: 3px solid var(--contorno);
+  font-weight: 800;
+  transition:
+    transform 160ms var(--suave),
+    box-shadow 160ms var(--suave);
+}
+
+.plataforma .btn-primary {
+  background: var(--acao);
+  color: var(--acao-texto);
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
+}
+
+.plataforma .btn-primary:hover {
+  background: var(--acao);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--sombra-dura);
+}
+
+.plataforma .btn-primary:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.plataforma .btn-primary:disabled {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+  box-shadow: none;
+  color: var(--text-dim);
+  transform: none;
+}
+
+.plataforma .btn-secondary {
+  background: var(--cartao);
+  color: var(--cartao-texto);
+  box-shadow: none;
+}
+
+.plataforma .btn-secondary:hover {
+  background: var(--cartao);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
+}
+
+.plataforma .btn-secondary:disabled {
+  border-color: var(--border-strong);
+  box-shadow: none;
+  color: var(--text-dim);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.plataforma .btn-approve {
+  border: 2px solid var(--positive-border);
+  font-weight: 800;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plataforma .btn-primary:hover,
+  .plataforma .btn-primary:active,
+  .plataforma .btn-secondary:hover {
+    transform: none;
+  }
 }

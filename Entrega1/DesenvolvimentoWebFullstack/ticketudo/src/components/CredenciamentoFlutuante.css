@@ -13,14 +13,15 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 13px 18px;
-  background: linear-gradient(180deg, var(--tt-cinza-1c), var(--tt-cinza-13));
+  min-height: 48px;
+  padding: 12px 20px;
+  background: var(--surface-raised);
   border: 1px solid var(--border-strong);
   border-radius: 999px;
-  box-shadow: var(--realce), var(--sombra-alta);
+  box-shadow: var(--sombra-alta);
   color: var(--text);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -31,7 +32,7 @@
 .cred-botao:focus-visible,
 .cred-minimizar:focus-visible,
 .cred-painel:focus-visible {
-  outline: 2px solid var(--marca-clara);
+  outline: 3px solid var(--foco);
   outline-offset: 2px;
 }
 
@@ -65,8 +66,8 @@
   max-height: calc(100vh - 48px);
   background: var(--surface);
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  box-shadow: var(--realce), var(--sombra-alta);
+  border-radius: 16px;
+  box-shadow: var(--sombra-alta);
   animation: cred-entra 0.18s ease-out;
 }
 
@@ -88,16 +89,17 @@
 
 .cred-cab h2 {
   margin: 6px 0 0;
-  font-size: 17px;
+  font-size: 19px;
+  font-weight: 800;
   line-height: 1.3;
 }
 
 .cred-minimizar {
   flex: none;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 50%;
   background: none;
   color: var(--text-dim);
   font-size: 18px;
@@ -117,7 +119,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.6;
 }
 
@@ -145,14 +147,12 @@
   padding: 12px 14px;
   background: var(--negative-bg);
   border: 1px solid var(--negative-border);
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .cred-recusa strong {
   color: var(--negative);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 14px;
 }
 
 .cred-recusa p {
@@ -186,9 +186,9 @@
 .cred-grupo legend {
   margin-bottom: 8px;
   padding: 0;
-  color: var(--tt-cinza-6d);
-  font-size: 11px;
-  font-weight: 700;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .cred-opcoes {
@@ -201,12 +201,12 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 11px 12px;
+  padding: 12px 14px;
   background: var(--field-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
   color: var(--text);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -219,13 +219,13 @@
 .cred-opcao small {
   display: block;
   color: var(--text-dim);
-  font-size: 11.5px;
+  font-size: 13px;
   font-weight: 400;
 }
 
 .cred-opcao input {
   margin-top: 3px;
-  accent-color: var(--marca-clara);
+  accent-color: var(--accent);
 }
 
 .cred-chips {
@@ -250,23 +250,24 @@
 
 .cred-chip span {
   display: block;
-  padding: 7px 13px;
-  border: 1px solid var(--border);
+  padding: 9px 15px;
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
   background: var(--field-bg);
   color: var(--text-muted);
-  font-size: 12.5px;
+  font-size: 14px;
 }
 
 .cred-chip input:checked + span {
   border-color: var(--accent);
   background: var(--accent);
-  color: var(--acao-texto);
-  font-weight: 600;
+  /* lilas com texto azul-noite: 9,4:1 */
+  color: var(--tt-noite);
+  font-weight: 700;
 }
 
 .cred-chip input:focus-visible + span {
-  outline: 2px solid var(--marca-clara);
+  outline: 3px solid var(--foco);
   outline-offset: 2px;
 }
 
@@ -281,17 +282,17 @@
   gap: 10px;
   margin-top: 4px;
   color: var(--text-muted);
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.55;
   cursor: pointer;
 }
 
 .cred-declaracao input {
   flex: none;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   margin-top: 2px;
-  accent-color: var(--marca-clara);
+  accent-color: var(--accent);
 }
 
 .cred-declaracao.has-error span {

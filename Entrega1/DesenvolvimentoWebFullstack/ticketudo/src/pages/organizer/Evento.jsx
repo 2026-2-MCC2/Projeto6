@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Carregando from '../../components/Carregando'
+import EtapasEvento from '../../components/EtapasEvento'
 import PageHeading from '../../components/PageHeading'
 import StatusBadge from '../../components/StatusBadge'
 import CompararPropostas from './CompararPropostas'
@@ -119,6 +120,8 @@ export default function Evento({ parametro, onNavigate }) {
       >
         <StatusBadge status={rotulo(ev.status)} />
       </PageHeading>
+
+      <EtapasEvento status={ev.status} />
 
       {erro ? <p className="form-erro">{erro}</p> : null}
       {ev.motivo_recusa && ev.status === 'recusado' ? (

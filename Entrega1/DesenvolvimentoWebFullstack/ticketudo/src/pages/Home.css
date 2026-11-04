@@ -1,32 +1,53 @@
 /* ==========================================================================
-   Pagina publica
+   Pagina publica (modelo Noite, VIS-05)
 
-   A medida de tudo aqui sai dos tokens de escala: o texto cresce com a
-   largura da tela (clamp), o respiro entre secoes e um valor so
-   (--secao), e o conteudo para em --wrap no meio.
+   Cada secao e uma faixa de cor so (tokens.css, secao 3): escura, roxa,
+   clara ou lilas. Os cartoes sao de papel, com contorno grosso e sombra
+   dura em roxo, como um ingresso. Nenhuma cor e escrita aqui: tudo vem
+   dos tokens.
    ========================================================================== */
 
 .site {
+  --gutter-site: clamp(16px, 2.5vw, 40px);
+  --wrap-site: 1240px;
+  --secao-site: clamp(72px, 9vw, 160px);
+
   overflow-x: clip;
+  background: var(--bg);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+/* :where deixa o reset sem peso: qualquer classe da pagina ganha dele */
+:where(.site) :is(h1, h2, h3, p) {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+:where(.site) :is(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.site :focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 3px;
 }
 
 .wrap {
-  width: 100%;
-  max-width: var(--wrap);
-  margin: 0 auto;
-  padding: 0 var(--gutter);
+  width: min(100% - 2 * var(--gutter-site), var(--wrap-site));
+  margin-inline: auto;
 }
 
 /* --------------------------------------------------------------------------
-   Revelacao no scroll
+   Revelacao no scroll (componente Revela)
    -------------------------------------------------------------------------- */
 
 .revela {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(24px);
   transition:
-    opacity 620ms var(--suave),
-    transform 620ms var(--suave);
+    opacity 600ms var(--suave),
+    transform 600ms var(--suave);
 }
 
 .revela.is-visivel {
@@ -42,15 +63,24 @@
   }
 }
 
-.sr-only {
+/* link que aparece so no Tab, para quem usa teclado pular o menu */
+.pular-conteudo {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  top: 12px;
+  left: 12px;
+  z-index: 50;
+  padding: 10px 16px;
+  border: 3px solid var(--contorno);
+  border-radius: 999px;
+  background: var(--cartao);
+  color: var(--cartao-texto);
+  font-weight: 800;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.pular-conteudo:focus-visible {
+  transform: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -60,183 +90,293 @@
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 20;
-  background: var(--vidro-site);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
+  z-index: 30;
+  border-bottom: 3px solid var(--contorno);
 }
 
 .site-header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--espaco-4);
+  gap: 24px;
   height: 72px;
+}
+
+.site-header .brand {
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
 .site-header nav {
   display: flex;
-  gap: var(--espaco-4);
+  gap: 28px;
   margin-left: auto;
-  margin-right: var(--espaco-3);
 }
 
 .site-header nav a {
-  color: var(--text-muted);
-  font-size: var(--text-small);
+  color: var(--text);
+  font-weight: 700;
   text-decoration: none;
-  transition: color var(--duracao) var(--suave);
 }
 
 .site-header nav a:hover {
-  color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+
+.menu-botao {
+  display: none;
 }
 
 /* --------------------------------------------------------------------------
-   Hero
+   Hero e calculadora
    -------------------------------------------------------------------------- */
 
 .site-hero {
-  position: relative;
-  padding: clamp(3.5rem, 2rem + 6vw, 7rem) 0 var(--secao);
-}
-
-/* clarao difuso atras do titulo */
-.hero-brilho {
-  position: absolute;
-  top: -180px;
-  left: 50%;
-  width: min(1100px, 120%);
-  height: 620px;
-  transform: translateX(-50%);
-  background:
-    radial-gradient(closest-side, var(--marca-brilho), transparent 72%),
-    radial-gradient(closest-side at 70% 40%, var(--tt-branco-6), transparent 70%);
-  pointer-events: none;
+  padding: clamp(48px, 7vw, 112px) 0;
 }
 
 .hero-grade {
-  position: relative;
-}
-
-.pilula {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(32px, 5vw, 80px);
   align-items: center;
-  gap: var(--espaco-1);
-  margin: 0 0 var(--espaco-3);
-  padding: 7px 15px;
-  background: var(--tt-branco-4);
-  border: 1px solid var(--border);
-  border-radius: var(--raio-pill);
-  color: var(--text-muted);
-  font-size: var(--text-eyebrow);
-  letter-spacing: 0.04em;
-}
-
-.pilula i {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--positive);
-  box-shadow: 0 0 0 4px var(--positive-halo);
 }
 
 .site-hero h1 {
-  max-width: 17ch;
-  margin: 0 0 var(--espaco-3);
-  font-family: var(--font-serif);
-  font-size: var(--text-display);
-  font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.03em;
-  text-wrap: balance;
+  font-size: clamp(46px, 7.4vw, 112px);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
 }
 
-.site-hero h1 span {
-  display: block;
-}
-
-.site-hero h1 em {
-  color: var(--accent);
-  font-style: italic;
-}
-
-.lead {
-  max-width: 62ch;
-  margin: 0 0 var(--espaco-4);
-  color: var(--text-muted);
-  font-size: var(--text-lead);
-  line-height: 1.65;
+.hero-apoio {
+  max-width: 34ch;
+  margin-top: 36px;
+  font-size: clamp(18px, 1.5vw, 22px);
+  font-weight: 500;
+  line-height: 1.45;
 }
 
 .hero-acoes {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--espaco-2);
-  margin-bottom: var(--espaco-8);
+  gap: 14px;
+  margin-top: 36px;
 }
 
-.hero-acoes .btn-primary,
-.hero-acoes .btn-secondary {
-  padding: 14px 22px;
-  border-radius: var(--raio-pill);
-  font-size: var(--text-small);
-  text-decoration: none;
+/* o ingresso picotado: cartao de papel com a conta do ticket */
+.ingresso {
+  position: relative;
+  background: var(--cartao);
+  color: var(--cartao-texto);
+  border: 3px solid var(--contorno);
+  border-radius: 22px;
+  box-shadow: 10px 10px 0 0 var(--sombra-dura);
+  rotate: 2deg;
+  transition: rotate 400ms var(--suave);
 }
 
-/* --- numeros do hero --- */
-
-.hero-numeros {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: var(--espaco-2);
-  margin: 0;
-  padding-top: var(--espaco-4);
-  border-top: 1px solid var(--border);
+.ingresso:hover,
+.ingresso:focus-within {
+  rotate: 0deg;
 }
 
-.hero-numeros > div {
-  display: grid;
-  gap: 4px;
+.ingresso-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 22px 26px 0;
+  font-weight: 800;
 }
 
-.hero-numeros dt {
-  color: var(--text-dim);
-  font-size: var(--text-caption, 0.7rem);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.hero-numeros dd {
-  margin: 0;
+.ingresso-topo span:last-child {
   font-family: var(--font-serif);
-  font-size: clamp(1.9rem, 1.4rem + 1.6vw, 2.6rem);
-  line-height: 1;
+  font-size: 15px;
+}
+
+.ingresso h2 {
+  padding: 6px 26px 0;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.05;
   letter-spacing: -0.02em;
 }
 
-/* filho direto: senao pega tambem os spans de dentro do contador */
-.hero-numeros > div > span {
-  color: var(--text-dim);
-  font-size: var(--text-small);
+.ingresso-campos {
+  display: grid;
+  gap: 14px;
+  padding: 20px 26px 24px;
 }
 
-/* o span de medida reserva a largura final, pra linha nao dancar
-   enquanto os digitos sobem */
-.contador {
+.ingresso-campo {
+  display: grid;
+  gap: 6px;
+}
+
+.ingresso-campo label {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.ingresso-linha {
+  display: flex;
+  align-items: center;
+  background: var(--campo-fundo);
+  border: 3px solid var(--contorno);
+  border-radius: 12px;
+}
+
+.ingresso-linha:focus-within {
+  outline: 3px solid var(--cartao-destaque);
+  outline-offset: 2px;
+}
+
+.ingresso-linha span {
+  padding-left: 14px;
+  font-weight: 800;
+}
+
+.ingresso-linha span.depois {
+  padding: 0 14px 0 0;
+}
+
+.ingresso-linha input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--cartao-texto);
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ingresso-linha input:focus {
+  outline: none;
+}
+
+.ingresso-campo small {
+  color: var(--cartao-muted);
+  font-size: 14px;
+}
+
+.ingresso-picote {
   position: relative;
-  display: inline-block;
+  height: 0;
+  margin: 0 18px;
+  border-top: 3px dashed var(--contorno);
 }
 
-.contador-medida {
-  visibility: hidden;
-}
-
-.contador > span:nth-child(2) {
+/* os dois meios-circulos do picote, na cor do fundo da faixa */
+.ingresso-picote::before,
+.ingresso-picote::after {
+  content: '';
   position: absolute;
-  inset: 0;
-  white-space: nowrap;
+  top: -17px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid var(--contorno);
+}
+
+.ingresso-picote::before {
+  left: -36px;
+  clip-path: inset(0 0 0 50%);
+}
+
+.ingresso-picote::after {
+  right: -36px;
+  clip-path: inset(0 50% 0 0);
+}
+
+.ingresso-resultado {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+  padding: 18px 26px 24px;
+}
+
+.ingresso-resultado div:first-child {
+  padding-right: 18px;
+}
+
+.ingresso-resultado div + div {
+  padding-left: 18px;
+  border-left: 3px solid var(--contorno);
+}
+
+.ingresso-resultado dt {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.ingresso-resultado dd {
+  margin: 4px 0 0;
+  font-size: clamp(26px, 2.6vw, 36px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ingresso-resultado .alvo dd {
+  color: var(--cartao-destaque);
+}
+
+.ingresso-formula {
+  padding: 0 26px 22px;
+  color: var(--cartao-muted);
+  font-size: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   Letreiro
+   -------------------------------------------------------------------------- */
+
+.letreiro {
+  /* clip e nao hidden: hidden faria do letreiro o rolador que a animacao
+     acompanha, e ele nunca rola */
+  overflow: clip;
+  background: var(--letreiro-fundo);
+  color: var(--destaque);
+  border-block: 3px solid var(--contorno);
+}
+
+/* o letreiro anda com a rolagem da pagina, nao sozinho: assim ele nunca
+   fica se mexendo enquanto a pessoa le. No navegador sem suporte (ou com
+   menos movimento) ele fica parado */
+.letreiro-trilho {
+  display: flex;
+  width: max-content;
+  gap: 32px;
+  padding: 14px 0;
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .letreiro-trilho {
+      animation: letreiro-correr linear both;
+      animation-timeline: view();
+    }
+  }
+}
+
+@keyframes letreiro-correr {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-25%);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -244,188 +384,542 @@
    -------------------------------------------------------------------------- */
 
 .site-secao {
-  padding: var(--secao) 0;
-}
-
-.secao-topo {
-  max-width: 62ch;
-  margin-bottom: var(--espaco-6);
-}
-
-.secao-topo .eyebrow {
-  margin: 0 0 var(--espaco-2);
+  padding: var(--secao-site) 0;
 }
 
 .site-secao h2,
 .site-chamada h2 {
-  margin: 0 0 var(--espaco-2);
-  font-family: var(--font-serif);
-  font-size: var(--text-h2);
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
+  font-size: clamp(38px, 5.2vw, 76px);
+  font-weight: 900;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
 }
 
-.secao-topo .lead {
-  margin-bottom: 0;
+.secao-topo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: 32px 64px;
+  align-items: end;
+  margin-bottom: clamp(40px, 5vw, 72px);
 }
 
-/* --- passos numerados --- */
+.secao-topo p {
+  color: var(--text-muted);
+  font-size: 19px;
+  font-weight: 500;
+}
+
+/* --- etapas: intro parada a esquerda e a linha que enche --- */
+
+.jornada {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(40px, 6vw, 96px);
+}
+
+.jornada-intro {
+  position: sticky;
+  top: 120px;
+  align-self: start;
+}
+
+.site-secao .jornada-intro h2 {
+  font-size: clamp(36px, 3.6vw, 54px);
+}
+
+.jornada-intro p {
+  margin-top: 24px;
+  color: var(--text-muted);
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.jornada-intro .btn-sticker {
+  margin-top: 32px;
+}
+
+.trilho {
+  position: relative;
+  padding-left: 76px;
+}
+
+.trilho-linha {
+  position: absolute;
+  top: 24px;
+  bottom: 24px;
+  left: 25px;
+  width: 8px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--trilho);
+}
+
+/* a linha e revelada por recorte: o degrade fica parado e cada ponto
+   mantem a sua cor, que e a cor que o numero aceso usa */
+.trilho-preenche {
+  position: absolute;
+  inset: 0;
+  background: var(--degrade-linha);
+  clip-path: inset(0 0 calc((1 - var(--progresso, 1)) * 100%) 0);
+}
 
 .passos {
   display: grid;
-  /* cinco colunas no computador; quebra sozinho em telas menores */
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: var(--espaco-3);
+  gap: clamp(28px, 4vw, 48px);
   margin: 0;
   padding: 0;
   list-style: none;
   counter-reset: passo;
 }
 
-.passos li {
-  padding: var(--espaco-3);
-  border-top: 2px solid var(--border-strong);
+.passos > li {
+  counter-increment: passo;
+  position: relative;
+  padding: 24px 26px 26px;
+  background: var(--cartao);
+  color: var(--cartao-texto);
+  border: 3px solid var(--contorno);
+  border-radius: 18px;
+  box-shadow: 6px 6px 0 0 var(--sombra-dura);
+  transition:
+    opacity 600ms var(--suave),
+    transform 600ms var(--suave),
+    rotate 500ms var(--suave);
 }
 
-.passo-numero {
-  display: block;
-  margin-bottom: var(--espaco-2);
-  color: var(--text-dim);
-  font-family: var(--font-serif);
-  font-size: 1.6rem;
+.passos > li:nth-child(odd) {
+  rotate: -1deg;
+}
+
+.passos > li:nth-child(even) {
+  rotate: 1deg;
+}
+
+.passos > li[data-ativa] {
+  rotate: 0deg;
+}
+
+/* o numero e a estacao da linha: acende quando a linha chega nela */
+.passos > li::before {
+  content: 'Nº ' counter(passo);
+  position: absolute;
+  top: 18px;
+  left: -76px;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--estacao-vazia);
+  color: var(--estacao-vazia-texto);
+  border: 3px solid var(--contorno);
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+  transition:
+    background-color 300ms var(--suave),
+    transform 300ms var(--suave);
+}
+
+.passos > li[data-ativa]::before {
+  background: var(--cor-estacao, var(--destaque));
+  color: var(--cor-estacao-texto, var(--destaque-texto));
+  transform: scale(1.08);
+}
+
+.passos h3 {
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 800;
+  line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
-.passos h3,
-.cartoes h3 {
-  margin: 0 0 var(--espaco-1);
-  font-size: var(--text-h3);
-  font-weight: 600;
+.passos p {
+  margin-top: 8px;
+  color: var(--cartao-muted);
 }
 
-.passos p,
-.cartoes p {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: var(--text-body);
-  line-height: 1.65;
+.passo-quem {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 4px 12px;
+  border: 2px solid var(--contorno);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 800;
 }
 
-/* --- cartoes --- */
+@media (prefers-reduced-motion: reduce) {
+  .trilho-preenche {
+    clip-path: none;
+  }
+}
 
-.cartoes {
+/* --- regras: cartoes com carimbo --- */
+
+.regras {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
-  gap: var(--espaco-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
 }
 
-.cartoes article {
+.regra {
   height: 100%;
-  padding: var(--espaco-4);
-  background: var(--superficie-elevada);
-  border: 1px solid var(--border);
-  border-radius: var(--raio-lg);
-  box-shadow: var(--realce), var(--sombra-rasa);
-  transition:
-    transform var(--duracao) var(--suave),
-    border-color var(--duracao) var(--suave),
-    box-shadow var(--duracao) var(--suave);
+  padding: clamp(24px, 3vw, 40px);
+  background: var(--campo-fundo);
+  color: var(--cartao-texto);
+  border: 3px solid var(--contorno);
+  border-radius: 20px;
+  box-shadow: 6px 6px 0 0 var(--sombra-dura);
 }
 
-.cartoes article:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-strong);
-  box-shadow: var(--realce-forte), var(--sombra-alta);
+.carimbo {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 6px 14px;
+  border: 3px solid currentColor;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.2;
+  rotate: -3deg;
 }
 
-.cartoes b {
+.regras > :nth-child(1) .carimbo {
+  color: var(--carimbo-1);
+}
+
+.regras > :nth-child(2) .carimbo {
+  color: var(--carimbo-2);
+}
+
+.regras > :nth-child(3) .carimbo {
+  color: var(--carimbo-3);
+}
+
+.regras > :nth-child(4) .carimbo {
+  color: var(--carimbo-4);
+}
+
+.regra h3 {
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.regra p {
+  margin-top: 10px;
+  color: var(--cartao-muted);
+}
+
+/* --- portais: tres portas em arco --- */
+
+.portas {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.porta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  min-height: 380px;
+  padding: clamp(24px, 3vw, 36px);
+  border: 3px solid var(--contorno);
+  border-radius: 160px 160px 22px 22px;
+  box-shadow: 6px 6px 0 0 var(--sombra-dura);
+}
+
+.porta h3 {
+  margin-top: auto;
+  padding-top: 80px;
+  font-size: clamp(30px, 3vw, 44px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.porta .btn-sticker {
+  align-self: flex-start;
+  margin-top: 8px;
+}
+
+/* a terceira porta e escura com o botao lilas */
+.porta-destaque {
+  --acao: var(--destaque);
+  --acao-texto: var(--destaque-texto);
+}
+
+/* --- quem somos --- */
+
+.historia-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 40px 80px;
+  align-items: start;
+}
+
+.site-secao .historia-grade h2 {
+  font-family: var(--font-serif);
+  letter-spacing: -0.02em;
+}
+
+.selo {
+  display: inline-grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
-  margin-bottom: var(--espaco-3);
-  border-radius: var(--raio-md);
-  background: var(--accent-bg);
-  border: 1px solid var(--border);
-  color: var(--accent);
+  width: 150px;
+  height: 150px;
+  margin-top: 24px;
+  border-radius: 50%;
+  background: var(--destaque);
+  color: var(--destaque-texto);
+  border: 3px solid var(--contorno);
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: center;
+  rotate: -10deg;
 }
 
-.cartoes-portal .btn-link {
-  margin-top: var(--espaco-3);
-}
-
-/* --- historia --- */
-
-/* limita a largura do texto, nao do bloco: assim ele fica alinhado a
-   esquerda com as outras secoes */
-.historia-grade > * {
-  max-width: 760px;
-}
-
-.historia-grade p {
+.historia-texto {
+  display: grid;
+  gap: 18px;
   color: var(--text-muted);
-  font-size: var(--text-body);
-  line-height: 1.75;
+  font-size: 19px;
 }
 
-/* --- chamada final --- */
+/* --------------------------------------------------------------------------
+   Chamada final e rodape
+   -------------------------------------------------------------------------- */
 
 .site-chamada {
-  padding: var(--secao) 0;
-  text-align: center;
+  padding: var(--secao-site) 0;
 }
 
-.site-chamada .lead {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.site-chamada .btn-primary {
-  padding: 15px 26px;
-  border-radius: var(--raio-pill);
-  font-size: var(--text-small);
-}
-
-/* --------------------------------------------------------------------------
-   Rodape
-   -------------------------------------------------------------------------- */
-
-.site-footer {
-  padding: var(--espaco-6) 0;
-  border-top: 1px solid var(--border);
-}
-
-.site-footer-inner {
+.chamada-grade {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: end;
   justify-content: space-between;
-  gap: var(--espaco-3);
+  gap: 32px;
 }
 
-.site-footer p {
-  max-width: 44ch;
-  margin: var(--espaco-1) 0 0;
-  color: var(--text-dim);
-  font-size: var(--text-small);
+.chamada-grade p {
+  max-width: 40ch;
+  margin-top: 18px;
+  font-size: 19px;
+  font-weight: 500;
 }
 
-.site-footer-nota {
-  margin: 0;
+.site-footer {
+  padding: 56px 0 28px;
+}
+
+/* o nome da marca em tamanho de cartaz, pintado com o degrade da logo */
+.site-footer-nome {
+  width: fit-content;
+  padding-bottom: 0.06em;
+  background: var(--degrade-logo);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(56px, 15.5vw, 228px);
+  font-weight: 900;
+  line-height: 0.86;
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+}
+
+.site-footer-linha {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 32px;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.barra-celular {
+  display: none;
 }
 
 /* --------------------------------------------------------------------------
-   Telas pequenas
+   Tablet
    -------------------------------------------------------------------------- */
 
-@media (max-width: 640px) {
-  .site-header nav {
+@media (max-width: 1080px) {
+  .portas {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .portas > :nth-child(3) {
+    grid-column: 1 / -1;
+  }
+
+  .portas > :nth-child(3) .porta {
+    min-height: 260px;
+    border-radius: 22px;
+  }
+
+  .portas > :nth-child(3) .porta h3 {
+    padding-top: 24px;
+  }
+}
+
+@media (max-width: 860px) {
+  .hero-grade,
+  .secao-topo,
+  .historia-grade,
+  .jornada {
+    grid-template-columns: 1fr;
+  }
+
+  .jornada-intro {
+    position: static;
+  }
+
+  .ingresso {
+    max-width: 520px;
+    rotate: 0deg;
+  }
+
+  .site-header nav,
+  .site-header-acao {
     display: none;
   }
 
-  .site-hero h1 span {
-    display: inline;
+  .menu-botao {
+    display: inline-flex;
+    min-height: 44px;
+    margin-left: auto;
+    padding: 0 18px;
+    font-size: 15px;
+  }
+
+  .site-header.is-aberto nav {
+    display: grid;
+    position: absolute;
+    inset: 72px 0 auto;
+    gap: 0;
+    padding: 8px var(--gutter-site) 24px;
+    background: var(--bg);
+    border-bottom: 3px solid var(--contorno);
+  }
+
+  .site-header.is-aberto nav a {
+    padding: 16px 0;
+    border-bottom: 3px solid currentColor;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Celular
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .site {
+    padding-bottom: 76px;
+    font-size: 16px;
+  }
+
+  .site-hero h1 {
+    font-size: clamp(44px, 13vw, 60px);
+  }
+
+  .hero-acoes .btn-sticker {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .ingresso-campos,
+  .ingresso h2,
+  .ingresso-topo,
+  .ingresso-formula,
+  .ingresso-resultado {
+    padding-inline: 18px;
+  }
+
+  .ingresso-resultado div + div {
+    padding-left: 14px;
+  }
+
+  /* a linha fica mais fina e encostada na borda, o cartao ganha largura */
+  .trilho {
+    padding-left: 52px;
+  }
+
+  .trilho-linha {
+    left: 17px;
+    width: 6px;
+  }
+
+  .passos > li {
+    padding: 20px 18px 22px;
+  }
+
+  /* :nth-child(n) iguala o peso das regras de inclinacao para tira-las */
+  .passos > li:nth-child(n) {
+    rotate: none;
+  }
+
+  .passos > li::before {
+    left: -52px;
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
+  }
+
+  .jornada-intro .btn-sticker,
+  .chamada-grade .btn-sticker {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .regras,
+  .portas {
+    grid-template-columns: 1fr;
+  }
+
+  .porta,
+  .portas > :nth-child(3) .porta {
+    min-height: 0;
+    border-radius: 120px 120px 22px 22px;
+  }
+
+  .porta h3,
+  .portas > :nth-child(3) .porta h3 {
+    padding-top: 48px;
+  }
+
+  .portas > :nth-child(3) {
+    grid-column: auto;
+  }
+
+  /* a barra presa no rodape cobre o fim da tela: quem navega por link
+     ou por Tab nao pode parar embaixo dela */
+  :root:has(.barra-celular) {
+    scroll-padding-bottom: 88px;
+  }
+
+  .barra-celular {
+    display: flex;
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 40;
+    padding: 10px var(--gutter-site) calc(10px + env(safe-area-inset-bottom));
+    border-top: 3px solid var(--contorno);
+  }
+
+  .barra-celular .btn-sticker {
+    flex: 1;
+    justify-content: center;
   }
 }

@@ -4,9 +4,11 @@
    Origem das cores:
    - preto, branco e o palido (#d7e2ea) foram medidos no site publicado
      (trocaticket.com.br), lendo as cores computadas no navegador;
-   - azul, roxo, rosa e laranja sao da logo oficial (VIS-02). Os valores
-     sao aproximados, tirados da imagem da logo: falta o grupo confirmar
-     com o arquivo original;
+   - azul, roxo, rosa e laranja sao da logo oficial (VIS-02), com os
+     valores da paleta Noite (VIS-05), conferidos na imagem da logo;
+   - a paleta Noite (VIS-05) usa o azul-noite no lugar do preto, cinzas
+     puxados para o mesmo tom, o roxo da logo nas acoes e o lilas como
+     destaque. O degrade da logo so aparece em destaque de marca;
    - o azul profundo e o azul claro aparecem em brilhos e destaques do
      site; verde, ambar e vermelho so aparecem como status.
 
@@ -29,11 +31,26 @@
   --tt-branco: #ffffff;
   --tt-palido: #d7e2ea;
 
-  /* cores da logo (aproximadas, a confirmar com o arquivo original) */
-  --tt-azul: #23aafb;
-  --tt-roxo: #6a4cff;
-  --tt-rosa: #ed0092;
-  --tt-laranja: #ff8e1e;
+  /* cores da logo */
+  --tt-azul: #30b0f0;
+  --tt-roxo: #5b4cf0;
+  --tt-rosa: #f020b0;
+  --tt-laranja: #ff7a45;
+
+  /* paleta Noite (VIS-05) */
+  --tt-noite: #0b0b1e;
+  --tt-papel: #f7f6fd;
+  --tt-lilas: #a9adff;
+  --tt-roxo-escuro: #4b3fe0;
+  --tt-rosa-escuro: #b0107e;
+  --tt-azul-escuro: #0a6a9c;
+  /* texto de apoio: no papel, na noite e no lilas */
+  --tt-cinza-noite: #46465e;
+  --tt-nevoa: #c9c9e0;
+  --tt-noite-lilas: #1d1f4a;
+  /* erro sobre o papel: texto 6,1:1 no papel e 5,8:1 no fundo do aviso */
+  --tt-vermelho-tinta: #b42318;
+  --tt-vermelho-papel: #fdeceb;
 
   /* azuis dos brilhos e destaques */
   --tt-azul-profundo: #1e5cb3;
@@ -232,6 +249,48 @@
   --camada: linear-gradient(180deg, var(--tt-branco-4), var(--tt-branco-1) 38%, transparent);
   --camada-forte: linear-gradient(180deg, var(--tt-branco-8), var(--tt-branco-2) 45%, transparent);
 
+  /* ----------------------------------------------------------------
+     Modelo Noite (VIS-05): cartoes de papel com contorno grosso e
+     sombra dura em roxo, como um ingresso. As faixas (secao 3) trocam
+     o fundo; estes tokens valem dentro de todas elas.
+     ---------------------------------------------------------------- */
+
+  --cartao: var(--tt-papel);
+  --cartao-texto: var(--tt-noite);
+  --cartao-muted: var(--tt-cinza-noite);
+  --campo-fundo: var(--tt-branco);
+  --contorno: var(--tt-noite);
+  /* roxo dentro do cartao: ticket-alvo e foco dos campos (6,3:1) */
+  --cartao-destaque: var(--tt-roxo);
+  --letreiro-fundo: var(--tt-noite);
+  --sombra-dura: var(--tt-roxo);
+
+  /* lilas: numeros, selos e o letreiro sobre o fundo escuro.
+     Contraste do lilas com o azul-noite: 9,4:1 */
+  --destaque: var(--tt-lilas);
+  --destaque-texto: var(--tt-noite);
+
+  /* numero da linha das etapas antes de a linha chegar nele (6,8:1) */
+  --estacao-vazia: var(--tt-roxo-escuro);
+  --estacao-vazia-texto: var(--tt-branco);
+  /* texto do numero aceso: o escuro (--cartao-texto) ou este claro,
+     o que tiver mais contraste com a cor da linha naquele ponto */
+  --estacao-texto-claro: var(--tt-branco);
+  --trilho: var(--tt-branco-20);
+
+  /* degrade da logo: so em destaque de marca (linha das etapas e
+     nome do rodape). As paradas repetem o degrade da linha para os
+     numeros acesos pegarem a cor dela (Home.jsx le esse token) */
+  --degrade-logo: linear-gradient(90deg, var(--tt-azul), var(--tt-roxo) 36%, var(--tt-rosa) 70%, var(--tt-laranja));
+  --degrade-linha: linear-gradient(180deg, var(--tt-azul), var(--tt-rosa) 55%, var(--tt-laranja));
+  --degrade-linha-paradas: var(--tt-azul) 0, var(--tt-rosa) 0.55, var(--tt-laranja) 1;
+
+  /* carimbos das regras, sobre o cartao (todos acima de 4,5:1) */
+  --carimbo-1: var(--tt-roxo-escuro);
+  --carimbo-2: var(--tt-rosa-escuro);
+  --carimbo-3: var(--tt-azul-escuro);
+  --carimbo-4: var(--tt-noite);
+
   --font-sans: 'DM Sans', 'Segoe UI', sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
 }
@@ -239,58 +298,168 @@
 /* ------------------------------------------------------------------
    3. Faixas
 
-   Trechos da pagina inicial que trocam os tokens de uso (VIS-01). Tudo
-   o que fica dentro da faixa usa os tokens, entao troca de cor junto.
-   Para a faixa clara virar uma cor da marca no futuro, basta mudar os
-   valores da .faixa-clara.
+   Trechos da pagina que trocam os tokens de uso (VIS-01). Tudo o que
+   fica dentro da faixa usa os tokens, entao troca de cor junto.
+   Com o modelo Noite (VIS-05) a pagina inicial tem quatro faixas:
+   escura (azul-noite), roxa, clara (papel) e lilas.
    ------------------------------------------------------------------ */
 
-/* faixa escura: os tokens padrao do site, por cima do fundo da pagina */
+/* faixa escura: azul-noite com texto branco e acao roxa.
+   Contraste: texto 19,4:1, muted 12:1, botao roxo com texto branco 5,6:1 */
 .faixa-escura {
   color-scheme: dark;
+
+  --bg: var(--tt-noite);
+  --text: var(--tt-branco);
+  --text-muted: var(--tt-nevoa);
+  --acao: var(--tt-roxo);
+  --acao-texto: var(--tt-branco);
+  --foco: var(--tt-lilas);
+
+  background: var(--bg);
+  color: var(--text);
 }
 
-/* faixa clara: fundo branco e texto preto.
-   Contraste sobre o branco: texto 19,6:1, muted 9,1:1, dim e faint
-   5,2:1 (4,6:1 sobre o cinza do pe do cartao), accent 6,5:1. */
+/* faixa roxa: o roxo da logo com texto branco (5,6:1) e botao de papel */
+.faixa-roxa {
+  color-scheme: dark;
+
+  --bg: var(--tt-roxo);
+  --text: var(--tt-branco);
+  --text-muted: var(--tt-branco);
+  --acao: var(--tt-papel);
+  --acao-texto: var(--tt-noite);
+  --foco: var(--tt-noite);
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* faixa clara: papel com texto azul-noite.
+   Contraste: texto 18,4:1, muted e dim 9,1:1 */
 .faixa-clara {
   color-scheme: light;
 
-  --bg: var(--tt-branco);
-  --surface: var(--tt-cinza-f2);
+  --bg: var(--tt-papel);
+  --text: var(--tt-noite);
+  --text-muted: var(--tt-cinza-noite);
+  --text-dim: var(--tt-cinza-noite);
+  --border: var(--tt-tinta-10);
+  --border-strong: var(--tt-tinta-20);
+
+  /* o vermelho de status do site e claro demais para o papel */
+  --negative: var(--tt-vermelho-tinta);
+  --negative-bg: var(--tt-vermelho-papel);
+  --negative-border: var(--tt-vermelho-tinta);
+  --acao: var(--tt-noite);
+  --acao-texto: var(--tt-papel);
+  --foco: var(--tt-roxo);
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* plataforma: as telas de dentro do portal (organizador, fornecedor e
+   administrador) com a cara da pagina inicial. O conteudo fica no papel,
+   como a faixa clara, com cartoes de contorno grosso e sombra dura roxa;
+   o titulo de cada tela abre numa faixa roxa (.faixa-roxa) e o menu
+   lateral fica no azul-noite (.sidebar, logo abaixo).
+   Contraste no papel: texto 18,1:1, apoio 8,5:1, roxo-escuro 6,8:1,
+   verde 5,4:1, vermelho 6,6:1 (no branco dos cartoes) */
+.plataforma,
+.toaster {
+  color-scheme: light;
+
+  --bg: var(--tt-papel);
+  --surface: var(--tt-branco);
   --surface-raised: var(--tt-branco);
-  --surface-hover: var(--tt-cinza-e8);
+  --surface-hover: #ecebf8;
+  --surface-muted: #efedfa;
+  --field-bg: var(--tt-branco);
 
   --border: var(--tt-tinta-10);
   --border-soft: var(--tt-tinta-6);
   --border-strong: var(--tt-tinta-20);
 
-  --text: var(--tt-preto);
-  --text-muted: var(--tt-cinza-48);
-  --text-dim: var(--tt-cinza-6d);
-  --text-faint: var(--tt-cinza-6d);
+  --text: var(--tt-noite);
+  --text-muted: var(--tt-cinza-noite);
+  --text-dim: var(--tt-cinza-noite);
+  --text-faint: #5c5c78;
 
-  --accent: var(--tt-azul-profundo);
-  --accent-bg: var(--tt-tinta-6);
+  --accent: var(--tt-roxo-escuro);
+  --accent-bg: #4b3fe01f;
+  --marca-clara: var(--tt-roxo-escuro);
+  --marca-clara-halo: #4b3fe026;
+  --foco: var(--tt-roxo);
 
-  /* a pilula de acao vira preta com texto branco */
-  --acao: var(--tt-preto);
-  --acao-texto: var(--tt-branco);
-  --acao-degrade: linear-gradient(180deg, var(--tt-cinza-26), var(--tt-preto));
-  --acao-degrade-hover: linear-gradient(180deg, var(--tt-cinza-48), var(--tt-cinza-13));
-  --acao-realce: inset 0 1px 0 var(--tt-branco-12);
-  --acao-sombra: 0 2px 6px -1px var(--tt-tinta-20), 0 8px 20px -8px var(--tt-tinta-20);
-  --acao-sombra-hover: 0 4px 10px -2px var(--tt-tinta-20), 0 12px 26px -8px var(--tt-tinta-20);
+  /* acao no papel: o botao sticker azul-noite, como na faixa clara */
+  --acao: var(--tt-noite);
+  --acao-texto: var(--tt-papel);
 
-  /* sombras e realce mais leves: no branco a sombra preta pesa */
-  --realce: inset 0 1px 0 var(--tt-branco);
-  --realce-forte: inset 0 1px 0 var(--tt-branco);
-  --sombra-rasa: 0 1px 2px var(--tt-tinta-10), 0 4px 12px var(--tt-tinta-6);
-  --sombra-alta: 0 4px 8px var(--tt-tinta-10), 0 24px 56px -12px var(--tt-tinta-20);
-  --superficie-elevada: linear-gradient(168deg, var(--tt-branco), var(--tt-cinza-f2) 68%);
+  /* adesivo: contorno grosso e sombra dura roxa (cartoes e botoes) */
+  --adesivo-borda: 3px solid var(--contorno);
+  --adesivo-sombra: 6px 6px 0 0 var(--sombra-dura);
+  --adesivo-sombra-sm: 4px 4px 0 0 var(--sombra-dura);
 
-  /* a cor do texto e calculada no body: aqui ela precisa ser aplicada
-     de novo para valer o --text da faixa */
+  --positive: #0b7a50;
+  --positive-bg: #dff3ea;
+  --positive-hover: #cdebdd;
+  --positive-border: #0b7a50;
+  --negative: var(--tt-vermelho-tinta);
+  --negative-bg: var(--tt-vermelho-papel);
+  --negative-hover: #fbdcda;
+  --negative-border: var(--tt-vermelho-tinta);
+  --waiting: #8a5a00;
+  --waiting-halo: #8a5a0026;
+
+  --vidro-topbar: var(--tt-papel);
+
+  --superficie-elevada: var(--surface);
+  --camada: none;
+  --camada-forte: none;
+  --realce: inset 0 0 0 0 transparent;
+  --realce-forte: inset 0 0 0 0 transparent;
+  --sombra-rasa: none;
+  --sombra: none;
+  --shadow: none;
+  --sombra-alta: 0 16px 40px -12px #0b0b1e59;
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* menu lateral da plataforma: azul-noite, como o topo da pagina inicial.
+   Contraste: texto 19,4:1, apoio 12:1, lilas 9,4:1 */
+.plataforma .sidebar {
+  color-scheme: dark;
+
+  --bg: var(--tt-noite);
+  --surface: #1a1a36;
+  --surface-hover: #222244;
+  --border: #c9c9e024;
+  --border-strong: #c9c9e047;
+  --text: var(--tt-branco);
+  --text-muted: var(--tt-nevoa);
+  --text-dim: #a8a8c8;
+  --accent: var(--tt-lilas);
+  --foco: var(--tt-lilas);
+  --acao: var(--tt-lilas);
+  --acao-texto: var(--tt-noite);
+
+  color: var(--text);
+}
+
+/* faixa lilas: texto azul-noite (9,4:1) e apoio em noite-lilas (7,5:1) */
+.faixa-lilas {
+  color-scheme: light;
+
+  --bg: var(--tt-lilas);
+  --text: var(--tt-noite);
+  --text-muted: var(--tt-noite-lilas);
+  --acao: var(--tt-noite);
+  --acao-texto: var(--tt-papel);
+  --foco: var(--tt-noite);
+
   background: var(--bg);
   color: var(--text);
 }
