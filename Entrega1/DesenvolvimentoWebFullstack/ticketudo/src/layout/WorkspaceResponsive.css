@@ -1,49 +1,123 @@
 @media (max-width: 900px) {
   .sidebar {
-    width: 200px;
+    width: 216px;
+  }
+
+  .topbar {
+    padding: 4px 28px 0;
   }
 
   .page {
-    padding: 35px 25px;
+    padding: 0 28px 72px;
   }
 }
 
+/* --------------------------------------------------------------------------
+   Celular: o menu lateral vira uma gaveta que entra pela esquerda,
+   aberta pelo botao Menu da barra do topo
+   -------------------------------------------------------------------------- */
+
 @media (max-width: 680px) {
   .sidebar {
-    display: none;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 40;
+    width: min(320px, 86vw);
+    padding-top: 24px;
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition:
+      transform 280ms var(--suave),
+      visibility 0s 280ms;
+  }
+
+  .sidebar.is-aberta {
+    transform: none;
+    visibility: visible;
+    transition: transform 280ms var(--suave);
+  }
+
+  .sidebar-fechar {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 2px solid var(--tt-papel);
+    border-radius: 999px;
+    background: none;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .sidebar-menu {
+    margin-top: 28px;
+  }
+
+  .gaveta-fundo {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 35;
+    background: #0b0b1ecc;
   }
 
   .mobile-logo {
     display: block;
   }
 
+  .mobile-logo .brand {
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
   .topbar {
     height: 64px;
-    padding: 0 18px;
+    padding: 4px 16px 0;
   }
 
   .topbar-actions {
-    gap: 8px;
+    gap: 4px;
   }
 
-  .topbar-actions .avatar {
-    padding-left: 8px;
+  /* no celular o nome sai da barra; ele aparece no pe da gaveta */
+  .topbar-user {
+    display: none;
+  }
+
+  .topbar-menu {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-left: 4px;
+    padding: 0 18px;
+    border: 2px solid var(--contorno);
+    border-radius: 999px;
+    background: var(--tt-lilas);
+    color: var(--tt-noite);
+    font-size: 15px;
+    font-weight: 800;
+    box-shadow: 3px 3px 0 0 var(--sombra-dura);
   }
 
   .page {
-    padding: 28px 16px 50px;
+    padding: 0 16px 64px;
   }
 
   .page-heading {
     display: block;
-    margin-bottom: 25px;
+    margin-bottom: 32px;
+    padding: 36px 0 32px;
+  }
+
+  .page-heading p {
+    font-size: 16px;
   }
 
   .page-heading-actions {
-    margin-top: 18px;
+    margin-top: 22px;
   }
-
-
 
   .field-row {
     grid-template-columns: 1fr;
@@ -52,5 +126,12 @@
 
   .panel {
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar.is-aberta {
+    transition: none;
   }
 }

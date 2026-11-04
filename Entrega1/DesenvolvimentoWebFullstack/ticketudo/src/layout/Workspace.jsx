@@ -65,10 +65,30 @@ export default function Workspace({ onSignOut }) {
   const [contadores, atualizarContadores] = useContadores(papel)
   const { exigir } = useCredenciamento()
   const temCredenciamento = papel === 'organizer' || papel === 'supplier'
+  // no celular o menu lateral vira gaveta: aberta ou fechada
+  const [menuAberto, setMenuAberto] = useState(false)
+
+  // gaveta aberta: Esc fecha e a pagina de tras nao rola
+  useEffect(() => {
+    if (!menuAberto) return undefined
+
+    function aoTeclar(evento) {
+      if (evento.key === 'Escape') setMenuAberto(false)
+    }
+
+    document.addEventListener('keydown', aoTeclar)
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.removeEventListener('keydown', aoTeclar)
+      document.body.style.overflow = ''
+    }
+  }, [menuAberto])
 
   // criar evento depende do credenciamento: sem ele, abre o pop-up e so
   // depois de enviar segue para a tela do evento
   function navegar(destino, valor = null) {
+    setMenuAberto(false)
     if (papel === 'organizer' && destino === 'new') {
       exigir('Para criar eventos, faça um credenciamento simples.', () => {
         setParametro(null)
@@ -86,17 +106,32 @@ export default function Workspace({ onSignOut }) {
   const CurrentPage = pages?.[page] ?? pages?.home
 
   return (
-    <div className="app">
+    <div className="app plataforma">
       <Sidebar
         profile={profile}
         page={paginaDoMenu}
         contadores={contadores}
+        aberto={menuAberto}
+        onFechar={() => setMenuAberto(false)}
         onNavigate={navegar}
-        onOpenPanel={setPanel}
+        onOpenPanel={(tipo) => {
+          setMenuAberto(false)
+          setPanel(tipo)
+        }}
         onSignOut={onSignOut}
       />
-      <main className="workspace">
-        <Topbar profile={profile} onOpenPanel={setPanel} />
+      {/* fundo escuro atras da gaveta: tocar nele fecha o menu */}
+      {menuAberto ? (
+        <div className="gaveta-fundo" aria-hidden="true" onClick={() => setMenuAberto(false)} />
+      ) : null}
+      {/* com a gaveta aberta a pagina de tras fica inerte: o Tab nao sai do menu */}
+      <main className="workspace" inert={menuAberto}>
+        <Topbar
+          profile={profile}
+          menuAberto={menuAberto}
+          onAbrirMenu={() => setMenuAberto(true)}
+          onOpenPanel={setPanel}
+        />
         <div className="page">
           <CurrentPage
             page={page}

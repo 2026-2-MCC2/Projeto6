@@ -1,11 +1,20 @@
+import { useEffect, useRef } from 'react'
 import Avatar from '../components/Avatar'
 import Icon from '../components/Icon'
 import Logo from '../components/Logo'
 import { useApp } from '../state/useApp'
 
-export default function Topbar({ profile, onOpenPanel }) {
+export default function Topbar({ profile, menuAberto, onAbrirMenu, onOpenPanel }) {
   const { state } = useApp()
   const { sessao } = state
+  const botaoMenu = useRef(null)
+  const estavaAberto = useRef(false)
+
+  // quando a gaveta fecha, o foco volta para o botao que abriu
+  useEffect(() => {
+    if (estavaAberto.current && !menuAberto) botaoMenu.current?.focus()
+    estavaAberto.current = menuAberto
+  }, [menuAberto])
 
   return (
     <header className="topbar">
@@ -23,6 +32,16 @@ export default function Topbar({ profile, onOpenPanel }) {
             <small>{profile.label}</small>
           </span>
         </span>
+        <button
+          className="topbar-menu"
+          type="button"
+          ref={botaoMenu}
+          aria-expanded={menuAberto}
+          aria-controls="menu-portal"
+          onClick={onAbrirMenu}
+        >
+          Menu
+        </button>
       </div>
     </header>
   )
