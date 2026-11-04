@@ -44,6 +44,7 @@ export default function CalculadoraIngresso() {
             <span>R$</span>
             <input
               id="calc-custo"
+              name="custo"
               inputMode="numeric"
               autoComplete="off"
               value={valores.custo}
@@ -57,6 +58,7 @@ export default function CalculadoraIngresso() {
           <div className="ingresso-linha">
             <input
               id="calc-publico"
+              name="publico"
               inputMode="numeric"
               autoComplete="off"
               value={valores.publico}
@@ -71,6 +73,7 @@ export default function CalculadoraIngresso() {
           <div className="ingresso-linha">
             <input
               id="calc-margem"
+              name="margem"
               inputMode="numeric"
               autoComplete="off"
               aria-describedby="calc-margem-dica"

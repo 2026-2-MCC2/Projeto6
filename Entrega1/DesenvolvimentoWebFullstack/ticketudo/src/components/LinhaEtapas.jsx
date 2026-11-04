@@ -11,16 +11,23 @@ function prefereParado() {
 
 // --- cor da linha num ponto, a partir das paradas do degrade ---
 
-function hexParaRgb(hex) {
-  const limpo = hex.trim().replace('#', '')
-  return [0, 2, 4].map((i) => parseInt(limpo.slice(i, i + 2), 16))
+// o navegador converte qualquer escrita de cor (#fff, #ffffff, nome...)
+// para rgb. O build encurta as cores, entao nao da para ler o hex na mao
+function corParaRgb(cor, onde) {
+  const amostra = document.createElement('span')
+  amostra.style.color = cor.trim()
+  onde.appendChild(amostra)
+  const rgb = getComputedStyle(amostra).color.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number)
+  amostra.remove()
+  return rgb
 }
 
 // "#30b0f0 0, #f020b0 0.55, #ff7a45 1" -> [{ rgb, pos }, ...]
-function lerParadas(texto) {
+function lerParadas(texto, onde) {
   return texto.split(',').map((parada) => {
-    const [cor, pos] = parada.trim().split(/\s+/)
-    return { rgb: hexParaRgb(cor), pos: Number(pos) }
+    const partes = parada.trim().split(/\s+/)
+    const pos = Number(partes.pop())
+    return { rgb: corParaRgb(partes.join(' '), onde), pos }
   })
 }
 
@@ -55,19 +62,24 @@ export default function LinhaEtapas({ passos }) {
 
     const parado = prefereParado()
     const estilo = getComputedStyle(el)
-    const paradas = lerParadas(estilo.getPropertyValue('--degrade-linha-paradas'))
-    const luzEscuro = luz(hexParaRgb(estilo.getPropertyValue('--cartao-texto')))
-    const luzClaro = luz(hexParaRgb(estilo.getPropertyValue('--estacao-texto-claro')))
+    const paradas = lerParadas(estilo.getPropertyValue('--degrade-linha-paradas'), el)
+    const luzEscuro = luz(corParaRgb(estilo.getPropertyValue('--cartao-texto'), el))
+    const luzClaro = luz(corParaRgb(estilo.getPropertyValue('--estacao-texto-claro'), el))
 
+    const itens = () => [...el.querySelectorAll('.passos > li')]
+
+    // primeiro le todas as medidas, depois escreve: misturar as duas coisas
+    // obriga o navegador a recalcular o layout a cada item
     function rolar() {
-      const caixa = el.getBoundingClientRect()
       const meio = window.innerHeight * 0.6
+      const caixa = el.getBoundingClientRect()
+      const topos = itens().map((li) => li.getBoundingClientRect().top)
+
       const progresso = parado ? 1 : Math.min(1, Math.max(0, (meio - caixa.top) / caixa.height))
       el.style.setProperty('--progresso', progresso)
-
-      el.querySelectorAll('.passos > li').forEach((li) => {
-        // data-ativa em vez de className: o React nao apaga no proximo render
-        if (parado || li.getBoundingClientRect().top + 40 < meio) li.dataset.ativa = ''
+      // data-ativa em vez de className: o React nao apaga no proximo render
+      itens().forEach((li, i) => {
+        if (parado || topos[i] + 40 < meio) li.dataset.ativa = ''
         else delete li.dataset.ativa
       })
     }
@@ -76,20 +88,31 @@ export default function LinhaEtapas({ passos }) {
     // texto escuro nem o branco chegam a 4,5:1, escurece so o necessario
     function pintarNumeros() {
       const linha = el.querySelector('.trilho-linha').getBoundingClientRect()
-
-      el.querySelectorAll('.passos > li').forEach((li) => {
+      const centros = itens().map((li) => {
         const bola = getComputedStyle(li, '::before')
-        const centro = li.getBoundingClientRect().top + parseFloat(bola.top) + parseFloat(bola.height) / 2
-        let rgb = corNaLinha(Math.min(1, Math.max(0, (centro - linha.top) / linha.height)), paradas)
+        return li.getBoundingClientRect().top + parseFloat(bola.top) + parseFloat(bola.height) / 2
+      })
+
+      itens().forEach((li, i) => {
+        let rgb = corNaLinha(Math.min(1, Math.max(0, (centros[i] - linha.top) / linha.height)), paradas)
 
         while (Math.max(contraste(luz(rgb), luzEscuro), contraste(luz(rgb), luzClaro)) < 4.5) {
           rgb = rgb.map((canal) => Math.round(canal * 0.97))
         }
 
         const escuroGanha = contraste(luz(rgb), luzEscuro) >= contraste(luz(rgb), luzClaro)
-        const texto = escuroGanha ? 'var(--cartao-texto)' : 'var(--estacao-texto-claro)'
         li.style.setProperty('--cor-estacao', `rgb(${rgb.join(' ')})`)
-        li.style.setProperty('--cor-estacao-texto', texto)
+        li.style.setProperty('--cor-estacao-texto', escuroGanha ? 'var(--cartao-texto)' : 'var(--estacao-texto-claro)')
+      })
+    }
+
+    // a rolagem dispara muitas vezes por quadro: so atualiza uma vez por quadro
+    let quadro = 0
+    function aoRolar() {
+      if (quadro) return
+      quadro = requestAnimationFrame(() => {
+        quadro = 0
+        rolar()
       })
     }
 
@@ -101,11 +124,12 @@ export default function LinhaEtapas({ passos }) {
     redimensionar()
     // a fonte muda a altura dos cartoes: pinta de novo quando ela chega
     document.fonts?.ready.then(pintarNumeros)
-    window.addEventListener('scroll', rolar, { passive: true })
+    window.addEventListener('scroll', aoRolar, { passive: true })
     window.addEventListener('resize', redimensionar)
 
     return () => {
-      window.removeEventListener('scroll', rolar)
+      cancelAnimationFrame(quadro)
+      window.removeEventListener('scroll', aoRolar)
       window.removeEventListener('resize', redimensionar)
     }
   }, [])

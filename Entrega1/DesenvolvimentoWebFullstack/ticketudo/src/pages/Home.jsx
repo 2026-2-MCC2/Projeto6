@@ -54,6 +54,10 @@ export default function Home({ onEnter }) {
 
   return (
     <div className="site">
+      <a className="pular-conteudo" href="#conteudo">
+        Pular para o conteúdo
+      </a>
+
       <header className={`site-header faixa-clara${menuAberto ? ' is-aberto' : ''}`}>
         <div className="wrap site-header-inner">
           <Logo />
@@ -83,157 +87,159 @@ export default function Home({ onEnter }) {
         </div>
       </header>
 
-      <section className="site-hero faixa-escura" aria-labelledby="hero-titulo">
-        <div className="wrap hero-grade">
-          <div>
-            <Revela>
-              <h1 id="hero-titulo">Quanto cobrar pelo ingresso?</h1>
-            </Revela>
-
-            <Revela atraso={80}>
-              <p className="hero-apoio">
-                A TrocaTicket junta organizador, fornecedores credenciados e administrador: você
-                lista os custos, recebe propostas por item e vê o preço que cobre tudo e garante a
-                sua margem.
-              </p>
-            </Revela>
-
-            <Revela atraso={160}>
-              <div className="hero-acoes">
-                <button className="btn-sticker" onClick={onEnter}>
-                  Entrar no meu portal <b aria-hidden="true">→</b>
-                </button>
-                <a className="btn-sticker btn-sticker-claro" href="#como-funciona">
-                  Ver como funciona
-                </a>
-              </div>
-            </Revela>
-          </div>
-
-          <Revela atraso={240}>
-            <CalculadoraIngresso />
-          </Revela>
-        </div>
-      </section>
-
-      <div className="letreiro" aria-hidden="true">
-        <div className="letreiro-trilho">
-          {[0, 1, 2, 3].map((i) => (
-            <span key={i}>{letreiro}</span>
-          ))}
-        </div>
-      </div>
-
-      <section className="site-secao faixa-roxa" id="como-funciona" aria-labelledby="etapas-titulo">
-        <div className="wrap jornada">
-          <div className="jornada-intro">
-            <h2 id="etapas-titulo">Cinco etapas até o evento aprovado</h2>
-            <p>
-              Do planejamento ao preço do ingresso, com fornecedores credenciados e a revisão do
-              administrador no fim.
-            </p>
-            <button className="btn-sticker" onClick={onEnter}>
-              Criar minha conta
-            </button>
-          </div>
-
-          <LinhaEtapas passos={passos} />
-        </div>
-      </section>
-
-      <section className="site-secao faixa-clara" id="garantias" aria-labelledby="regras-titulo">
-        <div className="wrap">
-          <Revela className="secao-topo">
-            <h2 id="regras-titulo">Quatro regras para todo mundo</h2>
-            <p>
-              Cada uma confere com uma rota da plataforma. Não é promessa: é como o sistema
-              funciona hoje.
-            </p>
-          </Revela>
-
-          <div className="regras">
-            {guarantees.map((item, i) => (
-              <Revela atraso={i * 80} key={item.id}>
-                <article className="regra">
-                  <span className="carimbo">{item.carimbo}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.detail}</p>
-                </article>
+      <main id="conteudo">
+        <section className="site-hero faixa-escura" aria-labelledby="hero-titulo">
+          <div className="wrap hero-grade">
+            <div>
+              <Revela>
+                <h1 id="hero-titulo">Quanto cobrar pelo ingresso?</h1>
               </Revela>
+
+              <Revela atraso={80}>
+                <p className="hero-apoio">
+                  A TrocaTicket junta organizador, fornecedores credenciados e administrador: você
+                  lista os custos, recebe propostas por item e vê o preço que cobre tudo e garante a
+                  sua margem.
+                </p>
+              </Revela>
+
+              <Revela atraso={160}>
+                <div className="hero-acoes">
+                  <button className="btn-sticker" onClick={onEnter}>
+                    Entrar no meu portal <b aria-hidden="true">→</b>
+                  </button>
+                  <a className="btn-sticker btn-sticker-claro" href="#como-funciona">
+                    Ver como funciona
+                  </a>
+                </div>
+              </Revela>
+            </div>
+
+            <Revela atraso={240}>
+              <CalculadoraIngresso />
+            </Revela>
+          </div>
+        </section>
+
+        <div className="letreiro" aria-hidden="true">
+          <div className="letreiro-trilho">
+            {[0, 1, 2, 3].map((i) => (
+              <span key={i}>{letreiro}</span>
             ))}
           </div>
         </div>
-      </section>
 
-      <section className="site-secao faixa-lilas" id="portais" aria-labelledby="portais-titulo">
-        <div className="wrap">
-          <Revela className="secao-topo">
-            <h2 id="portais-titulo">Cada perfil entra por uma porta</h2>
-            <p>
-              Organizador, fornecedor e administrador veem telas diferentes, com as permissões que
-              cada papel precisa, e só elas.
-            </p>
-          </Revela>
+        <section className="site-secao faixa-roxa" id="como-funciona" aria-labelledby="etapas-titulo">
+          <div className="wrap jornada">
+            <div className="jornada-intro">
+              <h2 id="etapas-titulo">Cinco etapas até o evento aprovado</h2>
+              <p>
+                Do planejamento ao preço do ingresso, com fornecedores credenciados e a revisão do
+                administrador no fim.
+              </p>
+              <button className="btn-sticker" onClick={onEnter}>
+                Criar minha conta
+              </button>
+            </div>
 
-          <div className="portas">
-            {todosOsPapeis.map((role, i) => {
-              const profile = profiles[role]
+            <LinhaEtapas passos={passos} />
+          </div>
+        </section>
 
-              return (
-                <Revela atraso={i * 80} key={role}>
-                  <article className={`porta ${corDaPorta[role]}`}>
-                    <h3>{profile.label}</h3>
-                    <p>{profile.pitch}</p>
-                    <button className="btn-sticker" onClick={onEnter}>
-                      Entrar como {profile.label.toLowerCase()}
-                    </button>
+        <section className="site-secao faixa-clara" id="garantias" aria-labelledby="regras-titulo">
+          <div className="wrap">
+            <Revela className="secao-topo">
+              <h2 id="regras-titulo">Quatro regras para todo mundo</h2>
+              <p>
+                Cada uma confere com uma rota da plataforma. Não é promessa: é como o sistema
+                funciona hoje.
+              </p>
+            </Revela>
+
+            <div className="regras">
+              {guarantees.map((item, i) => (
+                <Revela atraso={i * 80} key={item.id}>
+                  <article className="regra">
+                    <span className="carimbo">{item.carimbo}</span>
+                    <h3>{item.title}</h3>
+                    <p>{item.detail}</p>
                   </article>
                 </Revela>
-              )
-            })}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="site-secao faixa-escura" id="historia" aria-labelledby="historia-titulo">
-        <div className="wrap historia-grade">
-          <Revela>
-            <h2 id="historia-titulo">Nasceu na festa da faculdade</h2>
-            <p className="selo" aria-hidden="true">
-              Incubada
-              <br />
-              na FECAP
-            </p>
-          </Revela>
-          <Revela atraso={80} className="historia-texto">
-            <p>
-              A TrocaTicket nasceu com o objetivo de facilitar a troca e a revenda de ingressos
-              para festas universitárias e, com a evolução do negócio, passou a atender também
-              outros tipos de eventos.
-            </p>
-            <p>
-              Incubada e mentorada pela FECAP, a empresa pretende ampliar sua plataforma para
-              apoiar organizadores ainda na etapa de planejamento.
-            </p>
-          </Revela>
-        </div>
-      </section>
+        <section className="site-secao faixa-lilas" id="portais" aria-labelledby="portais-titulo">
+          <div className="wrap">
+            <Revela className="secao-topo">
+              <h2 id="portais-titulo">Cada perfil entra por uma porta</h2>
+              <p>
+                Organizador, fornecedor e administrador veem telas diferentes, com as permissões que
+                cada papel precisa, e só elas.
+              </p>
+            </Revela>
 
-      <section className="site-chamada faixa-roxa" aria-labelledby="chamada-titulo">
-        <Revela className="wrap chamada-grade">
-          <div>
-            <h2 id="chamada-titulo">Pronto para entrar?</h2>
-            <p>Crie sua conta de organizador ou fornecedor e envie o credenciamento para análise.</p>
+            <div className="portas">
+              {todosOsPapeis.map((role, i) => {
+                const profile = profiles[role]
+
+                return (
+                  <Revela atraso={i * 80} key={role}>
+                    <article className={`porta ${corDaPorta[role]}`}>
+                      <h3>{profile.label}</h3>
+                      <p>{profile.pitch}</p>
+                      <button className="btn-sticker" onClick={onEnter}>
+                        Entrar como {profile.label.toLowerCase()}
+                      </button>
+                    </article>
+                  </Revela>
+                )
+              })}
+            </div>
           </div>
-          <button className="btn-sticker" onClick={onEnter}>
-            Acessar plataforma <b aria-hidden="true">→</b>
-          </button>
-        </Revela>
-      </section>
+        </section>
+
+        <section className="site-secao faixa-escura" id="historia" aria-labelledby="historia-titulo">
+          <div className="wrap historia-grade">
+            <Revela>
+              <h2 id="historia-titulo">Nasceu na festa da faculdade</h2>
+              <p className="selo" aria-hidden="true">
+                Incubada
+                <br />
+                na FECAP
+              </p>
+            </Revela>
+            <Revela atraso={80} className="historia-texto">
+              <p>
+                A TrocaTicket nasceu com o objetivo de facilitar a troca e a revenda de ingressos
+                para festas universitárias e, com a evolução do negócio, passou a atender também
+                outros tipos de eventos.
+              </p>
+              <p>
+                Incubada e mentorada pela FECAP, a empresa pretende ampliar sua plataforma para
+                apoiar organizadores ainda na etapa de planejamento.
+              </p>
+            </Revela>
+          </div>
+        </section>
+
+        <section className="site-chamada faixa-roxa" aria-labelledby="chamada-titulo">
+          <Revela className="wrap chamada-grade">
+            <div>
+              <h2 id="chamada-titulo">Pronto para entrar?</h2>
+              <p>Crie sua conta de organizador ou fornecedor e envie o credenciamento para análise.</p>
+            </div>
+            <button className="btn-sticker" onClick={onEnter}>
+              Acessar plataforma <b aria-hidden="true">→</b>
+            </button>
+          </Revela>
+        </section>
+      </main>
 
       <footer className="site-footer faixa-escura">
         <div className="wrap">
-          <p className="site-footer-nome" aria-hidden="true">
+          <p className="site-footer-nome" aria-hidden="true" translate="no">
             TrocaTicket
           </p>
           <div className="site-footer-linha">

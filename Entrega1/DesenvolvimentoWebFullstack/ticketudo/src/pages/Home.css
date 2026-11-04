@@ -63,6 +63,26 @@
   }
 }
 
+/* link que aparece so no Tab, para quem usa teclado pular o menu */
+.pular-conteudo {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 50;
+  padding: 10px 16px;
+  border: 3px solid var(--contorno);
+  border-radius: 999px;
+  background: var(--cartao);
+  color: var(--cartao-texto);
+  font-weight: 800;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.pular-conteudo:focus-visible {
+  transform: none;
+}
+
 /* --------------------------------------------------------------------------
    Cabecalho
    -------------------------------------------------------------------------- */
@@ -318,12 +338,17 @@
    -------------------------------------------------------------------------- */
 
 .letreiro {
-  overflow: hidden;
+  /* clip e nao hidden: hidden faria do letreiro o rolador que a animacao
+     acompanha, e ele nunca rola */
+  overflow: clip;
   background: var(--letreiro-fundo);
   color: var(--destaque);
   border-block: 3px solid var(--contorno);
 }
 
+/* o letreiro anda com a rolagem da pagina, nao sozinho: assim ele nunca
+   fica se mexendo enquanto a pessoa le. No navegador sem suporte (ou com
+   menos movimento) ele fica parado */
 .letreiro-trilho {
   display: flex;
   width: max-content;
@@ -333,18 +358,24 @@
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.01em;
-  animation: letreiro-correr 28s linear infinite;
 }
 
-@keyframes letreiro-correr {
-  to {
-    transform: translateX(-50%);
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .letreiro-trilho {
+      animation: letreiro-correr linear both;
+      animation-timeline: view();
+    }
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .letreiro-trilho {
-    animation: none;
+@keyframes letreiro-correr {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-25%);
   }
 }
 
@@ -393,7 +424,7 @@
 }
 
 .site-secao .jornada-intro h2 {
-  font-size: clamp(38px, 4.2vw, 64px);
+  font-size: clamp(36px, 3.6vw, 54px);
 }
 
 .jornada-intro p {
@@ -870,6 +901,12 @@
 
   .portas > :nth-child(3) {
     grid-column: auto;
+  }
+
+  /* a barra presa no rodape cobre o fim da tela: quem navega por link
+     ou por Tab nao pode parar embaixo dela */
+  :root:has(.barra-celular) {
+    scroll-padding-bottom: 88px;
   }
 
   .barra-celular {
