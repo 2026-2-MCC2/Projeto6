@@ -1,103 +1,115 @@
+/* ==========================================================================
+   Pecas das telas da plataforma (modelo Noite, VIS-05)
+
+   Com a cara da pagina inicial: cartoes de adesivo (contorno grosso e
+   sombra dura roxa), abas como os botoes do site e o status de cada item
+   como os carimbos das regras.
+   ========================================================================== */
+
+/* --- abas de filtro: pilulas com contorno; a escolhida vira adesivo lilas --- */
+
 .filter-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
 .filter-tab {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px;
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  background: linear-gradient(180deg, var(--tt-cinza-1c), var(--tt-cinza-13));
-  box-shadow: var(--realce);
-  color: var(--text-muted);
-  font-size: 12px;
-  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  min-height: 44px;
+  padding: 8px 18px;
+  border: 3px solid var(--contorno);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  transition:
+    transform 160ms var(--suave),
+    box-shadow 160ms var(--suave);
 }
 
 .filter-tab:hover {
-  border-color: var(--border-strong);
-  color: var(--text);
+  transform: translate(-2px, -2px);
+  box-shadow: 3px 3px 0 0 var(--sombra-dura);
 }
 
+/* lilas com texto azul-noite: 9,4:1 */
 .filter-tab.is-selected {
-  background: linear-gradient(180deg, var(--tt-branco), var(--tt-cinza-e8));
-  border-color: transparent;
-  box-shadow: 0 2px 10px -2px var(--tt-sombra-60);
-  color: var(--acao-texto);
-  font-weight: 600;
-}
-
-.filter-tab.is-selected em {
-  background: var(--acao-texto-fundo);
-  color: var(--acao-texto);
+  background: var(--tt-lilas);
+  color: var(--tt-noite);
+  font-weight: 900;
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
 }
 
 .filter-tab em {
-  padding: 1px 7px;
-  border-radius: 100px;
-  background: var(--surface-hover);
-  color: var(--text);
-  font-size: 10px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--tt-noite);
+  color: var(--tt-papel);
+  font-size: 12px;
   font-style: normal;
+  font-weight: 800;
 }
 
+/* --- status: carimbo, como os das regras da pagina inicial --- */
+
 .status {
+  display: inline-block;
   width: max-content;
-  padding: 4px 9px;
-  border-radius: 100px;
-  font-size: 10px;
+  padding: 3px 10px;
+  border: 2.5px solid currentColor;
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 13px;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 900;
   white-space: nowrap;
+  rotate: -2deg;
 }
 
 .status.is-waiting {
-  background: var(--accent-bg);
-  color: var(--accent);
+  color: var(--carimbo-1);
 }
 
 .status.is-positive {
-  background: var(--positive-bg);
   color: var(--positive);
 }
 
 .status.is-negative {
-  background: var(--negative-bg);
   color: var(--negative);
 }
 
 .status.is-neutral {
-  background: var(--surface-hover);
-  color: var(--accent);
+  color: var(--carimbo-4);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .filter-tab:hover {
+    transform: none;
+  }
+}
+
+/* --- cartoes de pedido (credenciamentos, solicitacoes) --- */
 
 .request-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+  gap: 16px;
 }
 
 .request-card {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  padding: 24px;
-  background: linear-gradient(168deg, var(--tt-cinza-17), var(--tt-cinza-10) 65%);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--realce), var(--sombra);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-
-.request-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--border-strong);
-  box-shadow: var(--realce-forte), var(--sombra-alta);
+  padding: 22px;
+  background: var(--surface);
+  border: var(--adesivo-borda);
+  border-radius: 22px;
+  box-shadow: var(--adesivo-sombra);
 }
 
 .request-card header {
@@ -108,14 +120,16 @@
 }
 
 .request-card h3 {
-  margin: 6px 0 4px;
-  font-size: 17px;
+  margin: 8px 0 4px;
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
 .request-card header p {
   margin: 0;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .request-facts {
@@ -124,23 +138,24 @@
   gap: 14px;
   margin: 0;
   padding-top: 16px;
-  border-top: 1px solid var(--border-soft);
+  border-top: 2px dashed var(--contorno);
 }
 
 .request-facts dt {
   color: var(--text-dim);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .request-facts dd {
   margin: 4px 0 0;
-  font-size: 12.5px;
+  font-size: 15px;
+  overflow-wrap: anywhere;
 }
 
 .request-card footer {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
   margin-top: auto;
@@ -148,9 +163,12 @@
 
 .request-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
 }
+
+/* --- relatorios --- */
 
 .report-list {
   display: grid;
@@ -158,17 +176,11 @@
 }
 
 .report-card {
-  padding: 24px;
-  background: linear-gradient(168deg, var(--tt-cinza-17), var(--tt-cinza-10) 65%);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--realce), var(--sombra-rasa);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
-}
-
-.report-card:hover {
-  border-color: var(--border-strong);
-  box-shadow: var(--realce-forte), var(--sombra);
+  padding: 22px;
+  background: var(--surface);
+  border: var(--adesivo-borda);
+  border-radius: 22px;
+  box-shadow: var(--adesivo-sombra);
 }
 
 .report-card header {
@@ -179,36 +191,40 @@
 }
 
 .report-card h3 {
-  margin: 6px 0 0;
-  font-size: 16px;
+  margin: 8px 0 0;
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
 .report-card > p {
-  margin: 14px 0 18px;
   max-width: 88ch;
+  margin: 14px 0 18px;
   color: var(--text-muted);
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: 15px;
+  line-height: 1.65;
 }
 
 .report-card footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   padding-top: 16px;
-  border-top: 1px solid var(--border-soft);
+  border-top: 2px dashed var(--contorno);
 }
 
 .report-card footer button {
   margin-left: auto;
 }
 
+/* --- criar evento: formulario e a estimativa ao lado --- */
 
 .create-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 22px;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
   align-items: start;
 }
 
@@ -218,27 +234,62 @@
 }
 
 .create-layout .form-card > h3:not(:first-child) {
-  margin-top: 28px;
+  margin-top: 32px;
 }
 
+/* a estimativa e o ingresso da tela: cartao de papel com contorno e
+   sombra dura em roxo, o mesmo desenho da calculadora da pagina inicial.
+   Dentro dele os tokens viram de fundo claro, como na .faixa-clara.
+   Contraste no papel: texto 18,1:1, apoio 8,5:1, roxo-escuro 6,3:1,
+   verde 5:1, vermelho 6,1:1 */
 .estimate-card {
+  color-scheme: light;
+
+  --text: var(--tt-noite);
+  --text-muted: var(--tt-cinza-noite);
+  --text-dim: var(--tt-cinza-noite);
+  --text-faint: #5c5c78;
+  --surface: #ebe9f8;
+  --surface-raised: var(--tt-branco);
+  --surface-hover: #e2dff6;
+  --surface-muted: #efedfa;
+  --field-bg: var(--tt-branco);
+  --border: var(--tt-tinta-10);
+  --border-soft: var(--tt-tinta-6);
+  --border-strong: var(--tt-tinta-20);
+  --accent: var(--tt-roxo-escuro);
+  --accent-bg: #4b3fe01f;
+  --foco: var(--tt-roxo);
+  --positive: #0b7a50;
+  --positive-bg: #dff3ea;
+  --negative: var(--tt-vermelho-tinta);
+  --negative-bg: var(--tt-vermelho-papel);
+  --secundario-degrade: transparent;
+  --secundario-degrade-hover: var(--tt-tinta-6);
+  --acao-sombra: 3px 3px 0 0 var(--tt-noite);
+  --acao-sombra-hover: 5px 5px 0 0 var(--tt-noite);
+
   padding: 24px;
-  background: var(--surface-muted);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--cartao);
+  border: 3px solid var(--contorno);
+  border-radius: 20px;
+  box-shadow: 6px 6px 0 0 var(--sombra-dura);
+  color: var(--cartao-texto);
 }
 
 .estimate-card h3 {
-  margin: 12px 0 6px;
-  color: var(--accent);
-  font-family: var(--font-serif);
-  font-size: 27px;
+  margin: 10px 0 6px;
+  color: var(--cartao-destaque);
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 
 .estimate-card > p {
   margin: 0;
-  color: var(--text-muted);
-  font-size: 12px;
+  color: var(--cartao-muted);
+  font-size: 14px;
 }
 
 .estimate-card dl {
@@ -246,30 +297,35 @@
   gap: 10px;
   margin: 20px 0 0;
   padding-top: 18px;
-  border-top: 1px solid var(--border);
+  border-top: 3px dashed var(--contorno);
 }
 
 .estimate-card dl > div {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  font-size: 12px;
+  font-size: 15px;
 }
 
 .estimate-card dt {
-  color: var(--text-muted);
+  color: var(--cartao-muted);
 }
 
 .estimate-card dd {
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .estimate-card .estimate-note {
   margin-top: 18px;
-  color: var(--text-dim);
-  font-size: 11px;
+  color: var(--cartao-muted);
+  font-size: 13px;
   line-height: 1.6;
+}
+
+.estimate-card .eyebrow {
+  color: var(--cartao-muted);
 }
 
 .ticket-card {
@@ -283,13 +339,13 @@
 .ticket-card h4 {
   margin: 0;
   color: var(--text);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .ticket-card p {
   margin: 0;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -301,62 +357,75 @@
   color: var(--text-dim) !important;
 }
 
+/* --- estado vazio: cartao de papel com contorno tracejado --- */
+
 .empty-state {
   display: grid;
   justify-items: center;
-  gap: 6px;
-  padding: 52px 24px;
-  background:
-    radial-gradient(420px 180px at 50% 0%, var(--tt-branco-3), transparent 70%),
-    var(--tt-cinza-10);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius);
+  gap: 8px;
+  padding: 48px 24px;
+  background: var(--surface);
+  border: 3px dashed var(--contorno);
+  border-radius: 22px;
   text-align: center;
 }
 
+/* o icone vira o selo lilas da pagina inicial */
 .empty-state b {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 52px;
+  height: 52px;
   margin-bottom: 8px;
+  border: 3px solid var(--contorno);
   border-radius: 50%;
-  background: var(--surface-hover);
-  color: var(--accent);
+  background: var(--tt-lilas);
+  color: var(--tt-noite);
+  rotate: -8deg;
 }
 
 .empty-state strong {
-  font-size: 14px;
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
 .empty-state p {
   max-width: 44ch;
   margin: 0;
   color: var(--text-muted);
-  font-size: 12.5px;
+  font-size: 16px;
+  line-height: 1.5;
 }
+
+.empty-state .btn-secondary {
+  margin-top: 10px;
+}
+
+/* --- aviso (toast): flutua, entao e o unico com sombra --- */
 
 .toaster {
   position: fixed;
   right: 24px;
   bottom: 24px;
-  z-index: 10;
+  z-index: 50;
   display: grid;
   gap: 10px;
+  background: none;
 }
 
 .toast {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 13px 16px;
-  background: linear-gradient(180deg, var(--tt-cinza-1c), var(--tt-cinza-13));
-  border: 1px solid var(--border-strong);
-  border-left: 3px solid var(--accent);
-  border-radius: 8px;
-  box-shadow: var(--realce), var(--sombra-alta);
+  padding: 14px 16px;
+  background: var(--surface-raised);
+  border: 3px solid var(--contorno);
+  border-radius: 16px;
+  box-shadow: 5px 5px 0 0 var(--sombra-dura);
   color: var(--text);
-  font-size: 12.5px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .toast > svg {
@@ -364,31 +433,22 @@
 }
 
 .toast button {
-  padding: 0 0 0 6px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 4px;
+  padding: 0;
   border: 0;
+  border-radius: 50%;
   background: none;
   color: var(--text-dim);
-  font-size: 16px;
+  font-size: 20px;
 }
 
-.topbar-user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-left: 20px;
-  border-left: 1px solid var(--border);
-}
-
-.topbar-user strong {
-  display: block;
+.toast button:hover {
+  background: var(--surface-hover);
   color: var(--text);
-  font-size: 12px;
-}
-
-.topbar-user small {
-  display: block;
-  color: var(--text-dim);
-  font-size: 10px;
 }
 
 @media (max-width: 900px) {
@@ -407,5 +467,4 @@
     left: 16px;
     bottom: 16px;
   }
-
 }

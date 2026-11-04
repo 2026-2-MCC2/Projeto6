@@ -1,14 +1,12 @@
-import Icon from './Icon'
+// numero da visao geral: o valor grande e o rotulo, sem icone em circulo
+// (o icone que as telas ainda passam e ignorado)
+export default function StatCard({ label, value, trend, note, down }) {
+  // valor em reais ("R$ 73.000,00") nao cabe no tamanho dos numeros curtos
+  const longo = String(value).length > 7
 
-export default function StatCard({ label, value, trend, note, icon = 'trend', down }) {
   return (
-    <article className="stat">
-      <span className="stat-label">
-        {label}
-        <b>
-          <Icon name={icon} size={14} />
-        </b>
-      </span>
+    <article className={longo ? 'stat is-longo' : 'stat'}>
+      <span className="stat-label">{label}</span>
       <strong className="stat-value">{value}</strong>
       <small className={down ? 'stat-trend is-down' : 'stat-trend'}>
         {trend && `${trend} `}
