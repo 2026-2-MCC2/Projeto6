@@ -37,3 +37,6 @@ export const guarantees = [
     carimbo: 'Fórmula aberta',
   },
 ]
+
+// texto do letreiro: corre na pagina inicial e nas telas de carregamento
+export const letreiro = 'planeje · cote · compare · precifique · aprove ·'

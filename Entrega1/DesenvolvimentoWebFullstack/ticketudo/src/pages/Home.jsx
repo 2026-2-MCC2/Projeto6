@@ -3,7 +3,7 @@ import CalculadoraIngresso from '../components/CalculadoraIngresso'
 import LinhaEtapas from '../components/LinhaEtapas'
 import Logo from '../components/Logo'
 import Revela from '../components/Revela'
-import { guarantees } from '../data/paginaInicial'
+import { guarantees, letreiro } from '../data/paginaInicial'
 import { profiles, todosOsPapeis } from '../data/profiles'
 import './Home.css'
 
@@ -46,8 +46,6 @@ const corDaPorta = {
   supplier: 'faixa-escura',
   admin: 'faixa-escura porta-destaque',
 }
-
-const letreiro = 'planeje · cote · compare · precifique · aprove ·'
 
 export default function Home({ onEnter }) {
   const [menuAberto, setMenuAberto] = useState(false)
