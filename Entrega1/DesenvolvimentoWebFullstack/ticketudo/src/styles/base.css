@@ -119,3 +119,49 @@ button {
 .btn-block {
   width: 100%;
 }
+
+/* botao do modelo Noite (VIS-05): pilula com contorno grosso e sombra
+   dura em roxo, como um adesivo. Pega a cor da faixa em que esta
+   (--acao e --acao-texto) */
+.btn-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border: 3px solid var(--contorno);
+  border-radius: 999px;
+  background: var(--acao);
+  color: var(--acao-texto);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
+  transition:
+    transform 160ms var(--suave),
+    box-shadow 160ms var(--suave);
+}
+
+.btn-sticker:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--sombra-dura);
+}
+
+.btn-sticker:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-sticker,
+  .btn-sticker:hover,
+  .btn-sticker:active {
+    transform: none;
+  }
+}
+
+/* versao de papel, para a acao secundaria sobre fundo de cor */
+.btn-sticker-claro {
+  background: var(--cartao);
+  color: var(--cartao-texto);
+}
