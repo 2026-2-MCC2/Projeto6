@@ -137,6 +137,8 @@ button {
   line-height: 1;
   text-decoration: none;
   box-shadow: 4px 4px 0 0 var(--sombra-dura);
+  /* sem a espera do toque duplo no celular */
+  touch-action: manipulation;
   transition:
     transform 160ms var(--suave),
     box-shadow 160ms var(--suave);
@@ -158,6 +160,18 @@ button {
   .btn-sticker:active {
     transform: none;
   }
+}
+
+/* desativado (enviando): sem a sombra e sem o movimento */
+.btn-sticker:disabled {
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+
+.btn-sticker.btn-block {
+  justify-content: center;
 }
 
 /* versao de papel, para a acao secundaria sobre fundo de cor */

@@ -48,6 +48,9 @@
   --tt-cinza-noite: #46465e;
   --tt-nevoa: #c9c9e0;
   --tt-noite-lilas: #1d1f4a;
+  /* erro sobre o papel: texto 6,1:1 no papel e 5,8:1 no fundo do aviso */
+  --tt-vermelho-tinta: #b42318;
+  --tt-vermelho-papel: #fdeceb;
 
   /* azuis dos brilhos e destaques */
   --tt-azul-profundo: #1e5cb3;
@@ -333,13 +336,21 @@
 }
 
 /* faixa clara: papel com texto azul-noite.
-   Contraste: texto 18,4:1, muted 9,1:1 */
+   Contraste: texto 18,4:1, muted e dim 9,1:1 */
 .faixa-clara {
   color-scheme: light;
 
   --bg: var(--tt-papel);
   --text: var(--tt-noite);
   --text-muted: var(--tt-cinza-noite);
+  --text-dim: var(--tt-cinza-noite);
+  --border: var(--tt-tinta-10);
+  --border-strong: var(--tt-tinta-20);
+
+  /* o vermelho de status do site e claro demais para o papel */
+  --negative: var(--tt-vermelho-tinta);
+  --negative-bg: var(--tt-vermelho-papel);
+  --negative-border: var(--tt-vermelho-tinta);
   --acao: var(--tt-noite);
   --acao-texto: var(--tt-papel);
   --foco: var(--tt-roxo);
