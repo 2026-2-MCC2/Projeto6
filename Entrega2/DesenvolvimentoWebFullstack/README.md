@@ -64,4 +64,4 @@ O teste repete o cenário acima pela API (bloco "cenário 1" a "cenário 7"), al
 
 ## Evidências
 
-Os prints do roteiro feito no site publicado ficam em [`evidencias/`](evidencias/), um por passo (`passo-1-credenciamento.png`, `passo-2-evento.png`…).
+Os prints do roteiro feito no site publicado ficam em [`evidencias/`](evidencias/), um por passo (`passo-1-credenciamento.png`, `passo-2-evento-e-itens.png`…).
