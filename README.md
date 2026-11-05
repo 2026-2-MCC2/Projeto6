@@ -5,7 +5,7 @@
 <a href= "https://www.fecap.br/"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhZPrRa89Kma0ZZogxm0pi-tCn_TLKeHGVxywp-LXAFGR3B1DPouAJYHgKZGV0XTEf4AE&usqp=CAU" alt="FECAP - Fundação de Comércio Álvares Penteado" border="0"></a>
 </p>
 
-# Nome do Projeto
+## TrocaTicket
 
 ## Nome do Grupo: Os Ticketudo
 
@@ -25,6 +25,12 @@ Cada usuário acessa um workspace de acordo com o seu perfil: **organizadores** 
 <br><br>
 Com notificações, mensagens diretas e um painel de aprovações centralizado, o TrocaTicket reduz a fricção de encontrar o parceiro certo para cada evento.
 <br><br>
+
+## 🌐 Site publicado
+
+**Acesse:** [projeto6-pearl.vercel.app](https://projeto6-pearl.vercel.app)
+
+O site e a API ficam no mesmo endereço (a API responde em `/api`). Para percorrer o cenário completo (cadastro e aprovação, evento e itens de custo, propostas, orçamento e ticket), siga o roteiro de [Como demonstrar](Entrega2/DesenvolvimentoWebFullstack/README.md).
 
 
 ## 🚀 Como rodar
@@ -111,6 +117,7 @@ nem URL de API para configurar.
 │   ├── DesenvolvimentoWebFullstack/  # roteiro e evidências de demonstração
 │   │   └── evidencias/               # evidências da demonstração
 │   ├── GestãoEmpresarial/            # mapa de processos e documentos
+│   ├── PI/                           # documento de extensão e banner
 │   └── Proj.BancodeDados/            # scripts e documentação MySQL
 ├── .gitignore                        # arquivos ignorados pelo Git
 ├── .nvmrc                            # versão do Node usada no projeto
@@ -142,6 +149,9 @@ A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do pr
 <b>Entrega2/GestãoEmpresarial</b>: Mapa de Processos do planejamento e cotação de um evento: justificativa, fluxograma em raias, etapas, gargalos e melhorias. Veja o [documento](Entrega2/GestãoEmpresarial/Mapa%20de%20Processos%20Grupo%20Ticketudo.docx) e o [fluxograma](Entrega2/GestãoEmpresarial/Fluxograma%20Mapa%20de%20Processos.png).
 
 <b>Entrega2/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados: script do banco em MySQL, com as tabelas, chaves primárias e estrangeiras e o diagrama. Veja o [README do banco](Entrega2/Proj.BancodeDados/README.md).
+
+<b>Entrega2/PI</b>: Entrega do Projeto Interdisciplinar: documento do Projeto de Extensão (modelo do Moodle) e banner da apresentação.
+
 
 <b>TERMO_DE_USO_DE_IA.md</b>: Registro de onde e como ferramentas de inteligência artificial foram usadas no projeto. Veja o [termo](TERMO_DE_USO_DE_IA.md).
 
