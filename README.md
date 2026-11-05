@@ -5,7 +5,7 @@
 <a href= "https://www.fecap.br/"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhZPrRa89Kma0ZZogxm0pi-tCn_TLKeHGVxywp-LXAFGR3B1DPouAJYHgKZGV0XTEf4AE&usqp=CAU" alt="FECAP - Fundação de Comércio Álvares Penteado" border="0"></a>
 </p>
 
-## TrocaTicket
+# TrocaTicket
 
 ## Nome do Grupo: Os Ticketudo
 
@@ -19,11 +19,9 @@
 <video src="https://github.com/user-attachments/assets/82fa11c0-fb66-4d0a-b22c-8db80dfd8851" autoplay muted loop playsinline width="600"></video>
 </p>
 
-O **TrocaTicket** é uma plataforma web que conecta organizadores de eventos a fornecedores de serviços, simplificando tudo desde o primeiro briefing até o dia do evento.
+O **TrocaTicket** é uma plataforma web de planejamento e precificação de eventos. O organizador cadastra o evento e os itens de custo, fornecedores credenciados enviam propostas por item e a plataforma consolida o orçamento e calcula o preço do ingresso (ticket de equilíbrio e ticket-alvo) para diferentes cenários de público.
 <br><br>
-Cada usuário acessa um workspace de acordo com o seu perfil: **organizadores** criam e acompanham seus eventos, recebem e avaliam propostas de fornecedores; **fornecedores** descobrem oportunidades, enviam propostas e conversam diretamente com os organizadores pelo chat integrado; e **administradores** supervisionam a plataforma, aprovando novos perfis, acompanhando a receita e mediando denúncias.
-<br><br>
-Com notificações, mensagens diretas e um painel de aprovações centralizado, o TrocaTicket reduz a fricção de encontrar o parceiro certo para cada evento.
+Cada perfil tem o seu portal: **organizadores** criam eventos, comparam e escolhem propostas e acompanham o orçamento; **fornecedores** veem os eventos em cotação e enviam propostas; e **administradores** aprovam credenciamentos e eventos e acompanham os relatórios. Os três conversam pelo chat integrado.
 <br><br>
 
 ## 🌐 Site publicado
@@ -185,4 +183,4 @@ Aqui estão as referências usadas no projeto.
 
 1. <https://github.com/iuricode/readme-template>
 2. <https://github.com/gabrieldejesus/readme-model>
-5. <https://www.toptal.com/developers/gitignore>
+3. <https://www.toptal.com/developers/gitignore>
