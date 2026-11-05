@@ -8,8 +8,9 @@ import { moeda, numero, rotulo, soData } from '../../utils/format'
 import { useApp } from '../../state/useApp'
 
 // Comparar as propostas de cada item e escolher uma por item (FLX-05).
-// So da para escolher com a cotacao encerrada.
-export default function CompararPropostas({ idEvento, versao, onMudou }) {
+// So da para escolher com a cotacao encerrada. "Conversar" abre o chat com o
+// fornecedor da proposta (onConversar vem da tela do evento).
+export default function CompararPropostas({ idEvento, versao, onMudou, onConversar }) {
   const { dispatch } = useApp()
   const lista = useRecurso(() => eventos.propostas(idEvento), `${idEvento}:${versao}`)
   const [ocupado, setOcupado] = useState(null)
@@ -88,15 +89,22 @@ export default function CompararPropostas({ idEvento, versao, onMudou }) {
                         Válida até {soData(p.validade)}
                         {p.cidade ? ` · ${p.cidade}/${p.estado}` : ''}
                       </small>
-                      {podeSelecionar ? (
-                        <button
-                          className={selecionada ? 'btn-secondary' : 'btn-approve'}
-                          disabled={ocupado === p.id_proposta}
-                          onClick={() => escolher(p, !selecionada)}
-                        >
-                          {selecionada ? 'Desmarcar' : 'Selecionar'}
-                        </button>
-                      ) : null}
+                      <div className="comparar-acoes">
+                        {podeSelecionar ? (
+                          <button
+                            className={selecionada ? 'btn-secondary' : 'btn-approve'}
+                            disabled={ocupado === p.id_proposta}
+                            onClick={() => escolher(p, !selecionada)}
+                          >
+                            {selecionada ? 'Desmarcar' : 'Selecionar'}
+                          </button>
+                        ) : null}
+                        {onConversar && p.id_usuario_fornecedor ? (
+                          <button className="btn-link" onClick={() => onConversar(p)}>
+                            Conversar
+                          </button>
+                        ) : null}
+                      </div>
                     </article>
                   )
                 })}

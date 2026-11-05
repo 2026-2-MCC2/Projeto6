@@ -4,7 +4,7 @@ import Icon from '../components/Icon'
 import Logo from '../components/Logo'
 import { useApp } from '../state/useApp'
 
-export default function Topbar({ profile, menuAberto, onAbrirMenu, onOpenPanel }) {
+export default function Topbar({ profile, menuAberto, naoLidas = 0, onAbrirMenu, onOpenPanel }) {
   const { state } = useApp()
   const { sessao } = state
   const botaoMenu = useRef(null)
@@ -22,8 +22,17 @@ export default function Topbar({ profile, menuAberto, onAbrirMenu, onOpenPanel }
         <Logo />
       </div>
       <div className="topbar-actions">
-        <button aria-label="Mensagens" onClick={() => onOpenPanel('chat')}>
+        <button
+          className="topbar-mensagens"
+          aria-label={naoLidas > 0 ? `Mensagens, ${naoLidas} não lidas` : 'Mensagens'}
+          onClick={() => onOpenPanel('chat')}
+        >
           <Icon name="message" size={19} />
+          {naoLidas > 0 ? (
+            <em className="topbar-badge" aria-hidden="true">
+              {naoLidas > 99 ? '99+' : naoLidas}
+            </em>
+          ) : null}
         </button>
         <span className="topbar-user">
           <Avatar initials={sessao.iniciais} />

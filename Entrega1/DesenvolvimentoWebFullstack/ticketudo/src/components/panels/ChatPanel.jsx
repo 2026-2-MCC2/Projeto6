@@ -1,214 +1,124 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Carregando from '../Carregando'
-import Field from '../Field'
 import { chats } from '../../api'
-import { useRecurso } from '../../hooks/useRecurso'
-import { dataHora, rotulo } from '../../utils/format'
+import { useCredenciamento } from '../../hooks/useCredenciamento'
+import { useIntervalo } from '../../hooks/useIntervalo'
 import { useApp } from '../../state/useApp'
+import Conversa from './chat/Conversa'
+import ListaConversas from './chat/ListaConversas'
+import NovaConversa from './chat/NovaConversa'
+import './chat/Chat.css'
 
-// o administrador consegue chamar qualquer usuario no chat
-function NovaConversa({ aoAbrir, onCancelar }) {
-  const [busca, setBusca] = useState('')
-  const [mensagem, setMensagem] = useState('')
-  const [escolhido, setEscolhido] = useState(null)
-  const [erro, setErro] = useState(null)
-  const pessoas = useRecurso(() => chats.usuarios(busca), busca)
-
-  async function abrir(e) {
-    e.preventDefault()
-    setErro(null)
-    try {
-      const r = await chats.abrir({
-        id_usuario: escolhido.id_usuario,
-        mensagem: mensagem || undefined,
-      })
-      aoAbrir(r.id_chat)
-    } catch (err) {
-      setErro(err.message)
-    }
-  }
-
-  return (
-    <form className="nova-conversa" onSubmit={abrir}>
-      {erro ? <p className="form-erro">{erro}</p> : null}
-
-      <Field label="Com quem você quer falar">
-        <input
-          value={busca}
-          onChange={(e) => {
-            setBusca(e.target.value)
-            setEscolhido(null)
-          }}
-          placeholder="Busque por nome ou e-mail"
-        />
-      </Field>
-
-      {pessoas.carregando ? (
-        <Carregando />
-      ) : (
-        <div className="pessoa-lista">
-          {(pessoas.dados || []).map((u) => (
-            <button
-              type="button"
-              className={escolhido?.id_usuario === u.id_usuario ? 'is-selected' : undefined}
-              onClick={() => setEscolhido(u)}
-              key={u.id_usuario}
-            >
-              <strong>{u.nome}</strong>
-              <small>
-                {u.tipo} · {u.email}
-              </small>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {escolhido ? (
-        <Field label={`Primeira mensagem para ${escolhido.nome}`}>
-          <textarea rows={2} value={mensagem} onChange={(e) => setMensagem(e.target.value)} />
-        </Field>
-      ) : null}
-
-      <div className="request-actions">
-        <button className="btn-secondary" type="button" onClick={onCancelar}>
-          Cancelar
-        </button>
-        <button className="btn-primary" type="submit" disabled={!escolhido}>
-          Abrir conversa
-        </button>
-      </div>
-    </form>
-  )
+// Telas do painel de mensagens:
+//   lista      as conversas da pessoa
+//   nova       escolher com quem falar
+//   procurando abrir conversa com uma pessoa: usa a conversa direta que ja
+//              existe com ela ou abre um rascunho (resolvido assim que a
+//              lista chega)
+//   conversa   uma conversa aberta
+//   rascunho   conversa com alguem que ainda nao tem mensagem
+//
+// Outras telas podem abrir o painel ja numa conversa:
+//   onOpenPanel('chat', { idChat })                         conversa conhecida
+//   onOpenPanel('chat', { com: { id_usuario, nome, ... }, assunto })  com uma pessoa
+function telaInicial(opcoes) {
+  if (opcoes?.idChat) return { nome: 'conversa', idChat: opcoes.idChat }
+  if (opcoes?.com) return { nome: 'procurando', pessoa: opcoes.com, assunto: opcoes.assunto }
+  return { nome: 'lista' }
 }
 
-export default function ChatPanel() {
+// a lista de conversas confere novidades a cada 8 segundos enquanto aparece
+const LISTA_MS = 8000
+
+export default function ChatPanel({ opcoes, onMudou }) {
   const { state } = useApp()
-  const lista = useRecurso(() => chats.lista())
-  const [novaConversa, setNovaConversa] = useState(false)
-  const [escolhido, setEscolhido] = useState(null)
-  const [mensagens, setMensagens] = useState([])
-  const [texto, setTexto] = useState('')
-  const [enviando, setEnviando] = useState(false)
-  const fim = useRef(null)
+  const eu = state.sessao
+  const { situacao } = useCredenciamento()
+  const [tela, setTela] = useState(() => telaInicial(opcoes))
+  const [lista, setLista] = useState({ dados: null, erro: null })
 
-  // sem efeito pra isso: a conversa aberta e a escolhida, ou a primeira da lista
-  const ativo = escolhido ?? lista.dados?.[0] ?? null
-  const idChat = ativo?.id_chat
-
-  useEffect(() => {
-    if (!idChat) return undefined
-    let vivo = true
-
+  const carregar = useCallback(() => {
     chats
-      .mensagens(idChat)
-      .then((lidas) => {
-        if (vivo) setMensagens(lidas)
-      })
-      .catch(() => {
-        if (vivo) setMensagens([])
-      })
-
-    return () => {
-      vivo = false
-    }
-  }, [idChat])
+      .lista()
+      .then((dados) => setLista({ dados, erro: null }))
+      // se ja tinha a lista, um erro na atualizacao nao apaga o que esta na tela
+      .catch((erro) => setLista((atual) => (atual.dados ? atual : { dados: null, erro })))
+  }, [])
 
   useEffect(() => {
-    fim.current?.scrollIntoView({ block: 'end' })
-  }, [mensagens])
+    carregar()
+  }, [carregar])
 
-  async function enviar(e) {
-    e.preventDefault()
-    if (!texto.trim() || !ativo) return
+  useIntervalo(carregar, LISTA_MS, tela.nome === 'lista')
 
-    setEnviando(true)
-    try {
-      await chats.enviar(idChat, texto.trim())
-      setMensagens(await chats.mensagens(idChat))
-      setTexto('')
-    } finally {
-      setEnviando(false)
-    }
+  // "procurando" vira conversa ou rascunho assim que a lista estiver pronta
+  let atual = tela
+  if (tela.nome === 'procurando' && lista.dados) {
+    const existente = lista.dados.find((c) => c.com_id === tela.pessoa.id_usuario && !c.servico)
+    atual = existente
+      ? { nome: 'conversa', idChat: existente.id_chat }
+      : { nome: 'rascunho', pessoa: tela.pessoa, assunto: tela.assunto }
   }
 
-  if (lista.carregando || lista.erro) {
-    return <Carregando erro={lista.erro} aoTentarDeNovo={lista.recarregar} />
+  function voltar() {
+    setTela({ nome: 'lista' })
+    carregar()
+    onMudou?.()
   }
 
-  const ehAdm = state.sessao.tipo === 'adm'
-
-  if (novaConversa) {
+  if (atual.nome === 'conversa') {
     return (
-      <NovaConversa
-        onCancelar={() => setNovaConversa(false)}
-        aoAbrir={(id) => {
-          setNovaConversa(false)
-          lista.recarregar()
-          setEscolhido({ id_chat: id })
+      <Conversa
+        key={atual.idChat}
+        idChat={atual.idChat}
+        eu={eu}
+        onVoltar={voltar}
+        onLeu={onMudou}
+      />
+    )
+  }
+
+  if (atual.nome === 'rascunho') {
+    return (
+      <Conversa
+        key={`rascunho-${atual.pessoa.id_usuario}`}
+        rascunho={atual}
+        eu={eu}
+        onVoltar={voltar}
+        onCriada={(idChat) => {
+          setTela({ nome: 'conversa', idChat })
+          carregar()
         }}
       />
     )
   }
 
-  if (lista.dados.length === 0) {
+  if (atual.nome === 'nova') {
     return (
-      <div className="panel-vazio">
-        <strong>Nenhuma conversa ainda</strong>
-        <p>O chat abre sozinho quando um organizador solicita um serviço.</p>
-        {ehAdm ? (
-          <button className="btn-primary" onClick={() => setNovaConversa(true)}>
-            Falar com alguém
-          </button>
-        ) : null}
+      <NovaConversa
+        eu={eu}
+        situacao={situacao}
+        onVoltar={() => setTela({ nome: 'lista' })}
+        onEscolher={(pessoa) => setTela({ nome: 'procurando', pessoa })}
+      />
+    )
+  }
+
+  if (!lista.dados) {
+    return (
+      <div className="chat-espera">
+        <Carregando erro={lista.erro} aoTentarDeNovo={carregar} />
       </div>
     )
   }
 
   return (
-    <>
-      <div className="panel-conversas">
-        {ehAdm ? (
-          <button className="btn-secondary" onClick={() => setNovaConversa(true)}>
-            Falar com alguém
-          </button>
-        ) : null}
-
-        {lista.dados.map((chat) => (
-          <button
-            className={ativo?.id_chat === chat.id_chat ? 'is-selected' : undefined}
-            onClick={() => setEscolhido(chat)}
-            key={chat.id_chat}
-          >
-            <strong>{chat.evento || chat.assunto || chat.com_quem}</strong>
-            <small>
-              {chat.servico ? `${chat.servico} · ${rotulo(chat.status)}` : `com ${chat.com_quem}`}
-            </small>
-          </button>
-        ))}
-      </div>
-
-      <div className="panel-messages">
-        {mensagens.map((m) => (
-          <p className={m.id_remetente === state.sessao.id ? 'is-mine' : undefined} key={m.id_mensagem}>
-            <b>{m.remetente}</b>
-            {m.texto_mensagem}
-            <i>{dataHora(m.criado_em)}</i>
-          </p>
-        ))}
-        <span ref={fim} />
-      </div>
-
-      <form className="panel-composer" onSubmit={enviar}>
-        <input
-          id="chat-draft"
-          value={texto}
-          onChange={(e) => setTexto(e.target.value)}
-          placeholder="Escreva uma mensagem…"
-        />
-        <button type="submit" disabled={enviando || !texto.trim()}>
-          Enviar
-        </button>
-      </form>
-    </>
+    <ListaConversas
+      conversas={lista.dados}
+      eu={eu}
+      situacao={situacao}
+      onAbrir={(c) => setTela({ nome: 'conversa', idChat: c.id_chat })}
+      onNova={() => setTela({ nome: 'nova' })}
+    />
   )
 }

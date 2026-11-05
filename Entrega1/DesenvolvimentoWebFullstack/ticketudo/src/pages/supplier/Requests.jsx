@@ -68,7 +68,10 @@ export default function Requests({ profile, onOpenPanel, onMudou }) {
               {item.mensagem ? <p className="request-descricao">“{item.mensagem}”</p> : null}
 
               <footer>
-                <button className="btn-link" onClick={() => onOpenPanel('chat')}>
+                <button
+                  className="btn-link"
+                  onClick={() => onOpenPanel('chat', item.id_chat ? { idChat: item.id_chat } : null)}
+                >
                   Abrir chat
                 </button>
                 {item.status === 'em_analise' ? (

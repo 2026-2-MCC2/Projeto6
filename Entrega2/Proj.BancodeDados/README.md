@@ -314,13 +314,13 @@ Pedido de um serviço de fornecedor para um evento.
 
 #### `chat`
 
-Conversas. Nasce de um pedido de serviço (organizador e fornecedor) ou aberta pelo administrador direto com um usuário.
+Conversas. Nasce de um pedido de serviço (organizador e fornecedor) ou é aberta direto entre duas pessoas: qualquer usuário com a equipe TrocaTicket (administrador) e organizador com fornecedor quando os dois estão credenciados.
 
 | Campo | Tipo | Obrigatório? | Chave | Descrição |
 |---|---|---|---|---|
 | `id_chat` | `INT` | Sim | PK | Identificador da conversa. |
-| `id_solicitacao` | `INT` | Não | FK → `solicitacao_servico.id_solicitacao`, UNIQUE | Pedido de serviço que originou a conversa. Fica nulo quando o administrador abre o chat. |
-| `assunto` | `VARCHAR(140)` | Não | — | Assunto da conversa (usado nos chats abertos pelo administrador). |
+| `id_solicitacao` | `INT` | Não | FK → `solicitacao_servico.id_solicitacao`, UNIQUE | Pedido de serviço que originou a conversa. Fica nulo na conversa direta. |
+| `assunto` | `VARCHAR(140)` | Não | — | Assunto da conversa direta (por exemplo, o evento sobre o qual ela começou). |
 | `criado_em` | `DATETIME` | Sim | — | Data e hora em que a linha foi criada. |
 
 - Cada pedido de serviço tem no máximo um chat (`id_solicitacao` é `UNIQUE`).
@@ -334,8 +334,10 @@ Quem participa de cada conversa.
 |---|---|---|---|---|
 | `id_chat` | `INT` | Sim | PK, FK → `chat.id_chat` | Conversa. |
 | `id_usuario` | `INT` | Sim | PK, FK → `usuario.id_usuario` | Usuário participante. |
+| `ultima_lida` | `INT` | Não | — | Id da última mensagem que o usuário já viu na conversa. Fica nulo até a primeira leitura. |
 
 - A chave primária é composta: o usuário não entra duas vezes na mesma conversa.
+- Mensagens dos outros participantes com `id_mensagem` maior que `ultima_lida` contam como não lidas. É o que gera o número de não lidas e o "Visto" no chat.
 
 #### `mensagem`
 
@@ -350,6 +352,8 @@ Mensagens de uma conversa.
 | `criado_em` | `DATETIME` | Sim | — | Data e hora do envio. |
 
 - Se a conversa for apagada, as mensagens vão junto (`ON DELETE CASCADE`).
+- O índice `idx_mensagem_chat` (`id_chat`, `id_mensagem`) deixa rápido buscar as mensagens de uma conversa em ordem e só as novas.
+- A mensagem tem no máximo 2.000 caracteres (validado na API).
 
 ### Tabelas de extensão (venda de ingressos)
 

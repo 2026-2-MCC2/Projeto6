@@ -170,9 +170,14 @@ precisa estar entre 0% (inclusive) e 100% (exclusive).
 ### Chat
 | metodo | rota | quem |
 |---|---|---|
-| GET | `/chats` | participante |
+| GET | `/chats` | logado (minhas conversas, com `nao_lidas` e a ultima mensagem) |
+| GET | `/chats/nao-lidas` | logado (total de nao lidas, o numero do menu) |
+| GET | `/chats/contatos?busca=` | logado (com quem pode comecar conversa) |
+| POST | `/chats` | logado (abre ou reaproveita a conversa direta) |
+| GET | `/chats/:id?depois=` | participante (cabecalho + mensagens; so as novas com `depois`) |
 | GET | `/chats/:id/mensagens` | participante |
 | POST | `/chats/:id/mensagens` | participante |
+| POST | `/chats/:id/lida` | participante (marca como lida ate a mensagem `ate`) |
 
 ### Administracao
 | metodo | rota | quem |
@@ -221,7 +226,7 @@ validações de cada rota. Erros inesperados retornam `500`.
 | GET/POST/DELETE | `/ingressos/meus`, `/ingressos/:id/anunciar`, `/ingressos/:id/anuncio` | logado/dono | 200 | 400, 401, 403, 404, 409, 422 |
 | GET | `/ingressos/revenda/:idEvento` | público | 200 | 500 |
 | POST/GET | `/pedidos`, `/pedidos/revenda`, `/pedidos/meus` | logado | 200/201 | 400, 401, 404, 409 |
-| GET/POST | `/chats`, `/chats/usuarios`, `/chats/:id/mensagens` | participante/adm | 200/201 | 400, 401, 403, 404 |
+| GET/POST | `/chats`, `/chats/contatos`, `/chats/:id`, `/chats/:id/mensagens`, `/chats/:id/lida` | logado/participante | 200/201 | 400, 401, 403, 404 |
 | GET | `/admin/eventos`, `/admin/eventos/:id` | adm | 200 | 401, 403, 404 |
 | POST | `/admin/eventos/:id/aprovar`, `/recusar` | adm | 200 | 400, 401, 403, 404, 409 |
 | GET | `/admin/credenciamentos`, `/relatorios`, `/aprovacoes` | adm | 200 | 400, 401, 403 |
@@ -302,3 +307,10 @@ agora) e `disponiveis` (quantos ingressos sobraram).
 - Compra usa `select ... for update` dentro de transacao, entao duas pessoas
   nao levam o mesmo ingresso.
 - Ninguem le um chat em que nao e participante.
+- Conversa direta: o administrador fala com qualquer pessoa; qualquer pessoa
+  fala com o administrador (suporte); organizador e fornecedor conversam
+  entre si quando os dois estao credenciados. A mesma dupla tem uma conversa
+  direta so (abrir de novo reaproveita). Mensagem de 1 a 2000 caracteres.
+- Nao lidas: cada participante guarda a ultima mensagem que viu
+  (`chat_participante.ultima_lida`). E o que gera o numero no menu e o
+  "Visto" na conversa.

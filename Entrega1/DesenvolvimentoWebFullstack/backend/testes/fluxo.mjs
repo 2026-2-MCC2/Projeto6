@@ -518,24 +518,94 @@ check('nao compra o mesmo ingresso 2x', duasVezes.status === 409)
 const pedidosC2 = await api('GET', '/pedidos/meus', null, c2)
 check('historico de pedidos vem com os itens', pedidosC2.body?.[0]?.itens?.length === 1, JSON.stringify(pedidosC2).slice(0,200))
 
-// --- chat direto do administrador ---
-const semPermissao2 = await api('POST', '/chats', { id_usuario: 2 }, org)
-check('so o adm abre conversa direta', semPermissao2.status === 403)
+// --- chat: conversas diretas, nao lidas e visto ---
+const idDe = (token) => JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString()).id
+const idAdm = idDe(adm), idOrg = idDe(org), idForn = idDe(forn), idC1 = idDe(c1)
 
 const pessoas = await api('GET', '/chats/usuarios?busca=', null, adm)
 check('adm lista usuarios pro chat', pessoas.body.length >= 2, `${pessoas.body.length}`)
-check('adm nao aparece na propria lista', !pessoas.body.some((u) => u.tipo === 'adm' && u.email === 'admin@trocaticket.com.br'))
+check('adm nao aparece na propria lista', !pessoas.body.some((u) => u.id_usuario === idAdm))
 
-const direto = await api('POST', '/chats', {
-  id_usuario: pessoas.body[0].id_usuario, mensagem: 'Oi, uma duvida.',
-}, adm)
-check('adm abre conversa direta', direto.status === 201 && !!direto.body.id_chat)
-
-const denovo = await api('POST', '/chats', { id_usuario: pessoas.body[0].id_usuario }, adm)
-check('nao duplica a conversa direta', denovo.body.id_chat === direto.body.id_chat)
-
+const direto = await api('POST', '/chats', { id_usuario: idC1, mensagem: 'Oi, uma duvida.' }, adm)
+check('adm abre conversa direta', direto.status === 201 && !!direto.body.id_chat && direto.body.nova === true)
+const denovo = await api('POST', '/chats', { id_usuario: idC1 }, adm)
+check('nao duplica a conversa direta', denovo.status === 200 && denovo.body.id_chat === direto.body.id_chat)
 const doAdm = await api('GET', '/chats', null, adm)
 check('conversa direta aparece na lista do adm', doAdm.body.some((c) => c.id_chat === direto.body.id_chat))
+
+const contatosOrg = await api('GET', '/chats/contatos?busca=', null, org)
+check('organizador ve a equipe TrocaTicket nos contatos', contatosOrg.body.some((u) => u.id_usuario === idAdm))
+check('organizador credenciado ve o fornecedor credenciado', contatosOrg.body.some((u) => u.id_usuario === idForn))
+check('organizador nao ve comprador nos contatos', !contatosOrg.body.some((u) => u.id_usuario === idC1))
+check('contatos nao mostram e-mail para quem nao e adm', contatosOrg.body.every((u) => !u.email))
+
+const orgComComprador = await api('POST', '/chats', { id_usuario: idC1 }, org)
+check('organizador nao abre conversa com comprador', orgComComprador.status === 403, orgComComprador.body.erro)
+const consigo = await api('POST', '/chats', { id_usuario: idOrg }, org)
+check('ninguem abre conversa consigo mesmo', consigo.status === 403)
+const compradorComForn = await api('POST', '/chats', { id_usuario: idForn }, c1)
+check('comprador nao abre conversa com fornecedor', compradorComForn.status === 403)
+const suporte = await api('POST', '/chats', { id_usuario: idAdm, mensagem: 'Preciso de ajuda' }, c1)
+check('qualquer pessoa fala com a equipe TrocaTicket', suporte.status === 200 && suporte.body.id_chat === direto.body.id_chat)
+
+const novoOrg = await criar('organizador', 'Nina Sem Credenciamento')
+const semCredChat = await api('POST', '/chats', { id_usuario: idForn }, novoOrg)
+check('organizador sem credenciamento nao abre conversa com fornecedor', semCredChat.status === 403, semCredChat.body.erro)
+
+const conversa = await api('POST', '/chats', {
+  id_usuario: idForn, assunto: 'Festival de teste', mensagem: 'Oi! Sobre a proposta de som.',
+}, org)
+check('organizador e fornecedor credenciados abrem conversa', conversa.status === 201, conversa.body.erro)
+const idConversa = conversa.body.id_chat
+
+const naoLidasForn = await api('GET', '/chats/nao-lidas', null, forn)
+check('fornecedor tem mensagem nao lida', naoLidasForn.body.total >= 1, JSON.stringify(naoLidasForn.body))
+const listaForn = await api('GET', '/chats', null, forn)
+const daLista = listaForn.body.find((c) => c.id_chat === idConversa)
+check('lista mostra nao lidas, ultima mensagem e com quem', daLista?.nao_lidas === 1
+  && daLista?.ultima_mensagem === 'Oi! Sobre a proposta de som.' && daLista?.com_id === idOrg, JSON.stringify(daLista))
+check('conversa mais recente vem primeiro', listaForn.body[0]?.id_chat === idConversa)
+
+const r1 = await api('POST', `/chats/${idConversa}/mensagens`, { texto: '  Consigo fazer por 15 mil  ' }, forn)
+check('envio devolve a mensagem completa', r1.status === 201 && r1.body.texto_mensagem === 'Consigo fazer por 15 mil'
+  && !!r1.body.criado_em && r1.body.id_remetente === idForn, JSON.stringify(r1.body))
+const r2 = await api('POST', `/chats/${idConversa}/mensagens`, { texto: 'E monto na vespera' }, forn)
+check('manda a segunda mensagem seguida', r2.status === 201)
+const vazia = await api('POST', `/chats/${idConversa}/mensagens`, { texto: '   ' }, forn)
+check('mensagem vazia e recusada', vazia.status === 400)
+const longa = await api('POST', `/chats/${idConversa}/mensagens`, { texto: 'a'.repeat(2001) }, forn)
+check('mensagem acima de 2000 caracteres e recusada', longa.status === 400)
+
+const soNovas = await api('GET', `/chats/${idConversa}?depois=${r1.body.id_mensagem}`, null, org)
+check('busca so as mensagens novas', soNovas.body.mensagens?.length === 1
+  && soNovas.body.mensagens[0].id_mensagem === r2.body.id_mensagem, JSON.stringify(soNovas.body.mensagens))
+check('detalhe traz os 2 participantes', soNovas.body.participantes?.length === 2)
+const todas = await api('GET', `/chats/${idConversa}/mensagens`, null, org)
+check('conversa tem as 3 mensagens', todas.body.length === 3, `${todas.body.length}`)
+
+// o organizador ja tinha outra conversa (a da solicitacao): conta pela diferenca
+const naoLidaDaConversa = async () => (await api('GET', '/chats', null, org)).body.find((c) => c.id_chat === idConversa)?.nao_lidas
+const antesDeLer = await api('GET', '/chats/nao-lidas', null, org)
+check('organizador tem 2 nao lidas na conversa', (await naoLidaDaConversa()) === 2)
+const lida = await api('POST', `/chats/${idConversa}/lida`, { ate: r2.body.id_mensagem }, org)
+check('marca como lida', lida.status === 200)
+const depoisDeLer = await api('GET', '/chats/nao-lidas', null, org)
+check('nao lidas da conversa zeram depois de ler', (await naoLidaDaConversa()) === 0
+  && depoisDeLer.body.total === antesDeLer.body.total - 2, `${antesDeLer.body.total} -> ${depoisDeLer.body.total}`)
+const vistoForn = await api('GET', `/chats/${idConversa}`, null, forn)
+const orgNoChat = vistoForn.body.participantes.find((p) => p.id_usuario === idOrg)
+check('fornecedor ve ate onde o organizador leu (visto)', orgNoChat?.ultima_lida === r2.body.id_mensagem)
+const lidaAlem = await api('POST', `/chats/${idConversa}/lida`, { ate: 999999999 }, org)
+const naoPassa = await api('GET', `/chats/${idConversa}`, null, forn)
+check('marcar como lida nao passa da ultima mensagem', lidaAlem.status === 200
+  && naoPassa.body.participantes.find((p) => p.id_usuario === idOrg)?.ultima_lida === r2.body.id_mensagem)
+
+const intruso = await api('GET', `/chats/${idConversa}`, null, c2)
+check('quem nao participa nao ve a conversa', intruso.status === 403)
+const intrusoEnvia = await api('POST', `/chats/${idConversa}/mensagens`, { texto: 'oi' }, c2)
+check('quem nao participa nao manda mensagem', intrusoEnvia.status === 403)
+const inexistente = await api('GET', '/chats/abc', null, org)
+check('id invalido de conversa responde 404', inexistente.status === 404)
 
 // 10. cenario de ponta a ponta do documento do PI (secao 10), do zero (FLX-08)
 {

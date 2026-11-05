@@ -1,0 +1,533 @@
+/* ------------------------------------------------------------------
+   Chat (painel Mensagens), no desenho da plataforma (VIS-05): papel,
+   contorno grosso azul-noite e sombra dura roxa. Cores so por token.
+   O painel e uma coluna: topo fixo, a parte do meio rola e a caixa de
+   escrever fica sempre no pe.
+   ------------------------------------------------------------------ */
+
+.chat-lista,
+.chat-conversa,
+.chat-nova,
+.chat-espera {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.chat-espera {
+  padding-top: 18px;
+}
+
+/* --- lista de conversas --- */
+
+.chat-lista-topo {
+  display: grid;
+  gap: 12px;
+  padding: 16px 0 12px;
+}
+
+.chat-lista-topo .btn-primary {
+  justify-self: start;
+}
+
+.chat-lista-resumo {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.chat-busca {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+}
+
+.chat-busca svg {
+  position: absolute;
+  left: 14px;
+  pointer-events: none;
+}
+
+.chat-busca input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px 10px 40px;
+  background: var(--field-bg);
+  border: 3px solid var(--contorno);
+  border-radius: 12px;
+  color: var(--text);
+  /* 16px: o celular nao da zoom ao tocar */
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.chat-busca input::placeholder {
+  color: var(--text-faint);
+  font-weight: 400;
+}
+
+.chat-nova .chat-busca {
+  margin: 14px 0 6px;
+}
+
+.chat-itens {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* a lista e quem rola, com folga para a sombra dos cartoes */
+.chat-lista > .chat-itens,
+.chat-contatos {
+  flex: 1;
+  min-height: 0;
+  padding: 4px 8px 24px 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.chat-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 2px solid var(--border-strong);
+  border-radius: 14px;
+  color: var(--text);
+  text-align: left;
+  transition:
+    transform 160ms var(--suave),
+    box-shadow 160ms var(--suave),
+    border-color 160ms var(--suave);
+}
+
+.chat-item:hover {
+  border-color: var(--contorno);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
+}
+
+/* conversa com mensagem nova: contorno cheio e nome mais forte */
+.chat-item.is-nova {
+  border-color: var(--contorno);
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
+}
+
+.chat-item-texto {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.chat-item-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.chat-item strong {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-item.is-nova strong {
+  font-weight: 900;
+}
+
+.chat-item time {
+  flex: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chat-item.is-nova time {
+  color: var(--accent);
+}
+
+.chat-item-sobre {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-item-previa {
+  overflow: hidden;
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-item.is-nova .chat-item-previa {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.chat-item-novas {
+  flex: none;
+  min-width: 24px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--tt-roxo);
+  color: var(--tt-branco);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  text-align: center;
+}
+
+.chat-grupo h3 {
+  margin: 16px 0 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chat-aviso {
+  margin: 6px 0 4px;
+  padding: 10px 12px;
+  background: var(--surface-hover);
+  border: 2px dashed var(--contorno);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.chat-vazio {
+  display: grid;
+  gap: 6px;
+  margin: auto 0;
+  padding: 40px 12px;
+  text-align: center;
+}
+
+.chat-vazio strong {
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.chat-vazio p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* --- conversa aberta --- */
+
+.chat-conversa {
+  position: relative;
+}
+
+.chat-conversa-topo {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 2px solid var(--border-strong);
+}
+
+.chat-voltar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: var(--surface);
+  border: 2px solid var(--contorno);
+  border-radius: 50%;
+  color: var(--text);
+}
+
+.chat-voltar:hover {
+  box-shadow: 3px 3px 0 0 var(--sombra-dura);
+}
+
+.chat-conversa-topo .avatar {
+  flex: none;
+}
+
+.chat-conversa-quem {
+  display: grid;
+  min-width: 0;
+}
+
+.chat-conversa-quem strong {
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-conversa-quem small {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.chat-mensagens {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  padding: 10px 8px 16px 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.chat-mensagens .carregando,
+.chat-mensagens .empty-state {
+  margin: auto 0;
+}
+
+.chat-dia {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0 6px;
+}
+
+.chat-dia span {
+  padding: 3px 12px;
+  background: var(--surface);
+  border: 2px solid var(--contorno);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.chat-bolha {
+  align-self: flex-start;
+  max-width: 84%;
+  margin-top: 10px;
+  padding: 8px 12px 6px;
+  background: var(--surface);
+  border: 2px solid var(--contorno);
+  border-radius: 16px 16px 16px 4px;
+  color: var(--text);
+}
+
+.chat-bolha.is-seguida {
+  margin-top: 4px;
+}
+
+.chat-bolha p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.chat-bolha a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.chat-bolha time {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.chat-autor {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+/* a minha mensagem: o adesivo azul-noite da acao, com sombra roxa */
+.chat-bolha.is-minha {
+  align-self: flex-end;
+  background: var(--acao);
+  border-radius: 16px 16px 4px 16px;
+  box-shadow: 3px 3px 0 0 var(--sombra-dura);
+  color: var(--acao-texto);
+}
+
+.chat-bolha.is-minha time {
+  color: var(--acao-texto);
+  opacity: 0.8;
+}
+
+.chat-bolha.is-enviando {
+  opacity: 0.6;
+}
+
+.chat-bolha.is-erro {
+  background: var(--negative-bg);
+  border-color: var(--negative-border);
+  box-shadow: none;
+  color: var(--text);
+}
+
+.chat-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-self: flex-end;
+  justify-content: flex-end;
+  gap: 4px 12px;
+  margin: 4px 4px 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chat-status.is-erro {
+  color: var(--negative);
+}
+
+.chat-status button {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.chat-novas {
+  position: absolute;
+  bottom: 104px;
+  left: 50%;
+  padding: 6px 14px;
+  background: var(--tt-roxo);
+  border: 2px solid var(--contorno);
+  border-radius: 999px;
+  color: var(--tt-branco);
+  font-size: 13px;
+  font-weight: 800;
+  transform: translateX(-50%);
+  box-shadow: 3px 3px 0 0 var(--contorno);
+}
+
+/* --- caixa de escrever --- */
+
+.chat-composer {
+  display: grid;
+  flex: none;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 10px;
+  align-items: end;
+  padding: 12px 0 max(14px, env(safe-area-inset-bottom, 0px));
+  border-top: 2px dashed var(--contorno);
+}
+
+.chat-composer textarea {
+  width: 100%;
+  min-height: 50px;
+  max-height: 140px;
+  padding: 12px 14px;
+  background: var(--field-bg);
+  border: 3px solid var(--contorno);
+  border-radius: 14px;
+  color: var(--text);
+  font: inherit;
+  /* 16px: o celular nao da zoom ao tocar */
+  font-size: 16px;
+  line-height: 1.4;
+  resize: none;
+}
+
+.chat-composer textarea::placeholder {
+  color: var(--text-faint);
+}
+
+.chat-composer textarea:focus-visible {
+  outline: 3px solid var(--foco, var(--accent));
+  outline-offset: 2px;
+}
+
+.chat-composer button {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  background: var(--acao);
+  border: 3px solid var(--contorno);
+  border-radius: 50%;
+  color: var(--acao-texto);
+  box-shadow: 3px 3px 0 0 var(--sombra-dura);
+  transition:
+    transform 160ms var(--suave),
+    box-shadow 160ms var(--suave);
+}
+
+.chat-composer button:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 0 var(--sombra-dura);
+}
+
+.chat-composer button:disabled {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+  box-shadow: none;
+  color: var(--text-dim);
+  cursor: not-allowed;
+}
+
+.chat-dica {
+  grid-column: 1 / -1;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.chat-dica.is-erro {
+  color: var(--negative);
+  font-weight: 800;
+}
+
+/* no celular a dica do teclado nao serve (nao tem Shift+Enter) */
+@media (hover: none) {
+  .chat-dica.is-teclado {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-item,
+  .chat-composer button {
+    transition: none;
+  }
+
+  .chat-item:hover,
+  .chat-composer button:hover:not(:disabled) {
+    transform: none;
+  }
+}

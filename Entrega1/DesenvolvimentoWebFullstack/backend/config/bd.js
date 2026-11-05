@@ -59,6 +59,14 @@ function bancoRemoto(url) {
   };
 }
 
+// Mudancas no trocaticket.sql que um banco local antigo ainda nao tem.
+// Cada linha pode rodar de novo sem estragar nada (if not exists).
+// No Supabase o mesmo SQL e rodado uma vez no SQL Editor.
+const AJUSTES_LOCAIS = [
+  'alter table chat_participante add column if not exists ultima_lida int null',
+  'create index if not exists idx_mensagem_chat on mensagem (id_chat, id_mensagem)',
+];
+
 function bancoLocal() {
   const fs = require('fs');
   const path = require('path');
@@ -79,6 +87,9 @@ function bancoLocal() {
           await db.exec(fs.readFileSync(path.join(sqls, nome), 'utf8'));
         }
         console.log('banco local pronto. login do adm: admin@trocaticket.com.br / admin123');
+      } else {
+        // banco local criado antes de uma mudanca no script: aplica o que falta
+        for (const ajuste of AJUSTES_LOCAIS) await db.exec(ajuste);
       }
       return db;
     })();

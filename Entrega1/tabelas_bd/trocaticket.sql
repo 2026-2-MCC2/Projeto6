@@ -409,8 +409,10 @@ CREATE TABLE chat (
 );
 
 CREATE TABLE chat_participante (
-  id_chat    INT NOT NULL,
-  id_usuario INT NOT NULL,
+  id_chat     INT NOT NULL,
+  id_usuario  INT NOT NULL,
+  -- id da ultima mensagem que a pessoa ja viu (o resto conta como nao lido)
+  ultima_lida INT NULL,
   PRIMARY KEY (id_chat, id_usuario),
   CONSTRAINT fk_participante_chat FOREIGN KEY (id_chat)
     REFERENCES chat (id_chat) ON DELETE CASCADE,
@@ -429,6 +431,8 @@ CREATE TABLE mensagem (
   CONSTRAINT fk_mensagem_remetente FOREIGN KEY (id_remetente)
     REFERENCES usuario (id_usuario)
 );
+
+CREATE INDEX idx_mensagem_chat ON mensagem (id_chat, id_mensagem);
 
 -- --------------------------------------------------------
 -- Indices de apoio as consultas mais usadas

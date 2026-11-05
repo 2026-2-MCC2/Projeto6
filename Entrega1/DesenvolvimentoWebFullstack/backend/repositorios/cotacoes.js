@@ -3,7 +3,8 @@ const pool = require('../config/bd');
 
 const CAMPOS_EVENTO = `e.id_evento, e.nome, e.descricao, e.data_inicio, e.data_fim, e.status,
   e.publico_minimo, e.publico_maximo, e.publico_esperado,
-  l.nome as local, l.cidade, l.estado, c.nome as categoria, u.nome as organizador`;
+  l.nome as local, l.cidade, l.estado, c.nome as categoria, u.nome as organizador,
+  e.id_organizador`;
 
 const JUNTA_EVENTO = `from evento e
        join local_evento l on l.id_local = e.id_local

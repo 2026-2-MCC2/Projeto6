@@ -13,6 +13,7 @@ export default function Sidebar({
   onOpenPanel,
   onSignOut,
   contadores,
+  naoLidas = 0,
 }) {
   const { state } = useApp()
   const { sessao } = state
@@ -65,6 +66,12 @@ export default function Sidebar({
         <button className="nav" onClick={() => onOpenPanel('chat')}>
           <Icon name="message" size={18} />
           Mensagens
+          {naoLidas > 0 ? (
+            <em className="nav-badge">
+              {naoLidas > 99 ? '99+' : naoLidas}
+              <span className="sr-only"> não lidas</span>
+            </em>
+          ) : null}
         </button>
         <button className="nav nav-logout" onClick={onSignOut}>
           <Icon name="logout" size={18} />

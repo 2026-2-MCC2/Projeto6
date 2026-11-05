@@ -179,67 +179,6 @@
   border-bottom: 1px solid var(--border-soft);
 }
 
-/* --- conversas no painel lateral --- */
-
-.panel-conversas {
-  display: grid;
-  gap: 8px;
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--border);
-}
-
-.panel-conversas button {
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
-  color: var(--text);
-  text-align: left;
-}
-
-.panel-conversas button.is-selected {
-  border-color: var(--accent);
-  background: var(--surface-hover);
-}
-
-.panel-conversas strong {
-  display: block;
-  font-size: 15px;
-}
-
-.panel-conversas small {
-  display: block;
-  margin-top: 2px;
-  color: var(--text-dim);
-  font-size: 13px;
-}
-
-.panel-conversas > .btn-secondary {
-  margin-bottom: 4px;
-}
-
-.panel-vazio {
-  display: grid;
-  gap: 8px;
-  padding: 48px 24px;
-  text-align: center;
-}
-
-.panel-vazio strong {
-  font-size: 17px;
-}
-
-.panel-vazio p {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 15px;
-}
-
-.panel-vazio .btn-primary {
-  margin-top: 14px;
-  justify-self: center;
-}
-
 /* ------------------------------------------------------------------
    Escolha de fornecedor dentro da criacao do evento
    ------------------------------------------------------------------ */
@@ -782,8 +721,11 @@
   font-style: italic;
 }
 
-.comparar-proposta button {
-  justify-self: start;
+.comparar-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
   margin-top: 4px;
 }
 

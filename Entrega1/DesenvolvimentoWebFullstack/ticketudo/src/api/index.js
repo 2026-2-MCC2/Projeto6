@@ -90,10 +90,14 @@ export const pedidos = {
 
 export const chats = {
   lista: () => get('/chats'),
-  usuarios: (busca = '') => get(`/chats/usuarios?busca=${encodeURIComponent(busca)}`),
+  naoLidas: () => get('/chats/nao-lidas'),
+  contatos: (busca = '') => get(`/chats/contatos?busca=${encodeURIComponent(busca)}`),
+  // abre (ou reaproveita) a conversa direta: { id_usuario, mensagem?, assunto? }
   abrir: (dados) => post('/chats', dados),
-  mensagens: (id) => get(`/chats/${id}/mensagens`),
+  // cabecalho + mensagens; com "depois", so as mensagens novas
+  conversa: (id, depois = 0) => get(`/chats/${id}?depois=${depois}`),
   enviar: (id, texto) => post(`/chats/${id}/mensagens`, { texto }),
+  lida: (id, ate) => post(`/chats/${id}/lida`, { ate }),
 }
 
 export const admin = {
