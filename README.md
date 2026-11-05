@@ -161,23 +161,23 @@ Todas as cores do site ficam num arquivo só: [`tokens.css`](Entrega1/Desenvolvi
 
 | Nome | Cor | Para que serve |
 |---|---|---|
-| `--tt-preto` | `#0c0c0c` | Fundo do site |
-| `--tt-branco` | `#ffffff` | Texto principal e botão de ação |
-| `--tt-palido` | `#d7e2ea` | Destaque e texto secundário (com opacidade) |
-| `--tt-azul` | `#23aafb` | Cor da logo (aproximada, a confirmar) |
-| `--tt-roxo` | `#6a4cff` | Cor da logo (aproximada, a confirmar) |
-| `--tt-rosa` | `#ed0092` | Cor da logo (aproximada, a confirmar) |
-| `--tt-laranja` | `#ff8e1e` | Cor da logo (aproximada, a confirmar) |
-| `--tt-azul-profundo` | `#1e5cb3` | Brilhos do fundo e borda de destaque |
-| `--tt-azul-claro` | `#5b9bf0` | Destaques do pop-up de credenciamento |
-| `--tt-cinza-08` a `--tt-cinza-f2` | `#080808` a `#f2f2f2` | Superfícies, campos e textos de apoio (o número é o valor de cada canal) |
-| `--tt-branco-1` a `--tt-branco-20` | branco com 1% a 20% de opacidade | Bordas e superfícies translúcidas |
-| `--tt-sombra-35` a `--tt-sombra-100` | preto com 35% a 100% de opacidade | Sombras |
+| `--tt-noite` | `#0b0b1e` | Azul-noite: menu lateral, faixas escuras, contorno dos cartões e botão de ação |
+| `--tt-papel` | `#f7f6fd` | Fundo das telas da plataforma e das faixas claras |
+| `--tt-branco` | `#ffffff` | Cartões, campos e texto sobre fundo escuro |
+| `--tt-roxo` | `#5b4cf0` | Roxo da logo: faixa do título das telas e sombra dos cartões |
+| `--tt-lilas` | `#a9adff` | Destaques, avatar e faixa lilás |
+| `--tt-roxo-escuro` | `#4b3fe0` | Links e destaques sobre o papel |
+| `--tt-azul` | `#30b0f0` | Cor da logo (degradê da marca) |
+| `--tt-rosa` | `#f020b0` | Cor da logo (degradê da marca) |
+| `--tt-laranja` | `#ff7a45` | Cor da logo (degradê da marca) |
+| `--tt-rosa-escuro` / `--tt-azul-escuro` | `#b0107e` / `#0a6a9c` | Versões escuras da logo, para texto legível no papel |
+| `--tt-cinza-noite` / `--tt-nevoa` | `#46465e` / `#c9c9e0` | Texto de apoio no papel / no azul-noite |
 | `--tt-verde` | `#10b981` | Status positivo (aprovado, credenciado) |
 | `--tt-ambar` | `#f5b84b` | Status em análise |
-| `--tt-vermelho` | `#f87171` | Status negativo e erros |
+| `--tt-vermelho` / `--tt-vermelho-tinta` | `#f87171` / `#b42318` | Status negativo e erros (no fundo escuro / no papel) |
+| `--tt-preto`, `--tt-cinza-*`, `--tt-branco-*`, `--tt-sombra-*` | — | Cores do modelo escuro antigo, ainda no arquivo para as faixas e sombras |
 
-As telas e componentes não usam a paleta direto: usam os **tokens de uso** do mesmo arquivo, que dizem para que a cor serve (`--bg`, `--surface`, `--text`, `--border`, `--acao`, `--positive`, `--negative`…).
+As telas e componentes não usam a paleta direto: usam os **tokens de uso** do mesmo arquivo, que dizem para que a cor serve (`--bg`, `--surface`, `--text`, `--contorno`, `--sombra-dura`, `--acao`, `--positive`, `--negative`…). O modelo Noite (VIS-05) junta essas cores no desenho de "adesivo": cartão branco com contorno azul-noite de 3px e sombra dura roxa.
 
 ## 🎓 Referências
 
