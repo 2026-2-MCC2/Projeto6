@@ -4,6 +4,7 @@ import Topbar from './Topbar'
 import CredenciamentoFlutuante from '../components/CredenciamentoFlutuante'
 import SidePanel from '../components/SidePanel'
 import { admin, solicitacoes } from '../api'
+import { useNaoLidas } from '../hooks/useNaoLidas'
 import { profiles } from '../data/profiles'
 import { useCredenciamento } from '../hooks/useCredenciamento'
 import { pagesByRole } from '../pages'
@@ -55,7 +56,9 @@ function useContadores(papel) {
 export default function Workspace({ onSignOut }) {
   const { state } = useApp()
   const [page, setPage] = useState('home')
+  // painel lateral aberto: { tipo, opcoes } (ex.: o chat ja numa conversa)
   const [panel, setPanel] = useState(null)
+  const [naoLidas, atualizarNaoLidas] = useNaoLidas()
   // dado extra da pagina aberta (ex.: o id do evento na tela do evento)
   const [parametro, setParametro] = useState(null)
 
@@ -100,6 +103,16 @@ export default function Workspace({ onSignOut }) {
     setPage(destino)
   }
 
+  const abrirPainel = useCallback((tipo, opcoes = null) => {
+    setMenuAberto(false)
+    setPanel({ tipo, opcoes })
+  }, [])
+
+  const fecharPainel = useCallback(() => {
+    setPanel(null)
+    atualizarNaoLidas()
+  }, [atualizarNaoLidas])
+
   // paginas que nao estao no menu acendem o item do menu "pai"
   const paginaDoMenu = { evento: 'events' }[page] ?? page
 
@@ -111,13 +124,11 @@ export default function Workspace({ onSignOut }) {
         profile={profile}
         page={paginaDoMenu}
         contadores={contadores}
+        naoLidas={naoLidas}
         aberto={menuAberto}
         onFechar={() => setMenuAberto(false)}
         onNavigate={navegar}
-        onOpenPanel={(tipo) => {
-          setMenuAberto(false)
-          setPanel(tipo)
-        }}
+        onOpenPanel={abrirPainel}
         onSignOut={onSignOut}
       />
       {/* fundo escuro atras da gaveta: tocar nele fecha o menu */}
@@ -129,8 +140,9 @@ export default function Workspace({ onSignOut }) {
         <Topbar
           profile={profile}
           menuAberto={menuAberto}
+          naoLidas={naoLidas}
           onAbrirMenu={() => setMenuAberto(true)}
-          onOpenPanel={setPanel}
+          onOpenPanel={abrirPainel}
         />
         <div className="page">
           <CurrentPage
@@ -138,12 +150,19 @@ export default function Workspace({ onSignOut }) {
             parametro={parametro}
             profile={profile}
             onNavigate={navegar}
-            onOpenPanel={setPanel}
+            onOpenPanel={abrirPainel}
             onMudou={atualizarContadores}
           />
         </div>
       </main>
-      {panel ? <SidePanel type={panel} onClose={() => setPanel(null)} /> : null}
+      {panel ? (
+        <SidePanel
+          type={panel.tipo}
+          opcoes={panel.opcoes}
+          onClose={fecharPainel}
+          onMudou={atualizarNaoLidas}
+        />
+      ) : null}
       {temCredenciamento ? <CredenciamentoFlutuante /> : null}
     </div>
   )

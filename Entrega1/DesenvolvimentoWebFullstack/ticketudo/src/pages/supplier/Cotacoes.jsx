@@ -171,7 +171,7 @@ function Itens({ idEvento, onMudou }) {
   )
 }
 
-export default function Cotacoes({ profile, parametro }) {
+export default function Cotacoes({ profile, parametro, onOpenPanel }) {
   const { situacao, abrir } = useCredenciamento()
   const credenciado = situacao === 'credenciado'
   const lista = useRecurso(() => (credenciado ? cotacoes.lista() : Promise.resolve([])), String(credenciado))
@@ -237,6 +237,17 @@ export default function Cotacoes({ profile, parametro }) {
                 <small>
                   {ev.total_itens} item(ns) · {ev.minhas_propostas} proposta(s) suas
                 </small>
+                <button
+                  className="btn-link"
+                  onClick={() =>
+                    onOpenPanel?.('chat', {
+                      com: { id_usuario: ev.id_organizador, nome: ev.organizador, tipo: 'organizador' },
+                      assunto: ev.nome,
+                    })
+                  }
+                >
+                  Falar com o organizador
+                </button>
                 <button
                   className="btn-secondary"
                   onClick={() => {

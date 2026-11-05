@@ -224,6 +224,28 @@
   box-shadow: 3px 3px 0 0 var(--sombra-dura);
 }
 
+/* numero de mensagens nao lidas em cima do botao do chat */
+.topbar-mensagens {
+  position: relative;
+}
+
+.topbar-badge {
+  position: absolute;
+  top: -7px;
+  right: -9px;
+  min-width: 22px;
+  padding: 1px 6px;
+  border: 2px solid var(--contorno);
+  border-radius: 999px;
+  background: var(--tt-roxo);
+  color: var(--tt-branco);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1.4;
+  text-align: center;
+}
+
 .topbar-user {
   display: flex;
   align-items: center;

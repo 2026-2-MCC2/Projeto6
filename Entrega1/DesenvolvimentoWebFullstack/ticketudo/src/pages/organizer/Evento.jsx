@@ -44,7 +44,7 @@ const EDITAVEL = {
 }
 
 // parametro: o id do evento, ou { id, editar: true } para abrir ja editando
-export default function Evento({ parametro, onNavigate }) {
+export default function Evento({ parametro, onNavigate, onOpenPanel }) {
   const id = typeof parametro === 'object' && parametro ? parametro.id : parametro
   const { dispatch } = useApp()
   const plano = useRecurso(() => eventos.planejamento(id), id)
@@ -202,7 +202,17 @@ export default function Evento({ parametro, onNavigate }) {
                 Compare as propostas de cada item e escolha uma por item. O orçamento ao lado usa a
                 proposta escolhida; item sem escolha entra pelo custo estimado.
               </p>
-              <CompararPropostas idEvento={ev.id_evento} versao={versao} onMudou={recarregarTudo} />
+              <CompararPropostas
+                idEvento={ev.id_evento}
+                versao={versao}
+                onMudou={recarregarTudo}
+                onConversar={(p) =>
+                  onOpenPanel?.('chat', {
+                    com: { id_usuario: p.id_usuario_fornecedor, nome: p.fornecedor, tipo: 'fornecedor' },
+                    assunto: ev.nome,
+                  })
+                }
+              />
             </section>
           ) : null}
 

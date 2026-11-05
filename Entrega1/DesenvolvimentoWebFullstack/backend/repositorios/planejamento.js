@@ -43,7 +43,8 @@ async function propostasParaComparar(idEvento) {
   const [linhas] = await pool.query(
     `select p.id_proposta, p.id_item, p.valor, p.descricao, p.validade::text as validade,
             p.observacoes, p.situacao, p.atualizado_em,
-            f.id_fornecedor, f.nome_empresa as fornecedor, f.cidade, f.estado
+            f.id_fornecedor, f.id_usuario as id_usuario_fornecedor, f.nome_empresa as fornecedor,
+            f.cidade, f.estado
        from proposta p
        join item_custo i on i.id_item = p.id_item
        join fornecedor f on f.id_fornecedor = p.id_fornecedor
