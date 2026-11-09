@@ -114,6 +114,7 @@ nem URL de API para configurar.
 │   ├── Cálculo/                      # materiais de Cálculo II
 │   ├── DesenvolvimentoWebFullstack/  # roteiro e evidências de demonstração
 │   │   └── evidencias/               # evidências da demonstração
+│   ├── DeclaracaoIA/                 # fichas de declaração de uso de IA assinadas
 │   ├── GestãoEmpresarial/            # mapa de processos e documentos
 │   ├── PI/                           # documento de extensão e banner
 │   └── Proj.BancodeDados/            # scripts e documentação MySQL
@@ -139,6 +140,8 @@ A pasta raiz contém o arquivo <b>README.md</b> (guia e explicação geral do pr
 <b>Entrega1/PI</b>: Entregas da Materia de PI, com o design do Figma
 
 <b>Entrega1/Proj.BancodeDados</b>: Entrega da disciplina de Banco de Dados, com o diagrama entidade-relacionamento (DER) do projeto.
+
+<b>Entrega2/DeclaracaoIA</b>: Fichas de Declaração de Uso de IA de cada integrante, no modelo da FECAP, assinadas. O resumo do grupo está no [termo de uso de IA](TERMO_DE_USO_DE_IA.md).
 
 <b>Entrega2/Cálculo</b>: Entrega da disciplina de Cálculo II (máximos, mínimos e concavidade da função de engajamento com notificações, com quadros de sinais e gráficos).
 
