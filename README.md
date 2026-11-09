@@ -177,6 +177,10 @@ Todas as cores do site ficam num arquivo só: [`tokens.css`](Entrega1/Desenvolvi
 
 As telas e componentes não usam a paleta direto: usam os **tokens de uso** do mesmo arquivo, que dizem para que a cor serve (`--bg`, `--surface`, `--text`, `--contorno`, `--sombra-dura`, `--acao`, `--positive`, `--negative`…). O modelo Noite (VIS-05) junta essas cores no desenho de "adesivo": cartão branco com contorno azul-noite de 3px e sombra dura roxa.
 
+## Licensa
+
+Projeto6  © 2026 by Gabriel Ribeiro Alves, Caio Moraes, Guilherme Montes, Otavio Sanches Pierini is licensed under CC BY 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
+
 ## 🎓 Referências
 
 Aqui estão as referências usadas no projeto.
