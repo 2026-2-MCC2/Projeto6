@@ -90,10 +90,10 @@ O código entrou por pull request, com revisão de outro integrante, e passou po
 | **Aluno(s) Responsável(veis)** | Gabriel Ribeiro Alves |
 | :--- | :--- |
 | **Ferramenta utilizada** | GitHub Copilot |
-| **Versão/modelo** | [preencher] |
+| **Versão/modelo** | Github Copilot/ Copilot SDK |
 | **Disciplina / Trabalho** | Desenvolvimento Web Full, Entrega 2 |
 | **Finalidade de uso** | Apoio na atualização do README (tarefa ORG-09): organização e descrição da estrutura de pastas do projeto e sugestões de como melhorar o texto. O primeiro resultado não ficou bom e foi desfeito pelo próprio Gabriel (commit de *revert*). A versão final foi ajustada, revisada e registrada por ele, que decidiu o que entrava no arquivo. |
-| ***Prompts* principais utilizados** | [confirmar com o Gabriel o texto usado, ex.: "Atualize a seção de estrutura de pastas do README com as pastas atuais do projeto e o que cada uma contém"] |
+| ***Prompts* principais utilizados** | "Atualize a seção de estrutura de pastas do README com as pastas atuais do projeto e o que cada uma contém" |
 | **Trechos ou entregas afetadas** | Seção "Estrutura de pastas" do `README.md`. Commits `c80339e` (atualização), `186606f` (revert da primeira versão) e `c9083d3` (versão final), todos de 31/10/2026. Esses commits têm a linha `Co-authored-by: Copilot`, e é por isso que o GitHub mostra o Copilot na lista de contribuidores do repositório. |
 
 ## Como o grupo revisou o que a IA produziu
