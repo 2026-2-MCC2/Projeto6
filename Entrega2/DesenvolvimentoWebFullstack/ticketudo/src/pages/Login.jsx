@@ -414,9 +414,6 @@ export default function Login({ onBack }) {
           </form>}
         </div>
 
-        <small className="login-legal">
-          Conta de administrador não sai pelo cadastro: ela é criada direto no banco, pelo seed.
-        </small>
       </section>
     </div>
   )
