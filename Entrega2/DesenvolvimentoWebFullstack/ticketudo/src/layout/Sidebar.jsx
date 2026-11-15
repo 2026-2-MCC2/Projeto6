@@ -73,13 +73,21 @@ export default function Sidebar({
             </em>
           ) : null}
         </button>
+        <button
+          className={page === 'account' ? 'nav is-active' : 'nav'}
+          aria-current={page === 'account' ? 'page' : undefined}
+          onClick={() => onNavigate('account')}
+        >
+          <Icon name="user" size={18} />
+          Meu perfil
+        </button>
         <button className="nav nav-logout" onClick={onSignOut}>
           <Icon name="logout" size={18} />
           Sair do portal
         </button>
 
         <div className="sidebar-user">
-          <Avatar initials={sessao.iniciais} small />
+          <Avatar initials={sessao.iniciais} small foto={sessao.fotoPerfil} />
           <span>
             <strong>{sessao.nome}</strong>
             <small>{profile.label}</small>

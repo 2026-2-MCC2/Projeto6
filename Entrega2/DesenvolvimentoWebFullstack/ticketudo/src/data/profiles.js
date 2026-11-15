@@ -23,7 +23,7 @@ export const profiles = {
       { id: 'cotacoes', label: 'Eventos em cotação', icon: 'calendar' },
       { id: 'propostas', label: 'Minhas propostas', icon: 'wallet' },
       { id: 'requests', label: 'Solicitações', icon: 'file' },
-      { id: 'profile', label: 'Meu perfil', icon: 'user' },
+      { id: 'profile', label: 'Perfil da empresa', icon: 'briefcase' },
     ],
   },
   admin: {

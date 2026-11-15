@@ -34,6 +34,7 @@ CREATE TABLE usuario (
   cpf        VARCHAR(14)  NOT NULL UNIQUE,
   senha_hash VARCHAR(255) NOT NULL,
   telefone   VARCHAR(20),
+  foto_perfil TEXT,
   tipo       VARCHAR(30)
                 CHECK (tipo IN ('comprador','organizador','fornecedor','adm')) NOT NULL DEFAULT 'comprador',
   criado_em  TIMESTAMP NOT NULL DEFAULT current_timestamp,

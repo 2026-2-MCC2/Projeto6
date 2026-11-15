@@ -4,6 +4,7 @@ export const auth = {
   cadastro: (dados) => post('/auth/cadastro', dados),
   login: (email, senha) => post('/auth/login', { email, senha }),
   eu: () => get('/auth/eu'),
+  atualizarPerfil: (dados) => put('/auth/perfil', dados),
 }
 
 export const catalogo = {

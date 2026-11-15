@@ -52,6 +52,7 @@ router.post('/cadastro', async (req, res) => {
       id_usuario: id,
       nome,
       email,
+      foto_perfil: null,
       tipo: tipo || 'comprador',
     };
     return res.status(201).json({ usuario, token: gerarToken(usuario) });
@@ -87,6 +88,23 @@ router.get('/eu', autenticar, async (req, res) => {
   if (!usuario) {
     return res.status(404).json({ erro: 'usuario nao encontrado' });
   }
+  return res.json(usuario);
+});
+
+router.put('/perfil', autenticar, async (req, res) => {
+  const nome = String(req.body.nome || '').trim();
+  const telefone = String(req.body.telefone || '').trim();
+  const fotoPerfil = req.body.foto_perfil === null ? null : String(req.body.foto_perfil || '');
+
+  if (!nome) return res.status(400).json({ erro: 'nome e obrigatorio' });
+  if (nome.length > 120) return res.status(400).json({ erro: 'nome muito longo' });
+  if (telefone.length > 20) return res.status(400).json({ erro: 'telefone muito longo' });
+  if (fotoPerfil && (!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(fotoPerfil) || fotoPerfil.length > 2_800_000)) {
+    return res.status(400).json({ erro: 'foto invalida ou maior que 2 MB' });
+  }
+
+  await usuarios.atualizarPerfil(req.usuario.id, { nome, telefone, fotoPerfil });
+  const usuario = await usuarios.buscarPerfil(req.usuario.id);
   return res.json(usuario);
 });
 

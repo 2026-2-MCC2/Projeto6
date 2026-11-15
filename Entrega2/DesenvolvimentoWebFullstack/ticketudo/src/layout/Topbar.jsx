@@ -35,7 +35,7 @@ export default function Topbar({ profile, menuAberto, naoLidas = 0, onAbrirMenu,
           ) : null}
         </button>
         <span className="topbar-user">
-          <Avatar initials={sessao.iniciais} />
+          <Avatar initials={sessao.iniciais} foto={sessao.fotoPerfil} />
           <span>
             <strong>{sessao.nome}</strong>
             <small>{profile.label}</small>

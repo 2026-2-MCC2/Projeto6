@@ -63,6 +63,7 @@ function bancoRemoto(url) {
 // Cada linha pode rodar de novo sem estragar nada (if not exists).
 // No Supabase o mesmo SQL e rodado uma vez no SQL Editor.
 const AJUSTES_LOCAIS = [
+  'alter table usuario add column if not exists foto_perfil text',
   'alter table chat_participante add column if not exists ultima_lida int null',
   'create index if not exists idx_mensagem_chat on mensagem (id_chat, id_mensagem)',
 ];

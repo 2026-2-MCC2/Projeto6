@@ -48,6 +48,7 @@ function montarSessao(usuario) {
     id: usuario.id_usuario ?? usuario.id,
     nome,
     email: usuario.email,
+    fotoPerfil: usuario.foto_perfil || null,
     tipo: usuario.tipo,
     papel: PAPEL_POR_TIPO[usuario.tipo] || 'comprador',
     iniciais: iniciais(nome),
