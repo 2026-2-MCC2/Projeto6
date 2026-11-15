@@ -259,6 +259,63 @@
   outline-offset: 2px;
 }
 
+.login-link {
+  display: block;
+  margin: 14px auto 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--cartao-destaque);
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.login-google {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  min-height: 44px;
+}
+
+.login-senha-controle {
+  position: relative;
+  display: block;
+}
+
+.login-senha-controle input {
+  padding-right: 54px;
+}
+
+.login-senha-olho {
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--cartao-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.login-senha-olho:hover {
+  background: var(--tt-tinta-10);
+  color: var(--cartao-texto);
+}
+
+.login-senha-olho:focus-visible {
+  outline: 3px solid var(--cartao-destaque);
+  outline-offset: 1px;
+}
+
 .login .field.has-error input {
   border-color: var(--negative-border);
 }

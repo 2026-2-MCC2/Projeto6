@@ -1,8 +1,9 @@
 // O app Express em si, sem o listen. Quem sobe o servidor e o server.js
 // (no computador) ou a funcao da Vercel (api/index.js na raiz do repo).
-require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 // O segredo que assina os logins (JWT) nunca fica escrito no codigo.
 // - Na Vercel ele e obrigatorio e vem das Environment Variables.

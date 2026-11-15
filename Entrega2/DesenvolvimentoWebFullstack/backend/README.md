@@ -111,10 +111,29 @@ Se der erro dentro da funcao, tudo e desfeito (rollback).
 Todas as rotas ficam em `/api` (ex.: `POST /api/auth/login`). Tudo que pede login espera o cabecalho `Authorization: Bearer <token>`.
 
 ### Autenticacao
+
+O login tradicional continua disponivel. Para habilitar o login com Google,
+configure `GOOGLE_CLIENT_ID` no backend e `VITE_GOOGLE_CLIENT_ID` no frontend
+com o mesmo Client ID do Google Identity Services. O e-mail Google verificado
+e vinculado automaticamente a uma conta existente com o mesmo e-mail; contas
+novas entram como o perfil escolhido e completam CPF/telefone quando
+necessario.
+
+Para habilitar a recuperacao de senha, configure uma conta Gmail com senha de
+aplicativo usando `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`,
+`SMTP_PASS` e `SMTP_FROM`. Nunca use a senha normal da conta Gmail. Em banco
+remoto, aplique a tabela `password_reset_code` do arquivo
+`Entrega1/tabelas_bd/trocaticket.sql` antes de publicar. Se o banco remoto já
+existe, também permita `NULL` em `usuario.cpf` e `usuario.senha_hash` para
+contas criadas pelo Google.
+
 | metodo | rota | quem |
 |---|---|---|
 | POST | `/auth/cadastro` | aberto |
 | POST | `/auth/login` | aberto |
+| POST | `/auth/google` | aberto |
+| POST | `/auth/recuperar` | aberto |
+| POST | `/auth/recuperar/redefinir` | aberto |
 | GET | `/auth/eu` | logado |
 | PUT | `/auth/perfil` | logado |
 

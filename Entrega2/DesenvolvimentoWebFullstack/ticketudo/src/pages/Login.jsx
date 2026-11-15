@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Field from '../components/Field'
 import Icon from '../components/Icon'
 import Logo from '../components/Logo'
@@ -10,7 +10,7 @@ import { useApp } from '../state/useApp'
 import { mascaraCpf, mascaraTelefone } from '../utils/format'
 import './Login.css'
 
-const formVazio = { nome: '', email: '', cpf: '', telefone: '', senha: '' }
+const formVazio = { nome: '', email: '', cpf: '', telefone: '', senha: '', codigo: '' }
 
 // id de cada campo, na ordem em que aparecem na tela: o foco vai para o
 // primeiro que tiver erro
@@ -54,12 +54,102 @@ export default function Login({ onBack }) {
   const [form, setForm] = useState(formVazio)
   const [erros, setErros] = useState({})
   const [enviando, setEnviando] = useState(false)
+  const [senhaVisivel, setSenhaVisivel] = useState(false)
+  const [recuperacao, setRecuperacao] = useState(false)
+  const [codigoEnviado, setCodigoEnviado] = useState(false)
+  const googleBotao = useRef(null)
 
   const profile = profiles[papel]
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+
+  useEffect(() => {
+    if (recuperacao || !googleClientId || !googleBotao.current) return undefined
+
+    function renderizarGoogle() {
+      if (!window.google?.accounts?.id || !googleBotao.current) return
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: async ({ credential }) => {
+          setEnviando(true)
+          setErros({})
+          try {
+            const resposta = await auth.google(credential, TIPO_POR_PAPEL[papel])
+            guardarToken(resposta.token)
+            dispatch({ type: 'sessao/entrou', usuario: resposta.usuario })
+          } catch (e) {
+            setErros({ geral: e.message })
+          } finally {
+            setEnviando(false)
+          }
+        },
+      })
+      googleBotao.current.innerHTML = ''
+      window.google.accounts.id.renderButton(googleBotao.current, {
+        theme: 'outline',
+        size: 'large',
+        shape: 'pill',
+        width: 320,
+        text: 'continue_with',
+      })
+    }
+
+    if (window.google?.accounts?.id) {
+      renderizarGoogle()
+      return undefined
+    }
+    const script = document.createElement('script')
+    script.src = 'https://accounts.google.com/gsi/client'
+    script.async = true
+    script.defer = true
+    script.onload = renderizarGoogle
+    document.head.appendChild(script)
+    return () => {
+      script.onload = null
+    }
+  }, [dispatch, googleClientId, papel, recuperacao])
 
   function atualizar(campo, valor) {
     setForm({ ...form, [campo]: valor })
     if (erros[campo]) setErros({ ...erros, [campo]: undefined })
+  }
+
+  async function solicitarCodigo(event) {
+      event.preventDefault()
+      if (!form.email.trim()) {
+        setErros({ email: 'Informe o e-mail da sua conta.' })
+        return
+      }
+      setEnviando(true)
+      setErros({})
+      try {
+        await auth.solicitarRedefinicao(form.email.trim().toLowerCase())
+        setCodigoEnviado(true)
+      } catch (e) {
+        setErros({ geral: e.message })
+      } finally {
+        setEnviando(false)
+      }
+  }
+
+  async function redefinirSenha(event) {
+      event.preventDefault()
+      if (form.senha.length < 6) {
+        setErros({ senha: 'A senha precisa ter ao menos 6 caracteres.' })
+        return
+      }
+      setEnviando(true)
+      setErros({})
+      try {
+        await auth.redefinirSenha(form.email.trim().toLowerCase(), form.codigo, form.senha)
+        setRecuperacao(false)
+        setCodigoEnviado(false)
+        setErros({ geral: 'Senha redefinida. Agora você já pode entrar.' })
+        setForm((atual) => ({ ...atual, codigo: '', senha: '' }))
+      } catch (e) {
+        setErros({ geral: e.message })
+      } finally {
+        setEnviando(false)
+      }
   }
 
   async function enviar(event) {
@@ -145,9 +235,17 @@ export default function Login({ onBack }) {
             </>
           ) : null}
 
-          <h2>{cadastro ? `Criar conta de ${profile.label.toLowerCase()}` : 'Acesse seu workspace'}</h2>
+          <h2>
+            {recuperacao
+              ? codigoEnviado
+                ? 'Crie uma nova senha'
+                : 'Recupere sua senha'
+              : cadastro
+                ? `Criar conta de ${profile.label.toLowerCase()}`
+                : 'Acesse seu workspace'}
+          </h2>
 
-          <div className="login-abas">
+          {!recuperacao ? <div className="login-abas">
             <button
               type="button"
               className={cadastro ? undefined : 'is-selected'}
@@ -164,7 +262,7 @@ export default function Login({ onBack }) {
             >
               Cadastrar
             </button>
-          </div>
+          </div> : null}
 
           {erros.geral ? (
             <p className="form-erro" role="alert">
@@ -172,7 +270,55 @@ export default function Login({ onBack }) {
             </p>
           ) : null}
 
-          <form onSubmit={enviar} noValidate>
+          {recuperacao ? (
+            <form onSubmit={codigoEnviado ? redefinirSenha : solicitarCodigo} noValidate>
+              <Field label="E-mail" error={erros.email}>
+                <input
+                  id="login-email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={form.email}
+                  onChange={(e) => atualizar('email', e.target.value)}
+                  placeholder="voce@suaempresa.com.br…"
+                />
+              </Field>
+              {codigoEnviado ? (
+                <>
+                  <Field label="Código recebido">
+                    <input
+                      name="codigo"
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={form.codigo || ''}
+                      onChange={(e) => atualizar('codigo', e.target.value.replace(/\D/g, ''))}
+                      placeholder="000000"
+                    />
+                  </Field>
+                  <Field label="Nova senha" error={erros.senha}>
+                    <input
+                      name="senha"
+                      type={senhaVisivel ? 'text' : 'password'}
+                      autoComplete="new-password"
+                      value={form.senha}
+                      onChange={(e) => atualizar('senha', e.target.value)}
+                      placeholder="Digite sua nova senha…"
+                    />
+                  </Field>
+                </>
+              ) : null}
+              <button type="submit" className="btn-sticker btn-block" disabled={enviando}>
+                {enviando ? 'Enviando…' : codigoEnviado ? 'Redefinir senha' : 'Enviar código'}
+              </button>
+              <button type="button" className="login-link" onClick={() => {
+                setRecuperacao(false)
+                setCodigoEnviado(false)
+                setErros({})
+              }}>
+                Voltar para entrar
+              </button>
+            </form>
+          ) : <form onSubmit={enviar} noValidate>
             {cadastro ? (
               <>
                 <Field label="Seu nome" error={erros.nome} hint="É este nome que aparece no canto do workspace.">
@@ -229,21 +375,43 @@ export default function Login({ onBack }) {
             </Field>
 
             <Field label="Senha" error={erros.senha}>
-              <input
-                id="login-password"
-                name="senha"
-                type="password"
-                autoComplete={cadastro ? 'new-password' : 'current-password'}
-                value={form.senha}
-                onChange={(e) => atualizar('senha', e.target.value)}
-                placeholder="Digite sua senha…"
-              />
+              <span className="login-senha-controle">
+                <input
+                  id="login-password"
+                  name="senha"
+                  type={senhaVisivel ? 'text' : 'password'}
+                  autoComplete={cadastro ? 'new-password' : 'current-password'}
+                  value={form.senha}
+                  onChange={(e) => atualizar('senha', e.target.value)}
+                  placeholder="Digite sua senha…"
+                />
+                <button
+                  type="button"
+                  className="login-senha-olho"
+                  aria-label={senhaVisivel ? 'Ocultar senha' : 'Mostrar senha'}
+                  aria-pressed={senhaVisivel}
+                  onClick={() => setSenhaVisivel((visivel) => !visivel)}
+                >
+                  <Icon name={senhaVisivel ? 'eye-off' : 'eye'} size={19} />
+                </button>
+              </span>
             </Field>
 
             <button type="submit" className="btn-sticker btn-block" disabled={enviando}>
               {enviando ? 'Enviando…' : cadastro ? 'Criar conta e entrar' : 'Entrar'} <b aria-hidden="true">→</b>
             </button>
-          </form>
+            {!cadastro ? (
+              <>
+                <button type="button" className="login-link" onClick={() => {
+                  setRecuperacao(true)
+                  setErros({})
+                }}>
+                  Esqueci minha senha
+                </button>
+                {googleClientId ? <div ref={googleBotao} className="login-google" /> : null}
+              </>
+            ) : null}
+          </form>}
         </div>
 
         <small className="login-legal">

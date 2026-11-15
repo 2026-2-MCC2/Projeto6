@@ -3,6 +3,9 @@ import { get, post, put, del } from './client'
 export const auth = {
   cadastro: (dados) => post('/auth/cadastro', dados),
   login: (email, senha) => post('/auth/login', { email, senha }),
+  google: (credential, tipo) => post('/auth/google', { credential, tipo }),
+  solicitarRedefinicao: (email) => post('/auth/recuperar', { email }),
+  redefinirSenha: (email, codigo, novaSenha) => post('/auth/recuperar/redefinir', { email, codigo, novaSenha }),
   eu: () => get('/auth/eu'),
   atualizarPerfil: (dados) => put('/auth/perfil', dados),
 }

@@ -34,4 +34,47 @@ async function atualizarPerfil(id, { nome, telefone, fotoPerfil }) {
   return r.affectedRows > 0;
 }
 
-module.exports = { criar, buscarParaLogin, buscarPerfil, atualizarPerfil };
+async function criarCodigoRedefinicao({ idUsuario, codigoHash, expiraEm }) {
+  await pool.query(
+    'insert into password_reset_code (id_usuario, codigo_hash, expira_em) values (?, ?, ?)',
+    [idUsuario, codigoHash, expiraEm],
+  );
+}
+
+async function buscarCodigoRedefinicao(email) {
+  const [linhas] = await pool.query(
+    `select r.id_codigo, r.id_usuario, r.codigo_hash, r.expira_em, r.tentativas,
+            u.email
+       from password_reset_code r
+       join usuario u on u.id_usuario = r.id_usuario
+      where u.email = ? and r.usado_em is null
+      order by r.criado_em desc
+      limit 1`,
+    [email],
+  );
+  return linhas[0] || null;
+}
+
+async function marcarCodigoUsado(idCodigo) {
+  await pool.query('update password_reset_code set usado_em = current_timestamp where id_codigo = ?', [idCodigo]);
+}
+
+async function aumentarTentativasCodigo(idCodigo) {
+  await pool.query('update password_reset_code set tentativas = tentativas + 1 where id_codigo = ?', [idCodigo]);
+}
+
+async function atualizarSenha(idUsuario, senhaHash) {
+  await pool.query('update usuario set senha_hash = ? where id_usuario = ?', [senhaHash, idUsuario]);
+}
+
+module.exports = {
+  criar,
+  buscarParaLogin,
+  buscarPerfil,
+  atualizarPerfil,
+  criarCodigoRedefinicao,
+  buscarCodigoRedefinicao,
+  marcarCodigoUsado,
+  aumentarTentativasCodigo,
+  atualizarSenha,
+};
