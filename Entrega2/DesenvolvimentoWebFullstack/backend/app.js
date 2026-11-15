@@ -42,7 +42,7 @@ const app = express();
 if (process.env.CORS_ORIGIN) {
   app.use(cors({ origin: process.env.CORS_ORIGIN }));
 }
-app.use(express.json());
+app.use(express.json({ limit: '3mb' }));
 
 const api = express.Router();
 

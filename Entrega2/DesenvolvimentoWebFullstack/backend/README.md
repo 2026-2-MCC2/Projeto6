@@ -32,6 +32,14 @@ Para usar o banco compartilhado do Supabase, crie `backend/.env` com a
 `DATABASE_URL` (modelo no `.env.example`). Lembrando que a rede da faculdade
 bloqueia essa conexao.
 
+Fotos de perfil nao sao armazenadas no banco como Base64. Configure no `.env`
+`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` e `SUPABASE_STORAGE_BUCKET`, crie
+um bucket publico (por padrao `avatars`) no Storage do Supabase e o banco
+guardara somente a URL da imagem. Sem essa configuracao, dados textuais do
+perfil continuam funcionando, mas o upload de foto retorna `503`.
+No Supabase remoto, aplique tambem `alter table usuario add column if not exists
+foto_perfil text;` no SQL Editor antes de usar a tela.
+
 ### Recriar o banco do zero
 
 Pare o `npm run dev` e, na raiz:
@@ -108,6 +116,7 @@ Todas as rotas ficam em `/api` (ex.: `POST /api/auth/login`). Tudo que pede logi
 | POST | `/auth/cadastro` | aberto |
 | POST | `/auth/login` | aberto |
 | GET | `/auth/eu` | logado |
+| PUT | `/auth/perfil` | logado |
 
 ### Catalogo
 | metodo | rota | quem |
@@ -196,8 +205,9 @@ validações de cada rota. Erros inesperados retornam `500`.
 |---|---|---|---|---|
 | GET | `/health` | público | 200 | 500 |
 | POST | `/auth/cadastro` | público | 201 | 400, 409 |
-| POST | `/auth/login` | público | 200 | 400, 401 |
+| POST | `/auth/login` | público | 200 | 400, 401, 429 |
 | GET | `/auth/eu` | logado | 200 | 401, 404 |
+| PUT | `/auth/perfil` | logado | 200 | 400, 401, 503 |
 | GET | `/categorias`, `/locais` | público | 200 | 500 |
 | POST | `/categorias` | adm | 201 | 400, 401, 403 |
 | POST | `/locais` | organizador, adm | 201 | 400, 401, 403 |

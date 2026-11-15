@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const usuarios = require('../repositorios/usuarios');
 const { ehDuplicado } = require('../repositorios/transacao');
 const { autenticar } = require('../middleware/auth');
+const { limiteLogin, registrarFalha, limparFalhas } = require('../middleware/limiteLogin');
+const { salvarFotoPerfil } = require('../lib/storage');
 
 const router = express.Router();
 // conta de adm nao sai por cadastro aberto, so pelo seed ou direto no banco
@@ -65,7 +67,7 @@ router.post('/cadastro', async (req, res) => {
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', limiteLogin, async (req, res) => {
   const { senha } = req.body;
   const email = normalizarEmail(req.body.email);
   if (!email || !senha) {
@@ -76,9 +78,11 @@ router.post('/login', async (req, res) => {
 
   // mesma resposta pros dois casos, pra nao dizer se o email existe ou nao
   if (!usuario || !(await bcrypt.compare(senha, usuario.senha_hash))) {
+    registrarFalha(req);
     return res.status(401).json({ erro: 'email ou senha incorretos' });
   }
 
+  limparFalhas(req);
   delete usuario.senha_hash;
   return res.json({ usuario, token: gerarToken(usuario) });
 });
@@ -94,13 +98,20 @@ router.get('/eu', autenticar, async (req, res) => {
 router.put('/perfil', autenticar, async (req, res) => {
   const nome = String(req.body.nome || '').trim();
   const telefone = String(req.body.telefone || '').trim();
-  const fotoPerfil = req.body.foto_perfil === null ? null : String(req.body.foto_perfil || '');
+  const fotoRecebida = req.body.foto_perfil === null ? null : String(req.body.foto_perfil || '');
 
   if (!nome) return res.status(400).json({ erro: 'nome e obrigatorio' });
   if (nome.length > 120) return res.status(400).json({ erro: 'nome muito longo' });
   if (telefone.length > 20) return res.status(400).json({ erro: 'telefone muito longo' });
-  if (fotoPerfil && (!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(fotoPerfil) || fotoPerfil.length > 2_800_000)) {
-    return res.status(400).json({ erro: 'foto invalida ou maior que 2 MB' });
+  let fotoPerfil = fotoRecebida;
+  if (fotoRecebida?.startsWith('data:')) {
+    try {
+      fotoPerfil = await salvarFotoPerfil(req.usuario.id, fotoRecebida);
+    } catch (e) {
+      return res.status(e.status || 500).json({ erro: e.message });
+    }
+  } else if (fotoRecebida && !fotoRecebida.startsWith(`${process.env.SUPABASE_URL || ''}/storage/`)) {
+    return res.status(400).json({ erro: 'foto invalida' });
   }
 
   await usuarios.atualizarPerfil(req.usuario.id, { nome, telefone, fotoPerfil });

@@ -80,6 +80,28 @@ const cadRepetido = await api('POST', '/auth/cadastro', { nome: 'Outro', email: 
 check('nao cria conta repetida mudando so as maiusculas', cadRepetido.status === 409, cadRepetido.body.erro)
 const eu = await api('GET', '/auth/eu', null, org)
 check('/auth/eu devolve o usuario logado', eu.body.tipo === 'organizador', eu.body.nome)
+const perfilAtualizado = await api(
+  'PUT',
+  '/auth/perfil',
+  { nome: 'Lucas Perfil Atualizado', telefone: '(11) 99999-0000', foto_perfil: null },
+  org,
+)
+check('perfil atualiza nome e telefone', perfilAtualizado.status === 200
+  && perfilAtualizado.body.nome === 'Lucas Perfil Atualizado'
+  && perfilAtualizado.body.telefone === '(11) 99999-0000')
+const perfilConsultado = await api('GET', '/auth/eu', null, org)
+check('perfil atualizado permanece salvo', perfilConsultado.body.nome === 'Lucas Perfil Atualizado')
+const fotoInvalida = await api('PUT', '/auth/perfil', {
+  nome: 'Lucas Perfil Atualizado',
+  foto_perfil: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP',
+}, org)
+check('perfil rejeita formato de foto invalido', fotoInvalida.status === 400)
+const emailLimitado = `limite.${n}@tt.com`
+for (let tentativa = 0; tentativa < 5; tentativa += 1) {
+  await api('POST', '/auth/login', { email: emailLimitado, senha: 'errada' })
+}
+const bloqueioLogin = await api('POST', '/auth/login', { email: emailLimitado, senha: 'errada' })
+check('login bloqueia excesso de tentativas', bloqueioLogin.status === 429)
 
 // 2. permissao por perfil
 const semPermissao = await api('POST', '/categorias', { nome: 'Teste' }, org)
