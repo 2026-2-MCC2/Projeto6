@@ -109,6 +109,94 @@
     border-color 160ms var(--suave);
 }
 
+.chat-item-linha-lista {
+  position: relative;
+}
+
+.chat-item-linha-lista > .chat-item {
+  padding-right: 48px;
+}
+
+.chat-item-acoes {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.chat-item-menu-botao {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.chat-item-menu-botao:hover,
+.chat-item-menu-botao:focus-visible {
+  border-color: var(--contorno);
+  background: var(--field-bg);
+  color: var(--text);
+}
+
+.chat-item-menu {
+  position: absolute;
+  z-index: 3;
+  top: 36px;
+  right: 0;
+  display: grid;
+  width: 190px;
+  padding: 6px;
+  background: var(--surface);
+  border: 2px solid var(--contorno);
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
+}
+
+.chat-item-menu button {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.chat-item-menu button:hover,
+.chat-item-menu button:focus-visible {
+  background: var(--field-bg);
+}
+
+.chat-item-menu button span {
+  width: 16px;
+  color: var(--accent);
+  font-size: 18px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.chat-item-menu button.is-perigo {
+  color: var(--negative);
+}
+
+.chat-item-menu button.is-perigo span {
+  color: var(--negative);
+}
+
 .chat-item:hover {
   border-color: var(--contorno);
   transform: translate(-2px, -2px);
@@ -125,6 +213,18 @@
   display: grid;
   gap: 2px;
   min-width: 0;
+}
+
+.chat-item-fixada {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 5px;
+  color: var(--accent);
+  vertical-align: middle;
+}
+
+.chat-item-fixada svg {
+  transform: rotate(45deg);
 }
 
 .chat-item-linha {

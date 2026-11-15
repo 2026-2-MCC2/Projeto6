@@ -94,6 +94,8 @@ export const pedidos = {
 
 export const chats = {
   lista: () => get('/chats'),
+  excluir: (id) => del(`/chats/${id}`),
+  fixar: (id, fixada) => put(`/chats/${id}/fixada`, { fixada }),
   naoLidas: () => get('/chats/nao-lidas'),
   contatos: (busca = '') => get(`/chats/contatos?busca=${encodeURIComponent(busca)}`),
   // abre (ou reaproveita) a conversa direta: { id_usuario, mensagem?, assunto? }
@@ -101,7 +103,7 @@ export const chats = {
   // cabecalho + mensagens; com "depois", so as mensagens novas
   conversa: (id, depois = 0) => get(`/chats/${id}?depois=${depois}`),
   enviar: (id, texto) => post(`/chats/${id}/mensagens`, { texto }),
-  excluir: (idChat, idMensagem) => del(`/chats/${idChat}/mensagens/${idMensagem}`),
+  excluirMensagem: (idChat, idMensagem) => del(`/chats/${idChat}/mensagens/${idMensagem}`),
   lida: (id, ate) => post(`/chats/${id}/lida`, { ate }),
 }
 

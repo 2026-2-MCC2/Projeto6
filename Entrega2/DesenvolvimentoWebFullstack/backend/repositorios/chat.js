@@ -19,6 +19,30 @@ async function participa(idChat, idUsuario) {
   return linhas.length > 0;
 }
 
+async function ocultarConversa(idChat, idUsuario) {
+  const [r] = await pool.query(
+    'update chat_participante set apagado_em = current_timestamp where id_chat = ? and id_usuario = ?',
+    [idChat, idUsuario],
+  );
+  return r.affectedRows > 0;
+}
+
+async function reabrirConversa(idChat, idUsuario) {
+  await pool.query(
+    'update chat_participante set apagado_em = null where id_chat = ? and id_usuario = ?',
+    [idChat, idUsuario],
+  );
+}
+
+async function fixarConversa(idChat, idUsuario, fixada) {
+  await pool.query(
+    `update chat_participante
+        set fixado_em = ${fixada ? 'current_timestamp' : 'null'}
+      where id_chat = ? and id_usuario = ?`,
+    [idChat, idUsuario],
+  );
+}
+
 // as conversas da pessoa, da mais recente para a mais antiga (pela ultima
 // mensagem). O left join cobre os dois tipos de chat: o que nasceu de uma
 // solicitacao e a conversa direta.
@@ -28,12 +52,14 @@ async function doUsuario(idUsuario) {
             s.nome as servico, ss.status,
             um.texto_mensagem as ultima_mensagem, um.criado_em as ultima_em,
             um.id_remetente as ultimo_remetente,
+            (cp.fixado_em is not null) as fixada,
             (select count(*)::int from mensagem m
               where m.id_chat = ch.id_chat and m.id_remetente <> ?
                 and m.id_mensagem > coalesce(cp.ultima_lida, 0)) as nao_lidas,
             o.id_usuario as com_id, o.nome as com_quem, o.tipo as com_tipo, o.empresa as com_empresa
        from chat ch
        join chat_participante cp on cp.id_chat = ch.id_chat and cp.id_usuario = ?
+                                      and cp.apagado_em is null
        left join lateral (
              select texto_mensagem, criado_em, id_remetente from mensagem
               where id_chat = ch.id_chat order by id_mensagem desc limit 1) um on true
@@ -47,7 +73,8 @@ async function doUsuario(idUsuario) {
        left join solicitacao_servico ss on ss.id_solicitacao = ch.id_solicitacao
        left join servico s on s.id_servico = ss.id_servico
        left join evento e on e.id_evento = ss.id_evento
-      order by coalesce(um.criado_em, ch.criado_em) desc, ch.id_chat desc`,
+      order by (cp.fixado_em is not null) desc,
+               coalesce(um.criado_em, ch.criado_em) desc, ch.id_chat desc`,
     [idUsuario, idUsuario, idUsuario],
   );
   return linhas;
@@ -59,7 +86,8 @@ async function naoLidas(idUsuario) {
     `select count(*)::int as total, count(distinct m.id_chat)::int as conversas
        from chat_participante cp
        join mensagem m on m.id_chat = cp.id_chat
-      where cp.id_usuario = ? and m.id_remetente <> ?
+       where cp.id_usuario = ? and cp.apagado_em is null
+         and m.id_remetente <> ?
         and m.id_mensagem > coalesce(cp.ultima_lida, 0)`,
     [idUsuario, idUsuario],
   );
@@ -193,6 +221,10 @@ async function enviarMensagem({ idChat, idRemetente, texto }, conexao = pool) {
     'update chat_participante set ultima_lida = ? where id_chat = ? and id_usuario = ?',
     [r.insertId, idChat, idRemetente],
   );
+  await conexao.query(
+    'update chat_participante set apagado_em = null where id_chat = ?',
+    [idChat],
+  );
   return r.rows[0];
 }
 
@@ -218,6 +250,9 @@ async function marcarLida(idChat, idUsuario, ate) {
 
 module.exports = {
   participa,
+  ocultarConversa,
+  reabrirConversa,
+  fixarConversa,
   doUsuario,
   naoLidas,
   detalhe,

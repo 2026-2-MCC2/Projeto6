@@ -9,6 +9,7 @@
 //   GET    /api/chats/:id/mensagens    so as mensagens
 //   POST   /api/chats/:id/mensagens    envia mensagem
 //   DELETE /api/chats/:id/mensagens/:idMensagem apaga a propria mensagem
+//   DELETE /api/chats/:id                   oculta a conversa para a pessoa
 //   POST   /api/chats/:id/lida         marca como lida ate a mensagem "ate"
 const express = require('express');
 const chat = require('../repositorios/chat');
@@ -68,6 +69,7 @@ router.post('/', async (req, res) => {
 
   const existe = await chat.conversaDiretaEntre(eu.id_usuario, outro.id_usuario);
   const assunto = String(req.body.assunto || '').trim().slice(0, 140) || null;
+  if (existe) await chat.reabrirConversa(existe, eu.id_usuario);
 
   const idChat = await emTransacao(async (conexao) => {
     const id = existe || await chat.criarConversaDireta(
@@ -96,6 +98,23 @@ router.get('/:id/mensagens', async (req, res) => {
   const idChat = await soParticipante(req, res);
   if (!idChat) return;
   res.json(await chat.mensagens(idChat, idOuZero(req.query.depois)));
+});
+
+router.delete('/:id', async (req, res) => {
+  const idChat = await soParticipante(req, res);
+  if (!idChat) return;
+  await chat.ocultarConversa(idChat, req.usuario.id);
+  res.json({ id_chat: idChat, apagada: true });
+});
+
+router.put('/:id/fixada', async (req, res) => {
+  const idChat = await soParticipante(req, res);
+  if (!idChat) return;
+  if (typeof req.body.fixada !== 'boolean') {
+    return res.status(400).json({ erro: 'informe se a conversa deve ficar fixada' });
+  }
+  await chat.fixarConversa(idChat, req.usuario.id, req.body.fixada);
+  res.json({ id_chat: idChat, fixada: req.body.fixada });
 });
 
 router.post('/:id/mensagens', async (req, res) => {

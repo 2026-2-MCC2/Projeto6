@@ -170,7 +170,7 @@ export default function Conversa({ idChat, rascunho, eu, onVoltar, onCriada, onL
     if (!mensagemParaApagar) return
     setApagando(true)
     try {
-      await chats.excluir(idChat, mensagemParaApagar.id_mensagem)
+      await chats.excluirMensagem(idChat, mensagemParaApagar.id_mensagem)
       setMensagens((atuais) => atuais.filter((m) => m.id_mensagem !== mensagemParaApagar.id_mensagem))
       setMensagemParaApagar(null)
     } catch (e) {

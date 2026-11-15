@@ -426,6 +426,10 @@ CREATE TABLE chat_participante (
   id_usuario  INT NOT NULL,
   -- id da ultima mensagem que a pessoa ja viu (o resto conta como nao lido)
   ultima_lida INT NULL,
+  -- quando a conversa foi ocultada por este participante
+  apagado_em  TIMESTAMP NULL,
+  -- quando a conversa foi fixada por este participante
+  fixado_em   TIMESTAMP NULL,
   PRIMARY KEY (id_chat, id_usuario),
   CONSTRAINT fk_participante_chat FOREIGN KEY (id_chat)
     REFERENCES chat (id_chat) ON DELETE CASCADE,

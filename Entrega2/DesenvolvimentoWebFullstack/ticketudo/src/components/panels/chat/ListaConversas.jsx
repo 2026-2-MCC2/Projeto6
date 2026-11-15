@@ -10,8 +10,11 @@ const normalizar = (texto) =>
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
 
-export default function ListaConversas({ conversas, eu, situacao, onAbrir, onNova }) {
+export default function ListaConversas({ conversas, eu, situacao, onAbrir, onFixar, onExcluir, onNova }) {
   const [busca, setBusca] = useState('')
+  const [menuAberto, setMenuAberto] = useState(null)
+  const [confirmando, setConfirmando] = useState(null)
+  const [excluindo, setExcluindo] = useState(false)
   const termo = normalizar(busca.trim())
   const filtradas = termo
     ? conversas.filter((c) =>
@@ -66,7 +69,7 @@ export default function ListaConversas({ conversas, eu, situacao, onAbrir, onNov
             const minha = c.ultimo_remetente === eu.id
             const novas = c.nao_lidas > 0
             return (
-              <li key={c.id_chat}>
+              <li key={c.id_chat} className="chat-item-linha-lista">
                 <button
                   type="button"
                   className={novas ? 'chat-item is-nova' : 'chat-item'}
@@ -76,6 +79,12 @@ export default function ListaConversas({ conversas, eu, situacao, onAbrir, onNov
                   <span className="chat-item-texto">
                     <span className="chat-item-linha">
                       <strong>{nome}</strong>
+                      {c.fixada ? (
+                        <span className="chat-item-fixada" title="Conversa fixada">
+                          <Icon name="pin" size={14} />
+                          <span className="sr-only">Conversa fixada</span>
+                        </span>
+                      ) : null}
                       <time>{quandoCurto(c.ultima_em || c.criado_em)}</time>
                     </span>
                     <small className="chat-item-sobre">{sobre}</small>
@@ -94,11 +103,86 @@ export default function ListaConversas({ conversas, eu, situacao, onAbrir, onNov
                     </span>
                   </span>
                 </button>
+                <div className="chat-item-acoes">
+                  <button
+                    type="button"
+                    className="chat-item-menu-botao"
+                    aria-label={`Ações da conversa com ${nome}`}
+                    aria-expanded={menuAberto === c.id_chat}
+                    onClick={() => setMenuAberto((aberto) => (aberto === c.id_chat ? null : c.id_chat))}
+                  >
+                    <span aria-hidden="true">⋮</span>
+                  </button>
+                  {menuAberto === c.id_chat ? (
+                    <div className="chat-item-menu" role="menu">
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={async () => {
+                          await onFixar(c)
+                          setMenuAberto(null)
+                        }}
+                      >
+                        <span aria-hidden="true">{c.fixada ? '−' : '+'}</span>
+                        {c.fixada ? 'Desfixar conversa' : 'Fixar conversa'}
+                      </button>
+                      <button
+                        type="button"
+                        role="menuitem"
+                        className="is-perigo"
+                        onClick={() => {
+                          setMenuAberto(null)
+                          setConfirmando(c)
+                        }}
+                      >
+                        <span aria-hidden="true">×</span>
+                        Apagar conversa
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
               </li>
             )
           })}
         </ul>
       )}
+      {confirmando ? (
+        <div className="chat-modal-fundo" role="presentation" onClick={() => !excluindo && setConfirmando(null)}>
+          <div
+            className="chat-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="excluir-conversa-titulo"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="chat-modal-icone" aria-hidden="true">!</div>
+            <small className="eyebrow">Conversa</small>
+            <h2 id="excluir-conversa-titulo">Excluir conversa?</h2>
+            <p>A conversa será removida da sua lista, mas o histórico do outro participante será preservado.</p>
+            <div className="chat-modal-acoes">
+              <button type="button" className="btn-secondary" onClick={() => setConfirmando(null)} disabled={excluindo}>
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="btn-danger"
+                disabled={excluindo}
+                onClick={async () => {
+                  setExcluindo(true)
+                  try {
+                    await onExcluir(confirmando)
+                    setConfirmando(null)
+                  } finally {
+                    setExcluindo(false)
+                  }
+                }}
+              >
+                {excluindo ? 'Excluindo…' : 'Excluir conversa'}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

@@ -118,6 +118,24 @@ export default function ChatPanel({ opcoes, onMudou }) {
       eu={eu}
       situacao={situacao}
       onAbrir={(c) => setTela({ nome: 'conversa', idChat: c.id_chat })}
+      onFixar={async (c) => {
+        const fixada = !c.fixada
+        await chats.fixar(c.id_chat, fixada)
+        setLista((atual) => ({
+          ...atual,
+          dados: atual.dados
+            .map((item) => (item.id_chat === c.id_chat ? { ...item, fixada } : item))
+            .sort((a, b) => Number(b.fixada) - Number(a.fixada)),
+        }))
+      }}
+      onExcluir={async (c) => {
+        await chats.excluir(c.id_chat)
+        setLista((atual) => ({
+          ...atual,
+          dados: atual.dados.filter((item) => item.id_chat !== c.id_chat),
+        }))
+        onMudou?.()
+      }}
       onNova={() => setTela({ nome: 'nova' })}
     />
   )
