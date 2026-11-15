@@ -6,7 +6,11 @@ const path = require('path');
 const bd = require('../config/bd');
 
 async function main() {
-  const arquivo = path.join(__dirname, '..', '..', '..', 'tabelas_bd', 'seed_demo.sql');
+  const pastaEntrega2 = path.join(__dirname, '..', '..', '..', 'tabelas_bd');
+  const pasta = fs.existsSync(pastaEntrega2)
+    ? pastaEntrega2
+    : path.join(__dirname, '..', '..', '..', '..', 'Entrega1', 'tabelas_bd');
+  const arquivo = path.join(pasta, 'seed_demo.sql');
   const cliente = await bd.conectar();
   try {
     await cliente.query(fs.readFileSync(arquivo, 'utf8'));

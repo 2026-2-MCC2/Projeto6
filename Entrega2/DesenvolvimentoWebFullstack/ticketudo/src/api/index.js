@@ -97,6 +97,7 @@ export const chats = {
   // cabecalho + mensagens; com "depois", so as mensagens novas
   conversa: (id, depois = 0) => get(`/chats/${id}?depois=${depois}`),
   enviar: (id, texto) => post(`/chats/${id}/mensagens`, { texto }),
+  excluir: (idChat, idMensagem) => del(`/chats/${idChat}/mensagens/${idMensagem}`),
   lida: (id, ate) => post(`/chats/${id}/lida`, { ate }),
 }
 

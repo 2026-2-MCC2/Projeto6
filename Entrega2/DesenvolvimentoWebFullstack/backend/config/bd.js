@@ -71,7 +71,10 @@ function bancoLocal() {
   const fs = require('fs');
   const path = require('path');
   const pasta = path.join(__dirname, '..', '.banco-local');
-  const sqls = path.join(__dirname, '..', '..', '..', 'tabelas_bd');
+  const sqlsEntrega2 = path.join(__dirname, '..', '..', '..', 'tabelas_bd');
+  const sqls = fs.existsSync(sqlsEntrega2)
+    ? sqlsEntrega2
+    : path.join(__dirname, '..', '..', '..', '..', 'Entrega1', 'tabelas_bd');
 
   let pronto;
   function abrir() {

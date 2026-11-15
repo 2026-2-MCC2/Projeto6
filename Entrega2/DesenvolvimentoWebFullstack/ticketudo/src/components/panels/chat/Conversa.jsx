@@ -42,6 +42,8 @@ export default function Conversa({ idChat, rascunho, eu, onVoltar, onCriada, onL
   const [carregando, setCarregando] = useState(Boolean(idChat))
   const [erro, setErro] = useState(null)
   const [novasAbaixo, setNovasAbaixo] = useState(0)
+  const [mensagemParaApagar, setMensagemParaApagar] = useState(null)
+  const [apagando, setApagando] = useState(false)
 
   const lista = useRef(null)
   const rolarParaFim = useRef(true)
@@ -164,6 +166,20 @@ export default function Conversa({ idChat, rascunho, eu, onVoltar, onCriada, onL
     }
   }
 
+  async function excluir() {
+    if (!mensagemParaApagar) return
+    setApagando(true)
+    try {
+      await chats.excluir(idChat, mensagemParaApagar.id_mensagem)
+      setMensagens((atuais) => atuais.filter((m) => m.id_mensagem !== mensagemParaApagar.id_mensagem))
+      setMensagemParaApagar(null)
+    } catch (e) {
+      setErro(e)
+    } finally {
+      setApagando(false)
+    }
+  }
+
   const outros = (dados?.participantes ?? []).filter((p) => p.id_usuario !== eu.id)
   const pessoa = outros[0] ?? rascunho?.pessoa ?? null
   const grupo = outros.length > 1
@@ -227,6 +243,11 @@ export default function Conversa({ idChat, rascunho, eu, onVoltar, onCriada, onL
                   <Texto texto={m.texto_mensagem} />
                 </p>
                 <time dateTime={new Date(m.criado_em).toISOString()}>{hora(m.criado_em)}</time>
+                {minha ? (
+                  <button type="button" className="chat-apagar" onClick={() => setMensagemParaApagar(m)} aria-label="Apagar mensagem">
+                    Apagar
+                  </button>
+                ) : null}
               </div>
               {minha && m === minhaUltima && m === ultimaDeTodas && pendentes.length === 0 ? (
                 <small className="chat-status">{vistoAte >= m.id_mensagem ? 'Visto' : 'Enviada'}</small>
@@ -270,6 +291,31 @@ export default function Conversa({ idChat, rascunho, eu, onVoltar, onCriada, onL
           placeholder={pessoa ? `Mensagem para ${pessoa.nome.split(' ')[0]}…` : undefined}
         />
       )}
+
+      {mensagemParaApagar ? (
+        <div className="chat-modal-fundo" role="presentation" onClick={() => !apagando && setMensagemParaApagar(null)}>
+          <div
+            className="chat-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="apagar-mensagem-titulo"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="chat-modal-icone" aria-hidden="true">!</div>
+            <small className="eyebrow">Mensagem</small>
+            <h2 id="apagar-mensagem-titulo">Apagar mensagem?</h2>
+            <p>Essa ação remove a mensagem da conversa e não pode ser desfeita.</p>
+            <div className="chat-modal-acoes">
+              <button type="button" className="btn-secondary" onClick={() => setMensagemParaApagar(null)} disabled={apagando}>
+                Cancelar
+              </button>
+              <button type="button" className="btn-danger" onClick={excluir} disabled={apagando}>
+                {apagando ? 'Apagando…' : 'Apagar mensagem'}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

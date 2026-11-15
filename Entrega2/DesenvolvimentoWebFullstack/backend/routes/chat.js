@@ -8,6 +8,7 @@
 //   GET    /api/chats/:id?depois=      cabecalho + mensagens (so as novas com "depois")
 //   GET    /api/chats/:id/mensagens    so as mensagens
 //   POST   /api/chats/:id/mensagens    envia mensagem
+//   DELETE /api/chats/:id/mensagens/:idMensagem apaga a propria mensagem
 //   POST   /api/chats/:id/lida         marca como lida ate a mensagem "ate"
 const express = require('express');
 const chat = require('../repositorios/chat');
@@ -110,6 +111,17 @@ router.post('/:id/mensagens', async (req, res) => {
     remetente: req.usuario.nome,
     tipo_remetente: req.usuario.tipo,
   });
+});
+
+router.delete('/:id/mensagens/:idMensagem', async (req, res) => {
+  const idChat = await soParticipante(req, res);
+  if (!idChat) return;
+  const idMensagem = idOuZero(req.params.idMensagem);
+  if (!idMensagem) return res.status(400).json({ erro: 'mensagem invalida' });
+
+  const apagada = await chat.excluirMensagem(idChat, idMensagem, req.usuario.id);
+  if (!apagada) return res.status(404).json({ erro: 'mensagem nao encontrada ou nao pertence a voce' });
+  res.json({ id_mensagem: idMensagem, apagada: true });
 });
 
 router.post('/:id/lida', async (req, res) => {

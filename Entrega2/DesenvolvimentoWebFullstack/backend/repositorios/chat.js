@@ -196,6 +196,14 @@ async function enviarMensagem({ idChat, idRemetente, texto }, conexao = pool) {
   return r.rows[0];
 }
 
+async function excluirMensagem(idChat, idMensagem, idRemetente) {
+  const [r] = await pool.query(
+    'delete from mensagem where id_mensagem = ? and id_chat = ? and id_remetente = ?',
+    [idMensagem, idChat, idRemetente],
+  );
+  return r.affectedRows > 0;
+}
+
 // marca como lido ate a mensagem "ate" (nunca volta para tras e nunca passa
 // da ultima mensagem que existe na conversa)
 async function marcarLida(idChat, idUsuario, ate) {
@@ -220,5 +228,6 @@ module.exports = {
   abrirDaSolicitacao,
   mensagens,
   enviarMensagem,
+  excluirMensagem,
   marcarLida,
 };

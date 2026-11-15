@@ -5,7 +5,10 @@ const fs = require('fs');
 const path = require('path');
 const bd = require('../config/bd');
 
-const pasta = path.join(__dirname, '..', '..', '..', 'tabelas_bd');
+const pastaEntrega2 = path.join(__dirname, '..', '..', '..', 'tabelas_bd');
+const pasta = fs.existsSync(pastaEntrega2)
+  ? pastaEntrega2
+  : path.join(__dirname, '..', '..', '..', '..', 'Entrega1', 'tabelas_bd');
 const arquivos = ['trocaticket.sql', 'seed.sql'];
 
 async function main() {
