@@ -7,6 +7,7 @@ import { guardarToken } from '../api/client'
 import { profiles, roleOrder } from '../data/profiles'
 import { TIPO_POR_PAPEL } from '../state/reducer'
 import { useApp } from '../state/useApp'
+import { mascaraCpf, mascaraTelefone } from '../utils/format'
 import './Login.css'
 
 const formVazio = { nome: '', email: '', cpf: '', telefone: '', senha: '' }
@@ -193,7 +194,7 @@ export default function Login({ onBack }) {
                       inputMode="numeric"
                       autoComplete="off"
                       value={form.cpf}
-                      onChange={(e) => atualizar('cpf', e.target.value)}
+                      onChange={(e) => atualizar('cpf', mascaraCpf(e.target.value))}
                       placeholder="000.000.000-00…"
                     />
                   </Field>
@@ -204,7 +205,7 @@ export default function Login({ onBack }) {
                       type="tel"
                       autoComplete="tel"
                       value={form.telefone}
-                      onChange={(e) => atualizar('telefone', e.target.value)}
+                      onChange={(e) => atualizar('telefone', mascaraTelefone(e.target.value))}
                       placeholder="(11) 99999-0000…"
                     />
                   </Field>

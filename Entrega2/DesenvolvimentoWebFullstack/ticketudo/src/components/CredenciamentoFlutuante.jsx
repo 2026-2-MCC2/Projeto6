@@ -4,6 +4,7 @@ import { catalogo, credenciamento } from '../api'
 import { AREAS_FORNECEDOR, DECLARACAO } from '../data/credenciamento'
 import { useApp } from '../state/useApp'
 import { cnpj, soData, telefone } from '../utils/format'
+import { mascaraCnpj, mascaraTelefone } from '../utils/format'
 import { UFS, cnpjValido, soDigitos, telefoneValido } from '../utils/validacao'
 import './CredenciamentoFlutuante.css'
 
@@ -224,7 +225,7 @@ function Formulario({ perfil, dados, recusado, onEnviado }) {
             <input
               id="cred-cnpj"
               value={form.cnpj}
-              onChange={(e) => mudar('cnpj', e.target.value)}
+              onChange={(e) => mudar('cnpj', mascaraCnpj(e.target.value))}
               placeholder="00.000.000/0001-00"
               inputMode="numeric"
             />
@@ -258,7 +259,7 @@ function Formulario({ perfil, dados, recusado, onEnviado }) {
           id="cred-telefone"
           type="tel"
           value={form.telefone}
-          onChange={(e) => mudar('telefone', e.target.value)}
+          onChange={(e) => mudar('telefone', mascaraTelefone(e.target.value))}
           placeholder="(11) 98888-7777"
           autoComplete="tel"
         />

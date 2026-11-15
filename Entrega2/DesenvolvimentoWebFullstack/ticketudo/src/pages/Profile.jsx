@@ -5,6 +5,7 @@ import Field from '../components/Field'
 import PageHeading from '../components/PageHeading'
 import { auth } from '../api'
 import { iniciais } from '../state/reducer'
+import { mascaraTelefone } from '../utils/format'
 import { useApp } from '../state/useApp'
 import './Profile.css'
 
@@ -30,7 +31,7 @@ export default function Profile({ profile }) {
         setDados(usuario)
         setForm({
           nome: usuario.nome || '',
-          telefone: usuario.telefone || '',
+          telefone: mascaraTelefone(usuario.telefone || ''),
           foto_perfil: usuario.foto_perfil || null,
         })
       })
@@ -64,7 +65,7 @@ export default function Profile({ profile }) {
     try {
       const usuario = await auth.atualizarPerfil(form)
       setDados(usuario)
-      setForm({ nome: usuario.nome, telefone: usuario.telefone || '', foto_perfil: usuario.foto_perfil || null })
+      setForm({ nome: usuario.nome, telefone: mascaraTelefone(usuario.telefone || ''), foto_perfil: usuario.foto_perfil || null })
       dispatch({ type: 'sessao/restaurada', usuario })
       dispatch({ type: 'aviso', texto: 'Perfil atualizado.' })
     } catch (e) {
@@ -118,7 +119,7 @@ export default function Profile({ profile }) {
               <input value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} maxLength={120} required />
             </Field>
             <Field label="Telefone">
-              <input value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} maxLength={20} placeholder="(11) 99999-9999" />
+              <input value={form.telefone} onChange={(e) => setForm({ ...form, telefone: mascaraTelefone(e.target.value) })} maxLength={20} placeholder="(11) 99999-9999" />
             </Field>
           </div>
           {erro ? <p className="form-erro">{erro}</p> : null}
