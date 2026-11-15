@@ -1,13 +1,14 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
 const usuarios = require('../repositorios/usuarios');
 const { ehDuplicado } = require('../repositorios/transacao');
 const { autenticar } = require('../middleware/auth');
 const { limiteLogin, registrarFalha, limparFalhas } = require('../middleware/limiteLogin');
 const { salvarFotoPerfil } = require('../lib/storage');
 const { enviarCodigoRedefinicao } = require('../lib/mailer');
+const { validarCredencialGoogle } = require('../lib/google');
+const { gerarCodigo, hashCodigo, codigoConfere, codigoExpirado } = require('../lib/recovery');
 
 const router = express.Router();
 // conta de adm nao sai por cadastro aberto, so pelo seed ou direto no banco
@@ -27,27 +28,8 @@ function gerarToken(usuario) {
   );
 }
 
-function codigoHash(codigo) {
-  return crypto.createHash('sha256').update(`${codigo}:${process.env.JWT_SECRET}`).digest('hex');
-}
-
-function gerarCodigo() {
-  return String(crypto.randomInt(100000, 1000000));
-}
-
 async function usuarioGoogle(credential) {
-  if (!process.env.GOOGLE_CLIENT_ID) throw new Error('GOOGLE_CLIENT_ID nao configurado');
-  const resposta = await fetch(
-    `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`,
-  );
-  const dados = await resposta.json().catch(() => null);
-  if (!resposta.ok || dados?.aud !== process.env.GOOGLE_CLIENT_ID || dados?.email_verified !== 'true') {
-    return null;
-  }
-  return {
-    nome: String(dados.name || dados.email.split('@')[0]).slice(0, 120),
-    email: normalizarEmail(dados.email),
-  };
+  return validarCredencialGoogle(credential, process.env.GOOGLE_CLIENT_ID);
 }
 
 router.post('/cadastro', async (req, res) => {
@@ -143,7 +125,7 @@ router.post('/recuperar', async (req, res) => {
     const codigo = gerarCodigo();
     await usuarios.criarCodigoRedefinicao({
       idUsuario: usuario.id_usuario,
-      codigoHash: codigoHash(codigo),
+      codigoHash: hashCodigo(codigo, process.env.JWT_SECRET),
       expiraEm: new Date(Date.now() + 15 * 60 * 1000),
     });
     await enviarCodigoRedefinicao(email, codigo);
@@ -160,15 +142,11 @@ router.post('/recuperar/redefinir', async (req, res) => {
   }
 
   const registro = await usuarios.buscarCodigoRedefinicao(email);
-  const codigoRecebido = Buffer.from(codigoHash(codigo), 'utf8');
-  const codigoEsperado = Buffer.from(registro?.codigo_hash || '', 'utf8');
-  const codigoValido =
-    codigoRecebido.length === codigoEsperado.length &&
-    crypto.timingSafeEqual(codigoRecebido, codigoEsperado);
+  const codigoValido = codigoConfere(codigo, registro?.codigo_hash, process.env.JWT_SECRET);
   if (
     !registro ||
     registro.tentativas >= 5 ||
-    new Date(registro.expira_em).getTime() <= Date.now() ||
+    codigoExpirado(registro.expira_em) ||
     !codigoValido
   ) {
     if (registro && registro.tentativas < 5) await usuarios.aumentarTentativasCodigo(registro.id_codigo);

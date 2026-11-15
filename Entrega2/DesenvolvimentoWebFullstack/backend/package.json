@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --ignore .banco-local server.js",
     "start": "node server.js",
-    "test": "node --test testes/ticket.mjs && node testes/fluxo.mjs",
+    "test": "node --test testes/ticket.mjs testes/auth.mjs && node testes/fluxo.mjs",
     "db:reset": "node scripts/reset-db.js",
     "db:demo": "node scripts/demo-db.js"
   },
@@ -17,7 +17,7 @@
     "dotenv": "^18.0.5",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "nodemailer": "^7.0.11",
+    "nodemailer": "^10.5.0",
     "pg": "^8.23.1"
   },
   "devDependencies": {
