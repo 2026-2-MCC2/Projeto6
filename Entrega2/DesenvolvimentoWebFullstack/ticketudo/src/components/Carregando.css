@@ -1,0 +1,371 @@
+/* ==========================================================================
+   Carregamento (modelo Noite, VIS-05)
+
+   No desenho da tela de carregamento da agencia Benjamin: a marca entra
+   por mascara, adesivos saltam, a barra de adesivo enche e o letreiro da
+   pagina inicial corre numa faixa. Tudo em CSS, so com transform, opacity
+   e clip-path. Com menos movimento pedido, tudo fica parado.
+   ========================================================================== */
+
+/* --- letreiro: o mesmo da pagina inicial, correndo sozinho --- */
+
+.carregando-letreiro {
+  overflow: clip;
+  background: var(--tt-noite);
+  color: var(--tt-lilas);
+  border-block: 3px solid var(--contorno);
+}
+
+/* o respiro do fim do trilho e igual ao vao: andar 25% (uma copia do texto
+   mais um vao) volta exatamente ao mesmo desenho, sem salto */
+.carregando-letreiro-trilho {
+  display: flex;
+  width: max-content;
+  gap: 32px;
+  padding: 12px 32px 12px 0;
+  font-size: clamp(17px, 1.8vw, 24px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  animation: carregando-letreiro 18s linear infinite;
+}
+
+@keyframes carregando-letreiro {
+  to {
+    transform: translateX(-25%);
+  }
+}
+
+/* --- barra de adesivo: contorno grosso, sombra dura, degrade enchendo --- */
+
+.carregando-barra {
+  width: min(18rem, 70vw);
+  height: 18px;
+  overflow: hidden;
+  border: 3px solid var(--contorno);
+  border-radius: 999px;
+  background: var(--tt-papel);
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
+}
+
+.carregando-barra > span {
+  display: block;
+  height: 100%;
+  background: var(--degrade-logo);
+  transform-origin: left;
+  /* enche rapido ate 60% e depois anda devagar: a espera nao tem fim
+     conhecido, entao a barra nunca chega a 100% sozinha */
+  animation: carregando-enche 7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes carregando-enche {
+  0% {
+    transform: scaleX(0.05);
+  }
+
+  14% {
+    transform: scaleX(0.6);
+  }
+
+  100% {
+    transform: scaleX(0.94);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Dentro das telas
+   -------------------------------------------------------------------------- */
+
+/* a espera so aparece na primeira vez de cada tela e fica no minimo 0,9s
+   (useRecurso), entao entra direto, com um fade curto */
+.carregando {
+  animation: carregando-aparece 240ms ease-out both;
+}
+
+@keyframes carregando-aparece {
+  from {
+    opacity: 0;
+  }
+}
+
+/* direto na pagina: faixa roxa de ponta a ponta no lugar do titulo, com
+   barras-fantasma do tamanho do titulo e do texto (igual ao PageHeading) */
+.carregando-faixa {
+  display: none;
+}
+
+.page > .carregando .carregando-faixa {
+  display: grid;
+  gap: 18px;
+  padding: 56px 0 52px;
+  box-shadow: 0 0 0 100vmax var(--bg);
+  clip-path: inset(0 -100vmax);
+}
+
+.carregando-faixa span {
+  display: block;
+  width: min(520px, 72%);
+  height: clamp(36px, 4.6vw, 60px);
+  border-radius: 14px;
+  background: #ffffff38;
+  animation: carregando-pulsa 1.4s ease-in-out infinite alternate;
+}
+
+.carregando-faixa span + span {
+  width: min(380px, 52%);
+  height: 20px;
+  border-radius: 8px;
+  animation-delay: 0.2s;
+}
+
+@keyframes carregando-pulsa {
+  to {
+    opacity: 0.45;
+  }
+}
+
+/* na pagina o letreiro vira uma tira de adesivo, logo abaixo da faixa */
+.page > .carregando .carregando-letreiro {
+  margin-top: 32px;
+  border: 3px solid var(--contorno);
+  border-radius: 999px;
+  box-shadow: 4px 4px 0 0 var(--sombra-dura);
+}
+
+.carregando-corpo {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  padding: 44px 0 24px;
+}
+
+.carregando-corpo p {
+  margin: 0;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* a logo salta como os adesivos da tela cheia */
+.carregando-logo {
+  width: 48px;
+  height: 48px;
+  animation: carregando-salta 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+@keyframes carregando-salta {
+  from {
+    opacity: 0;
+    transform: scale(0.2) rotate(-26deg);
+  }
+}
+
+/* dentro de painel ou secao: compacto, so o letreiro e a barra */
+.carregando .carregando-logo {
+  display: none;
+}
+
+.page > .carregando .carregando-logo {
+  display: block;
+}
+
+.carregando .carregando-letreiro {
+  border-radius: 14px;
+  border-width: 3px;
+  border-style: solid;
+}
+
+.carregando .carregando-corpo {
+  padding: 24px 0 8px;
+}
+
+.page > .carregando .carregando-corpo {
+  padding: 44px 0 24px;
+}
+
+/* --------------------------------------------------------------------------
+   Tela cheia (abertura do site)
+   -------------------------------------------------------------------------- */
+
+.tela-carregando {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--tt-noite);
+  color: var(--tt-papel);
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 600ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* fora da abertura: so aparece se a espera passar de um instante */
+.tela-carregando.is-rapida {
+  animation: carregando-aparece 240ms ease-out 150ms both;
+}
+
+/* saida: a tela sobe como uma cortina e libera a pagina de baixo */
+.tela-carregando.is-saindo {
+  clip-path: inset(0 0 100% 0);
+  pointer-events: none;
+}
+
+.tela-carregando-palco {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(40px, 7vh, 72px);
+  min-height: 0;
+  padding: 24px;
+}
+
+.tela-carregando-marca {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+/* logo e nome entram por mascara, de baixo para cima */
+.tela-carregando-marca img,
+.tela-carregando-marca strong {
+  animation: carregando-mascara 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tela-carregando-marca strong {
+  /* o nome no degrade da logo, como no rodape da pagina inicial */
+  padding-bottom: 0.06em;
+  background: var(--degrade-logo);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(52px, 12vw, 128px);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  animation-delay: 0.08s;
+}
+
+.tela-carregando-marca img {
+  width: clamp(64px, 9vw, 96px);
+  height: auto;
+}
+
+@keyframes carregando-mascara {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(26px);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+/* os dois adesivos: o ingresso picotado e o selo lilas da pagina inicial */
+.tela-carregando-adesivo {
+  position: absolute;
+  border: 3px solid var(--tt-noite);
+  box-shadow: 5px 5px 0 0 var(--tt-roxo);
+  color: var(--tt-noite);
+  font-weight: 900;
+  animation: carregando-salta 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s both;
+}
+
+.tela-carregando-ingresso {
+  top: -30px;
+  left: -112px;
+  display: grid;
+  padding: 8px 16px 10px 20px;
+  border-left: 3px dashed var(--tt-noite);
+  border-radius: 12px;
+  background: var(--tt-papel);
+  font-size: 20px;
+  line-height: 1.1;
+  rotate: -12deg;
+}
+
+.tela-carregando-ingresso small {
+  color: var(--tt-cinza-noite);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* fora do nome, como os adesivos da Benjamin ficam fora do logotipo */
+.tela-carregando-selo {
+  right: -136px;
+  bottom: -44px;
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: var(--tt-lilas);
+  font-size: 15px;
+  line-height: 1.1;
+  text-align: center;
+  rotate: 8deg;
+  animation-delay: 0.4s;
+}
+
+/* na tela cheia o letreiro e lilas com texto azul-noite, no pe da tela */
+.tela-carregando .carregando-letreiro {
+  background: var(--tt-lilas);
+  color: var(--tt-noite);
+  border-bottom: 0;
+}
+
+.carregando-barra-grande {
+  height: 22px;
+}
+
+@media (max-width: 680px) {
+  .tela-carregando-ingresso {
+    top: -78px;
+    left: -4px;
+  }
+
+  .tela-carregando-selo {
+    right: -6px;
+    bottom: -112px;
+    width: 96px;
+    height: 96px;
+    font-size: 13px;
+  }
+
+  .tela-carregando-palco {
+    gap: 136px;
+  }
+}
+
+/* menos movimento: nada anda, a barra fica parada no meio e a saida e seca */
+@media (prefers-reduced-motion: reduce) {
+  .carregando,
+  .carregando-letreiro-trilho,
+  .carregando-faixa span,
+  .carregando-logo,
+  .tela-carregando.is-rapida,
+  .tela-carregando-marca img,
+  .tela-carregando-marca strong,
+  .tela-carregando-adesivo {
+    animation: none;
+  }
+
+  .carregando-barra > span {
+    animation: none;
+    transform: scaleX(0.6);
+  }
+
+  .tela-carregando {
+    transition: none;
+  }
+
+  .tela-carregando.is-saindo {
+    visibility: hidden;
+  }
+}

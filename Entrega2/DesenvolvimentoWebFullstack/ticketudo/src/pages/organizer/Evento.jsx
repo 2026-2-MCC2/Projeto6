@@ -1,0 +1,376 @@
+import { useState } from 'react'
+import Carregando from '../../components/Carregando'
+import EtapasEvento from '../../components/EtapasEvento'
+import PageHeading from '../../components/PageHeading'
+import StatusBadge from '../../components/StatusBadge'
+import CompararPropostas from './CompararPropostas'
+import EventoForm from './EventoForm'
+import PlanilhaCustos from './PlanilhaCustos'
+import { catalogo, eventos } from '../../api'
+import { AREAS_FORNECEDOR } from '../../data/credenciamento'
+import { useRecurso } from '../../hooks/useRecurso'
+import { moeda, numero, periodo, rotulo } from '../../utils/format'
+import { useApp } from '../../state/useApp'
+
+// Tela de um evento do organizador: dados, itens de custo e outros custos
+// (FLX-02), editar e excluir (WEB-05).
+
+const TIPOS_CUSTO = [
+  { id: 'fiscal', label: 'Fiscal' },
+  { id: 'operacional', label: 'Operacional' },
+  { id: 'variavel', label: 'Variável' },
+  { id: 'outro', label: 'Outro' },
+]
+
+const COLUNAS_ITEM = [
+  { campo: 'categoria', rotulo: 'Categoria', tipo: 'select', opcoes: AREAS_FORNECEDOR },
+  { campo: 'descricao', rotulo: 'Descrição', tipo: 'texto', exemplo: 'Iluminação de palco' },
+  { campo: 'quantidade', rotulo: 'Qtd.', tipo: 'inteiro', exemplo: '1' },
+  { campo: 'total_propostas', rotulo: 'Propostas', tipo: 'leitura' },
+  { campo: 'custo_estimado', rotulo: 'Custo estimado (R$)', tipo: 'dinheiro', exemplo: '0,00' },
+]
+
+const COLUNAS_CUSTO = [
+  { campo: 'tipo', rotulo: 'Tipo', tipo: 'select', opcoes: TIPOS_CUSTO },
+  { campo: 'descricao', rotulo: 'Descrição', tipo: 'texto', exemplo: 'ISS, taxa de alvará…' },
+  { campo: 'valor', rotulo: 'Valor (R$)', tipo: 'dinheiro', exemplo: '0,00' },
+]
+
+// em que situacao da pra mexer em cada parte (mesma regra do backend)
+const EDITAVEL = {
+  dados: ['rascunho', 'recusado'],
+  itens: ['rascunho', 'recusado'],
+  custos: ['rascunho', 'recusado', 'em_cotacao', 'cotacao_encerrada'],
+}
+
+// parametro: o id do evento, ou { id, editar: true } para abrir ja editando
+export default function Evento({ parametro, onNavigate, onOpenPanel }) {
+  const id = typeof parametro === 'object' && parametro ? parametro.id : parametro
+  const { dispatch } = useApp()
+  const plano = useRecurso(() => eventos.planejamento(id), id)
+  const categorias = useRecurso(() => catalogo.categorias())
+  const [editando, setEditando] = useState(!!parametro?.editar)
+  const [excluindo, setExcluindo] = useState(false)
+  const [erro, setErro] = useState(null)
+  // muda a cada acao, para a comparacao de propostas buscar de novo
+  const [versao, setVersao] = useState(0)
+  const ticket = useRecurso(() => eventos.ticket(id), `${id}:${versao}`)
+
+  if (!id) {
+    return (
+      <div className="empty-state">
+        <strong>Nenhum evento aberto</strong>
+        <button className="btn-primary" onClick={() => onNavigate('events')}>
+          Ver meus eventos
+        </button>
+      </div>
+    )
+  }
+  if (plano.carregando || plano.erro) return <Carregando erro={plano.erro} aoTentarDeNovo={plano.recarregar} />
+
+  const ev = plano.dados
+  const pode = (parte) => EDITAVEL[parte].includes(ev.status)
+  const orc = ev.orcamento
+  const temPropostas = ev.itens.some((i) => Number(i.total_propostas) > 0)
+  const mostraPropostas = temPropostas || ev.status !== 'rascunho'
+
+  async function acao(fn, aviso) {
+    setErro(null)
+    try {
+      await fn()
+      if (aviso) dispatch({ type: 'aviso', texto: aviso })
+      plano.recarregar()
+      setVersao((v) => v + 1)
+    } catch (e) {
+      setErro(e.message)
+    }
+  }
+
+  // o ticket depende do orcamento, do publico e da margem: recalcula junto
+  function recarregarTudo() {
+    plano.recarregar()
+    setVersao((v) => v + 1)
+  }
+
+  async function salvarDados(dados) {
+    await eventos.editar(ev.id_evento, dados)
+    setEditando(false)
+    dispatch({ type: 'aviso', texto: 'Evento atualizado.' })
+    recarregarTudo()
+  }
+
+  async function excluir() {
+    setErro(null)
+    try {
+      await eventos.excluir(ev.id_evento)
+      dispatch({ type: 'aviso', texto: `${ev.nome} excluído.` })
+      onNavigate('events')
+    } catch (e) {
+      setErro(e.message)
+      setExcluindo(false)
+    }
+  }
+
+  return (
+    <>
+      <PageHeading
+        eyebrow={`${ev.local.categoria} · ${periodo(ev.data_inicio, ev.data_fim)}`}
+        title={ev.nome}
+        description={`${ev.local.nome} — ${ev.local.cidade}/${ev.local.estado}`}
+      >
+        <StatusBadge status={rotulo(ev.status)} />
+      </PageHeading>
+
+      <EtapasEvento status={ev.status} />
+
+      {erro ? <p className="form-erro">{erro}</p> : null}
+      {ev.motivo_recusa && ev.status === 'recusado' ? (
+        <p className="request-descricao">O administrador recusou: {ev.motivo_recusa}</p>
+      ) : null}
+
+      <div className="create-layout">
+        <div className="evento-secoes">
+          {editando && !categorias.carregando ? (
+            <EventoForm
+              evento={ev}
+              categorias={categorias.dados || []}
+              rotuloBotao="Salvar alterações"
+              onSalvar={salvarDados}
+              onCancelar={() => setEditando(false)}
+            />
+          ) : (
+            <section className="bloco">
+              <div className="bloco-cab">
+                <h3>Dados do evento</h3>
+                {pode('dados') ? (
+                  <button className="btn-secondary" onClick={() => setEditando(true)}>
+                    Editar dados
+                  </button>
+                ) : null}
+              </div>
+              {ev.descricao ? <p>{ev.descricao}</p> : null}
+              <dl className="request-facts">
+                <div>
+                  <dt>Público mínimo</dt>
+                  <dd>{numero(ev.publico_minimo)} pessoas</dd>
+                </div>
+                <div>
+                  <dt>Público máximo</dt>
+                  <dd>{numero(ev.publico_maximo)} pessoas</dd>
+                </div>
+                <div>
+                  <dt>Público esperado</dt>
+                  <dd>{ev.publico_esperado ? `${numero(ev.publico_esperado)} pessoas` : '—'}</dd>
+                </div>
+                <div>
+                  <dt>Margem de lucro</dt>
+                  <dd>{Number(ev.margem_lucro).toLocaleString('pt-BR')}%</dd>
+                </div>
+              </dl>
+            </section>
+          )}
+
+          <section className="bloco">
+            <div className="bloco-cab">
+              <h3>Itens de custo</h3>
+            </div>
+            <p>
+              O que o evento precisa contratar. É sobre esses itens que os fornecedores mandam
+              propostas.
+              {!pode('itens') ? ' Com o evento nesta situação, os itens não mudam.' : ''}
+            </p>
+            <PlanilhaCustos
+              nome="item"
+              colunas={COLUNAS_ITEM}
+              linhas={ev.itens}
+              chave="id_item"
+              podeEditar={pode('itens')}
+              total={ev.totais.itens_estimado}
+              vazioTexto="Nenhum item ainda. Comece pelo que o evento mais precisa."
+              onCriar={(d) => acao(() => eventos.criarItem(ev.id_evento, d), 'Item adicionado.')}
+              onEditar={(idItem, d) => acao(() => eventos.editarItem(ev.id_evento, idItem, d), 'Item atualizado.')}
+              onExcluir={(idItem) => acao(() => eventos.excluirItem(ev.id_evento, idItem), 'Item removido.')}
+            />
+          </section>
+
+          {mostraPropostas ? (
+            <section className="bloco">
+              <div className="bloco-cab">
+                <h3>Propostas recebidas</h3>
+              </div>
+              <p>
+                Compare as propostas de cada item e escolha uma por item. O orçamento ao lado usa a
+                proposta escolhida; item sem escolha entra pelo custo estimado.
+              </p>
+              <CompararPropostas
+                idEvento={ev.id_evento}
+                versao={versao}
+                onMudou={recarregarTudo}
+                onConversar={(p) =>
+                  onOpenPanel?.('chat', {
+                    com: { id_usuario: p.id_usuario_fornecedor, nome: p.fornecedor, tipo: 'fornecedor' },
+                    assunto: ev.nome,
+                  })
+                }
+              />
+            </section>
+          ) : null}
+
+          <section className="bloco">
+            <div className="bloco-cab">
+              <h3>Outros custos</h3>
+            </div>
+            <p>
+              Custos que não vêm de fornecedor: impostos e taxas (fiscal), equipe e produção
+              (operacional) e gastos que mudam com o público (variável, lançado como valor total).
+            </p>
+            <PlanilhaCustos
+              nome="custo"
+              colunas={COLUNAS_CUSTO}
+              linhas={ev.custos}
+              chave="id_custo"
+              podeEditar={pode('custos')}
+              total={ev.totais.custos}
+              vazioTexto="Nenhum custo extra lançado."
+              onCriar={(d) => acao(() => eventos.criarCusto(ev.id_evento, d), 'Custo adicionado.')}
+              onEditar={(idCusto, d) => acao(() => eventos.editarCusto(ev.id_evento, idCusto, d), 'Custo atualizado.')}
+              onExcluir={(idCusto) => acao(() => eventos.excluirCusto(ev.id_evento, idCusto), 'Custo removido.')}
+            />
+          </section>
+        </div>
+
+        <aside className="estimate-card">
+          <small className="eyebrow">Orçamento consolidado</small>
+          <h3>{moeda(orc.totais.custo_total)}</h3>
+          <p>custo total do evento, usado no cálculo do ticket</p>
+          <dl>
+            <div>
+              <dt>Propostas escolhidas ({orc.contagem.itens_com_proposta})</dt>
+              <dd>{moeda(orc.totais.propostas_selecionadas)}</dd>
+            </div>
+            <div>
+              <dt>Itens pelo custo estimado ({orc.contagem.itens_sem_proposta})</dt>
+              <dd>{moeda(orc.totais.itens_sem_proposta)}</dd>
+            </div>
+            {TIPOS_CUSTO.map((t) =>
+              orc.totais.custos_por_tipo[t.id] ? (
+                <div key={t.id}>
+                  <dt>{t.label}</dt>
+                  <dd>{moeda(orc.totais.custos_por_tipo[t.id])}</dd>
+                </div>
+              ) : null,
+            )}
+          </dl>
+
+          <div className="cotacao-card">
+            <small className="eyebrow">Cotação com fornecedores</small>
+            {ev.status === 'em_cotacao' ? (
+              <>
+                <p>
+                  Os fornecedores credenciados estão vendo os itens e mandando propostas. Encerre
+                  quando quiser comparar.
+                </p>
+                <button
+                  className="btn-secondary btn-block"
+                  onClick={() => acao(() => eventos.encerrarCotacao(ev.id_evento), 'Cotação encerrada.')}
+                >
+                  Encerrar cotação
+                </button>
+              </>
+            ) : ['rascunho', 'recusado', 'cotacao_encerrada'].includes(ev.status) ? (
+              <>
+                <p>
+                  {ev.status === 'cotacao_encerrada'
+                    ? 'Cotação encerrada. Dá para reabrir se precisar de mais propostas.'
+                    : 'Publique os itens para os fornecedores credenciados mandarem propostas.'}
+                </p>
+                <button
+                  className="btn-secondary btn-block"
+                  disabled={ev.itens.length === 0}
+                  onClick={() =>
+                    acao(() => eventos.abrirCotacao(ev.id_evento), 'Evento publicado para cotação.')
+                  }
+                >
+                  {ev.status === 'cotacao_encerrada' ? 'Reabrir cotação' : 'Publicar para cotação'}
+                </button>
+              </>
+            ) : (
+              <p>Com o evento nesta situação, a cotação não muda.</p>
+            )}
+          </div>
+
+          <div className="ticket-card">
+            <small className="eyebrow">Ticket estimado</small>
+            <h4>Equilíbrio e alvo por cenário</h4>
+            {ticket.carregando ? <p>Calculando os tickets…</p> : null}
+            {ticket.erro ? <p className="form-erro">{ticket.erro.message}</p> : null}
+            {ticket.dados ? (
+              <>
+                <div className="tabela-rolagem">
+                  <table className="tabela ticket-tabela">
+                    <thead>
+                      <tr>
+                        <th>Cenário</th>
+                        <th className="num">Público</th>
+                        <th className="num">Equilíbrio</th>
+                        <th className="num">Alvo</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ticket.dados.cenarios.map((cenario) => (
+                        <tr key={cenario.nome}>
+                          <td>{cenario.nome}</td>
+                          <td className="num">{numero(cenario.publico)}</td>
+                          <td className="num">{moeda(cenario.ticketEquilibrio)}</td>
+                          <td className="num">{moeda(cenario.ticketAlvo)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="ticket-formula">
+                  Equilíbrio = custo total ÷ público · Alvo = custo total ÷ [público × (1 − margem)]
+                </p>
+              </>
+            ) : null}
+          </div>
+
+          {['rascunho', 'recusado', 'cotacao_encerrada'].includes(ev.status) ? (
+            <button
+              className="btn-primary btn-block"
+              disabled={ev.itens.length === 0}
+              onClick={() =>
+                acao(() => eventos.enviarAnalise(ev.id_evento), 'Evento enviado para o administrador.')
+              }
+            >
+              Enviar para análise
+            </button>
+          ) : null}
+          {ev.itens.length === 0 && ['rascunho', 'recusado'].includes(ev.status) ? (
+            <p className="estimate-note">Cadastre pelo menos um item de custo para enviar.</p>
+          ) : null}
+
+          {!['em_analise', 'aprovado'].includes(ev.status) ? (
+            excluindo ? (
+              <div className="confirmar-exclusao" role="alert">
+                <p>Excluir “{ev.nome}”? Isso apaga também os itens e os custos.</p>
+                <div>
+                  <button className="btn-secondary" onClick={() => setExcluindo(false)}>
+                    Cancelar
+                  </button>
+                  <button className="btn-recusar" onClick={excluir}>
+                    Excluir evento
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button className="btn-link perigo" onClick={() => setExcluindo(true)}>
+                Excluir evento
+              </button>
+            )
+          ) : null}
+        </aside>
+      </div>
+    </>
+  )
+}

@@ -1,0 +1,835 @@
+/* ==========================================================================
+   Telas que falam com a API (modelo Noite, VIS-05)
+
+   Listas, tabelas, a tela do evento (planilha, propostas, orcamento),
+   a cotacao do fornecedor e os relatorios do administrador, com a cara
+   da pagina inicial: tabelas e propostas em cartoes de adesivo, texto de
+   13px para cima (16px nos campos, para o celular nao dar zoom).
+   ========================================================================== */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+/* no celular os numeros ficam dois por linha, nao um cartao por tela */
+@media (max-width: 680px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .stat {
+    padding: 16px;
+  }
+
+  /* numero que sobraria sozinho na ultima linha ocupa a linha toda, e o
+     valor em reais tambem: dois por linha ele nao cabe */
+  .stat:last-child:nth-child(odd),
+  .stat.is-longo {
+    grid-column: 1 / -1;
+  }
+
+  .stat-value {
+    font-size: 36px;
+  }
+}
+
+.form-erro {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  background: var(--negative-bg);
+  border-left: 4px solid var(--negative);
+  border-radius: 10px;
+  color: var(--negative);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-nota {
+  margin: -4px 0 18px;
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.bloco {
+  margin-bottom: 40px;
+}
+
+.bloco h3 {
+  margin: 0 0 12px;
+  font-size: clamp(24px, 2.2vw, 30px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.bloco > p {
+  max-width: 72ch;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.bloco .btn-primary {
+  margin-top: 14px;
+}
+
+.request-descricao {
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-soft);
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.evento-detalhe {
+  display: grid;
+  gap: 10px;
+  padding: 18px 0 4px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.evento-detalhe strong {
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.evento-detalhe p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.evento-detalhe .request-facts {
+  margin-top: 6px;
+}
+
+/* --- tabelas: linhas e alinhamento, sem faixa no cabecalho --- */
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.tabela th {
+  padding: 12px 12px 10px 0;
+  border-bottom: 3px solid var(--contorno);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tabela td {
+  padding: 12px 12px 12px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.tabela th:last-child,
+.tabela td:last-child {
+  padding-right: 0;
+}
+
+.tabela .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* a tabela fica num cartao de adesivo branco e rola por dentro dele */
+.tabela-rolagem {
+  overflow-x: auto;
+  padding: 6px 20px 8px;
+  background: var(--surface);
+  border: var(--adesivo-borda);
+  border-radius: 20px;
+  box-shadow: var(--adesivo-sombra);
+}
+
+.tabela-rolagem .tabela tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* dentro do cartao do orcamento a tabela do ticket fica sem moldura */
+.estimate-card .tabela-rolagem {
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.lista-simples {
+  margin: 0;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+  list-style: none;
+}
+
+.lista-simples li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* e-mail e link longos quebram dentro do card em vez de invadir o vizinho */
+.request-facts > div {
+  min-width: 0;
+}
+
+/* --- motivo da recusa, aberto dentro do card --- */
+
+.recusa-form {
+  display: grid;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.recusa-form label {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.recusa-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--field-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.recusa-form textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+  outline: none;
+}
+
+.recusa-form small {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.recusa-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-recusar {
+  min-height: 40px;
+  padding: 8px 16px;
+  background: var(--negative-bg);
+  border: 1px solid var(--negative-border);
+  border-radius: 999px;
+  color: var(--negative);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-recusar:hover {
+  background: var(--negative-hover);
+}
+
+.btn-recusar:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* --- tela do evento (FLX-02 / WEB-05) ------------------------------------ */
+
+.bloco-cab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.bloco-cab h3 {
+  margin: 0;
+}
+
+.bloco > p + .planilha,
+.bloco > p + .request-facts {
+  margin-top: 16px;
+}
+
+.planilha-tabela tfoot td {
+  padding-top: 14px;
+  border-bottom: 0;
+  color: var(--text);
+  font-weight: 800;
+}
+
+.planilha-vazia {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.planilha-acoes {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.planilha-acoes > * + * {
+  margin-left: 14px;
+}
+
+.planilha-acoes span {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.planilha-editando input,
+.planilha-editando select,
+.planilha-nova input,
+.planilha-nova select {
+  width: 100%;
+  min-height: 46px;
+  padding: 8px 12px;
+  background: var(--field-bg);
+  border: 3px solid var(--contorno);
+  border-radius: 12px;
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.planilha-editando input:focus,
+.planilha-editando select:focus,
+.planilha-nova input:focus,
+.planilha-nova select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+  outline: none;
+}
+
+/* lista aberta do select: cores explicitas (no Windows escuro vinha
+   texto branco sobre fundo branco) */
+.planilha-editando select option,
+.planilha-nova select option {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.planilha-nova {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  align-items: end;
+  margin-top: 20px;
+  padding: 18px;
+  background: var(--surface);
+  border: 3px dashed var(--contorno);
+  border-radius: 20px;
+}
+
+.planilha-nova label {
+  display: grid;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.btn-link.perigo {
+  color: var(--negative);
+}
+
+.estimate-card > .btn-link.perigo {
+  display: block;
+  margin-top: 18px;
+}
+
+.confirmar-exclusao {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: var(--negative-bg);
+  border: 1px solid var(--negative-border);
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.confirmar-exclusao p {
+  margin: 0;
+  color: var(--text);
+}
+
+.confirmar-exclusao div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.estimate-card .btn-block {
+  margin-top: 20px;
+}
+
+/* no cartao do orcamento a tabela do ticket cabe inteira: sem largura
+   minima e com menos respiro entre as colunas */
+.estimate-card .ticket-tabela {
+  min-width: 0;
+  font-size: 14px;
+}
+
+.estimate-card .tabela th,
+.estimate-card .tabela td {
+  padding-right: 8px;
+}
+
+.estimate-card .tabela th:last-child,
+.estimate-card .tabela td:last-child {
+  padding-right: 0;
+}
+
+/* o alvo e o numero que a pessoa veio buscar: em roxo e mais forte */
+.estimate-card .ticket-tabela td:last-child {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+@media (max-width: 980px) {
+  .create-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* numa coluna so, o orcamento e o ticket vem logo abaixo do titulo:
+     e a resposta que o organizador procura na tela */
+  .create-layout > .estimate-card {
+    order: -1;
+    margin-bottom: 16px;
+  }
+}
+
+/* no celular as tabelas da planilha rolam para o lado (de borda a borda)
+   em vez de espremer a descricao palavra por palavra */
+@media (max-width: 680px) {
+  .tabela-rolagem {
+    padding-inline: 14px;
+  }
+
+  .tabela-rolagem > .tabela {
+    min-width: 620px;
+  }
+
+  .estimate-card .tabela-rolagem > .tabela {
+    min-width: 0;
+  }
+}
+
+/* --- cotacao (FLX-03) ----------------------------------------------------- */
+
+.cotacao-card {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.cotacao-card p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.cotacao-card .btn-block {
+  margin-top: 4px;
+}
+
+/* --- propostas do fornecedor (FLX-04) ------------------------------------- */
+
+.cotacao-itens {
+  display: grid;
+  gap: 12px;
+}
+
+.cotacao-item {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  background: var(--surface);
+  border: var(--adesivo-borda);
+  border-radius: 20px;
+  box-shadow: var(--adesivo-sombra);
+}
+
+.cotacao-item-cab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cotacao-item-cab strong {
+  display: block;
+  margin: 4px 0 2px;
+  font-size: 17px;
+}
+
+.cotacao-item-cab span,
+.cotacao-minha p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.cotacao-minha {
+  display: grid;
+  gap: 6px;
+}
+
+.cotacao-minha .request-actions span {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.proposta-form .field {
+  margin-bottom: 12px;
+}
+
+.texto-perigo {
+  color: var(--negative);
+}
+
+/* --- comparar propostas (FLX-05) ------------------------------------------ */
+
+.comparar {
+  display: grid;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.comparar-nota {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.comparar-item {
+  display: grid;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 2px dashed var(--contorno);
+}
+
+.comparar-item-cab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.comparar-item-cab strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.comparar-item-cab span {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.comparar-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+  gap: 12px;
+}
+
+.comparar-proposta {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 18px;
+  background: var(--surface);
+  border: var(--adesivo-borda);
+  border-radius: 20px;
+  box-shadow: var(--adesivo-sombra-sm);
+  font-size: 15px;
+}
+
+/* a proposta escolhida vira adesivo verde: fundo claro e sombra verde */
+.comparar-proposta.is-selecionada {
+  background: var(--positive-bg);
+  box-shadow: 6px 6px 0 0 var(--positive);
+}
+
+.comparar-proposta header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.comparar-proposta p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.comparar-proposta small {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.comparar-valor {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.comparar-menor {
+  justify-self: start;
+  padding: 3px 10px;
+  background: var(--positive-bg);
+  border-radius: 999px;
+  color: var(--positive) !important;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.comparar-obs {
+  font-style: italic;
+}
+
+.comparar-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 4px;
+}
+
+/* --- relatorios do adm (FLX-07) ------------------------------------------- */
+
+.relatorio-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: 0 32px;
+  margin-top: 28px;
+}
+
+.relatorio-total {
+  color: var(--text-dim);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.relatorio-barra {
+  width: 45%;
+}
+
+/* a barra e dado: leva a cor de destaque da plataforma */
+.relatorio-barra span {
+  display: block;
+  height: 12px;
+  min-width: 4px;
+  background: var(--degrade-logo);
+  border: 2px solid var(--contorno);
+  border-radius: 999px;
+}
+
+/* --- andamento do evento: a linha das etapas da pagina inicial ----------- */
+
+.etapas-evento {
+  margin-bottom: 44px;
+  padding: 24px clamp(20px, 3vw, 32px) 28px;
+  background: var(--surface);
+  border: var(--adesivo-borda);
+  border-radius: 22px;
+  box-shadow: var(--adesivo-sombra);
+}
+
+.etapas-evento h3 {
+  margin: 0 0 24px;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.etapas-evento-corpo {
+  position: relative;
+}
+
+.etapas-evento ol {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* a linha vai do centro do primeiro numero ao centro do ultimo:
+   cada coluna tem (100% - 4 vaos de 12px) / 5 de largura */
+.etapas-evento-trilho {
+  position: absolute;
+  top: 25px;
+  left: calc((100% - 48px) / 10);
+  right: calc((100% - 48px) / 10);
+  height: 10px;
+  overflow: hidden;
+  border: 2px solid var(--contorno);
+  border-radius: 999px;
+  background: var(--surface-hover);
+  transform: translateY(-50%);
+}
+
+/* o degrade fica parado e e revelado ate a etapa atual */
+.etapas-evento-trilho > span {
+  position: absolute;
+  inset: 0;
+  background: var(--degrade-logo);
+  clip-path: inset(0 calc((1 - var(--progresso, 0)) * 100%) 0 0);
+}
+
+.etapa-evento {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.etapa-evento b {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 6px;
+  border: 3px solid var(--contorno);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.etapa-evento strong {
+  color: var(--text-muted);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.etapa-evento small {
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.etapa-evento.is-feita strong,
+.etapa-evento.is-atual strong {
+  color: var(--text);
+  font-weight: 900;
+}
+
+/* numero aceso com a cor da linha naquele ponto, e o texto que tiver mais
+   contraste: azul 7,9:1, roxo 5,6:1, violeta 5,2:1, rosa 5,1:1, laranja 7,5:1 */
+.etapa-evento:nth-child(1):is(.is-feita, .is-atual) b {
+  background: var(--tt-azul);
+  color: var(--tt-noite);
+}
+
+.etapa-evento:nth-child(2):is(.is-feita, .is-atual) b {
+  background: var(--tt-roxo);
+  color: var(--tt-branco);
+}
+
+.etapa-evento:nth-child(3):is(.is-feita, .is-atual) b {
+  background: #a536d0;
+  color: var(--tt-branco);
+}
+
+.etapa-evento:nth-child(4):is(.is-feita, .is-atual) b {
+  background: var(--tt-rosa);
+  color: var(--tt-noite);
+}
+
+.etapa-evento:nth-child(5):is(.is-feita, .is-atual) b {
+  background: var(--tt-laranja);
+  color: var(--tt-noite);
+}
+
+/* a etapa atual salta como adesivo */
+.etapa-evento.is-atual b {
+  box-shadow: 4px 4px 0 0 var(--contorno);
+  transform: scale(1.12);
+}
+
+/* recusado na analise: carimbo vermelho (branco no vermelho: 6,6:1) */
+.etapa-evento.is-recusada b {
+  background: var(--negative);
+  color: var(--tt-branco);
+}
+
+.etapa-evento.is-recusada strong {
+  color: var(--negative);
+}
+
+/* no celular a linha fica de pe, como na pagina inicial */
+@media (max-width: 680px) {
+  .etapas-evento ol {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .etapas-evento-trilho {
+    top: 25px;
+    bottom: 25px;
+    left: 25px;
+    right: auto;
+    width: 10px;
+    height: auto;
+    transform: translateX(-50%);
+  }
+
+  .etapas-evento-trilho > span {
+    clip-path: inset(0 0 calc((1 - var(--progresso, 0)) * 100%) 0);
+  }
+
+  .etapa-evento {
+    grid-template-columns: 50px minmax(0, 1fr);
+    column-gap: 16px;
+    row-gap: 2px;
+    align-items: center;
+    min-height: 50px;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .etapa-evento b {
+    grid-row: span 2;
+    margin-bottom: 0;
+  }
+}

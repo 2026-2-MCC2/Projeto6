@@ -1,0 +1,465 @@
+/* ==================================================================
+   Cores do TrocaTicket: o unico lugar do site com cor escrita.
+
+   Origem das cores:
+   - preto, branco e o palido (#d7e2ea) foram medidos no site publicado
+     (trocaticket.com.br), lendo as cores computadas no navegador;
+   - azul, roxo, rosa e laranja sao da logo oficial (VIS-02), com os
+     valores da paleta Noite (VIS-05), conferidos na imagem da logo;
+   - a paleta Noite (VIS-05) usa o azul-noite no lugar do preto, cinzas
+     puxados para o mesmo tom, o roxo da logo nas acoes e o lilas como
+     destaque. O degrade da logo so aparece em destaque de marca;
+   - o azul profundo e o azul claro aparecem em brilhos e destaques do
+     site; verde, ambar e vermelho so aparecem como status.
+
+   Como usar:
+   1. Paleta da marca: so as cores, com nome proprio. Nao diz onde usar.
+   2. Tokens de uso: dizem PARA QUE a cor serve (fundo, texto, borda...).
+      Os arquivos de tela e componente usam estes nomes.
+   3. Faixas: classes que redefinem os tokens de uso num trecho da
+      pagina (entram com a VIS-01).
+
+   Para mudar uma cor do site, mude a linha dela aqui.
+   ================================================================== */
+
+:root {
+  /* ----------------------------------------------------------------
+     1. Paleta da marca
+     ---------------------------------------------------------------- */
+
+  --tt-preto: #0c0c0c;
+  --tt-branco: #ffffff;
+  --tt-palido: #d7e2ea;
+
+  /* cores da logo */
+  --tt-azul: #30b0f0;
+  --tt-roxo: #5b4cf0;
+  --tt-rosa: #f020b0;
+  --tt-laranja: #ff7a45;
+
+  /* paleta Noite (VIS-05) */
+  --tt-noite: #0b0b1e;
+  --tt-papel: #f7f6fd;
+  --tt-lilas: #a9adff;
+  --tt-roxo-escuro: #4b3fe0;
+  --tt-rosa-escuro: #b0107e;
+  --tt-azul-escuro: #0a6a9c;
+  /* texto de apoio: no papel, na noite e no lilas */
+  --tt-cinza-noite: #46465e;
+  --tt-nevoa: #c9c9e0;
+  --tt-noite-lilas: #1d1f4a;
+  /* erro sobre o papel: texto 6,1:1 no papel e 5,8:1 no fundo do aviso */
+  --tt-vermelho-tinta: #b42318;
+  --tt-vermelho-papel: #fdeceb;
+
+  /* azuis dos brilhos e destaques */
+  --tt-azul-profundo: #1e5cb3;
+  --tt-azul-claro: #5b9bf0;
+
+  /* escala de cinzas: o numero e o valor hexadecimal de cada canal
+     (--tt-cinza-17 = #171717). Do mais escuro para o mais claro. */
+  --tt-cinza-08: #080808;
+  --tt-cinza-10: #101010;
+  --tt-cinza-13: #131313;
+  --tt-cinza-17: #171717;
+  --tt-cinza-1c: #1c1c1c;
+  --tt-cinza-26: #262626;
+  --tt-cinza-48: #484848;
+  --tt-cinza-6d: #6d6d6d;
+  --tt-cinza-74: #747474;
+  --tt-cinza-84: #848484;
+  --tt-cinza-9c: #9c9c9c;
+  --tt-cinza-c3: #c3c3c3;
+  --tt-cinza-de: #dedede;
+  --tt-cinza-e8: #e8e8e8;
+  --tt-cinza-f2: #f2f2f2;
+
+  /* branco translucido por cima do preto (o numero e a opacidade em %).
+     E assim que o site desenha superficies e bordas. */
+  --tt-branco-1: #ffffff03;
+  --tt-branco-2: #ffffff05;
+  --tt-branco-3: #ffffff08;
+  --tt-branco-4: #ffffff0a;
+  --tt-branco-6: #ffffff0f;
+  --tt-branco-8: #ffffff14;
+  --tt-branco-10: #ffffff1a;
+  --tt-branco-12: #ffffff1f;
+  --tt-branco-18: #ffffff2e;
+  --tt-branco-20: #ffffff33;
+
+  /* o preto do site translucido por cima do branco (o numero e a
+     opacidade em %). E o par do --tt-branco-N para as faixas claras. */
+  --tt-tinta-6: #0c0c0c0f;
+  --tt-tinta-10: #0c0c0c1a;
+  --tt-tinta-12: #0c0c0c1f;
+  --tt-tinta-20: #0c0c0c33;
+
+  /* preto translucido, para sombras (o numero e a opacidade em %) */
+  --tt-sombra-35: #00000059;
+  --tt-sombra-40: #00000066;
+  --tt-sombra-50: #00000080;
+  --tt-sombra-60: #00000099;
+  --tt-sombra-65: #000000a6;
+  --tt-sombra-70: #000000b3;
+  --tt-sombra-80: #000000cc;
+  --tt-sombra-85: #000000d9;
+  --tt-sombra-100: #000000;
+
+  /* status. Contraste medido sobre o fundo --tt-preto:
+     verde 7,7:1, ambar 11:1, vermelho 7,1:1 (todos passam do AA, 4,5:1) */
+  --tt-verde: #10b981;
+  --tt-verde-escuro: #0c2b22;
+  --tt-verde-medio: #0f3a2e;
+  --tt-verde-borda: #16614a;
+  --tt-ambar: #f5b84b;
+  --tt-vermelho: #f87171;
+  --tt-vermelho-escuro: #2b1316;
+  --tt-vermelho-medio: #3a1a1e;
+  --tt-vermelho-borda: #5c2429;
+
+  /* ----------------------------------------------------------------
+     2. Tokens de uso
+     ---------------------------------------------------------------- */
+
+  /* diz ao navegador que a pagina e escura: sem isso ele desenha a
+     lista do select e o calendario do date com fundo branco */
+  color-scheme: dark;
+
+  --bg: var(--tt-preto);
+  --surface: var(--tt-cinza-10);
+  --surface-raised: var(--tt-cinza-17);
+  --surface-hover: var(--tt-cinza-1c);
+  /* superficie um degrau abaixo (botoes de escolha, linhas de lista) */
+  --surface-muted: var(--tt-cinza-13);
+  --field-bg: var(--tt-cinza-08);
+
+  /* no site as bordas sao branco com alpha, nao cinza chapado */
+  --border: var(--tt-branco-10);
+  --border-soft: var(--tt-branco-6);
+  --border-strong: var(--tt-branco-20);
+
+  /* texto: branco e o palido com tres opacidades.
+     Contraste sobre --bg: texto 19,6:1, muted 9,6:1, dim 5,2:1, faint 4:1.
+     O faint fica abaixo do AA (4,5:1): usar so em texto de apoio, nunca
+     em informacao que a pessoa precisa ler para usar a tela. */
+  --text: var(--tt-branco);
+  --text-muted: #d7e2eacc;
+  --text-dim: #d7e2ea8f;
+  --text-faint: #d7e2ea7a;
+
+  /* o palido da marca, usado em destaque e estado ativo */
+  --accent: var(--tt-palido);
+  --accent-bg: var(--tt-branco-6);
+
+  /* o azul que aparece em gradiente e borda no site */
+  --marca: var(--tt-azul-profundo);
+  --marca-clara: var(--tt-azul-claro);
+  --marca-brilho: #1e5cb333;
+  --marca-brilho-suave: #1e5cb31a;
+  --marca-clara-halo: #5b9bf026;
+
+  /* acao principal: pilula branca com texto escuro */
+  --acao: var(--tt-branco);
+  --acao-texto: var(--tt-preto);
+  --acao-texto-fundo: var(--tt-tinta-12);
+  --acao-degrade: linear-gradient(180deg, var(--tt-branco), var(--tt-cinza-e8));
+  --acao-degrade-hover: linear-gradient(180deg, var(--tt-branco), var(--tt-cinza-f2));
+  --acao-realce: inset 0 1px 0 var(--tt-branco);
+  --acao-sombra: 0 2px 6px -1px var(--tt-sombra-60), 0 8px 20px -8px var(--tt-sombra-70);
+  --acao-sombra-hover: 0 4px 10px -2px var(--tt-sombra-70), 0 12px 26px -8px var(--tt-sombra-80);
+
+  /* acao secundaria: botao escuro com borda */
+  --secundario-degrade: linear-gradient(180deg, var(--tt-cinza-1c), var(--tt-cinza-13));
+  --secundario-degrade-hover: linear-gradient(180deg, var(--tt-cinza-26), var(--tt-cinza-1c));
+  --secundario-sombra: 0 2px 6px -2px var(--tt-sombra-65);
+
+  /* barras fixas com fundo de vidro (o conteudo aparece borrado atras) */
+  --vidro-topbar: #0f0f0fd9;
+  --vidro-site: #0a0a0acc;
+
+  --positive: var(--tt-verde);
+  --positive-bg: var(--tt-verde-escuro);
+  --positive-hover: var(--tt-verde-medio);
+  --positive-border: var(--tt-verde-borda);
+  --positive-halo: #10b98126;
+
+  --waiting: var(--tt-ambar);
+  --waiting-halo: #f5b84b26;
+
+  --negative: var(--tt-vermelho);
+  --negative-bg: var(--tt-vermelho-escuro);
+  --negative-hover: var(--tt-vermelho-medio);
+  --negative-border: var(--tt-vermelho-borda);
+  --negative-halo: #f8717126;
+
+  /* ----------------------------------------------------------------
+     Escala
+
+     O tamanho do texto e o respiro das secoes acompanham a largura da
+     tela em vez de pular em dois ou tres breakpoints. O clamp define o
+     minimo, o quanto cresce e o maximo.
+     ---------------------------------------------------------------- */
+
+  --text-display: clamp(2.5rem, 1.5rem + 3.9vw, 4.6rem);
+  --text-h2:      clamp(1.85rem, 1.35rem + 2vw, 3rem);
+  --text-h3:      clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem);
+  --text-lead:    clamp(1rem, 0.94rem + 0.3vw, 1.18rem);
+  --text-body:    0.95rem;
+  --text-small:   0.8125rem;
+  --text-eyebrow: 0.75rem;
+
+  --espaco-1: 0.5rem;
+  --espaco-2: 1rem;
+  --espaco-3: 1.5rem;
+  --espaco-4: 2rem;
+  --espaco-5: 2.5rem;
+  --espaco-6: 3rem;
+  --espaco-8: 4rem;
+
+  --secao:  clamp(4.5rem, 3rem + 6vw, 8.5rem);
+  --gutter: clamp(1.25rem, 0.5rem + 2.6vw, 3rem);
+  --wrap:   76rem;
+
+  --raio-sm:   8px;
+  --raio-md:   14px;
+  --raio-lg:   24px;
+  --raio-pill: 999px;
+
+  --suave: cubic-bezier(0.22, 1, 0.36, 1);
+  --duracao: 280ms;
+
+  --radius: 10px;
+
+  /* profundidade: luz de cima, sombra embaixo.
+     o realce e a linha clara na borda superior, que e o que faz
+     a superficie parecer levantada em vez de pintada */
+  --realce: inset 0 1px 0 var(--tt-branco-8);
+  --realce-forte: inset 0 1px 0 var(--tt-branco-12);
+
+  --sombra-rasa: 0 1px 2px var(--tt-sombra-50), 0 4px 12px var(--tt-sombra-35);
+  --sombra: 0 2px 4px var(--tt-sombra-60), 0 12px 28px -6px var(--tt-sombra-65);
+  --sombra-alta: 0 4px 8px var(--tt-sombra-65), 0 24px 56px -12px var(--tt-sombra-85);
+  --shadow: var(--sombra);
+
+  /* receita das superficies levantadas: degrade de cima pra baixo.
+     usada junto com --realce e --sombra-rasa */
+  --superficie-elevada: linear-gradient(168deg, var(--tt-cinza-17), var(--tt-cinza-10) 68%);
+
+  /* superficies em degrade: o topo um pouco mais claro que a base */
+  --camada: linear-gradient(180deg, var(--tt-branco-4), var(--tt-branco-1) 38%, transparent);
+  --camada-forte: linear-gradient(180deg, var(--tt-branco-8), var(--tt-branco-2) 45%, transparent);
+
+  /* ----------------------------------------------------------------
+     Modelo Noite (VIS-05): cartoes de papel com contorno grosso e
+     sombra dura em roxo, como um ingresso. As faixas (secao 3) trocam
+     o fundo; estes tokens valem dentro de todas elas.
+     ---------------------------------------------------------------- */
+
+  --cartao: var(--tt-papel);
+  --cartao-texto: var(--tt-noite);
+  --cartao-muted: var(--tt-cinza-noite);
+  --campo-fundo: var(--tt-branco);
+  --contorno: var(--tt-noite);
+  /* roxo dentro do cartao: ticket-alvo e foco dos campos (6,3:1) */
+  --cartao-destaque: var(--tt-roxo);
+  --letreiro-fundo: var(--tt-noite);
+  --sombra-dura: var(--tt-roxo);
+
+  /* lilas: numeros, selos e o letreiro sobre o fundo escuro.
+     Contraste do lilas com o azul-noite: 9,4:1 */
+  --destaque: var(--tt-lilas);
+  --destaque-texto: var(--tt-noite);
+
+  /* numero da linha das etapas antes de a linha chegar nele (6,8:1) */
+  --estacao-vazia: var(--tt-roxo-escuro);
+  --estacao-vazia-texto: var(--tt-branco);
+  /* texto do numero aceso: o escuro (--cartao-texto) ou este claro,
+     o que tiver mais contraste com a cor da linha naquele ponto */
+  --estacao-texto-claro: var(--tt-branco);
+  --trilho: var(--tt-branco-20);
+
+  /* degrade da logo: so em destaque de marca (linha das etapas e
+     nome do rodape). As paradas repetem o degrade da linha para os
+     numeros acesos pegarem a cor dela (Home.jsx le esse token) */
+  --degrade-logo: linear-gradient(90deg, var(--tt-azul), var(--tt-roxo) 36%, var(--tt-rosa) 70%, var(--tt-laranja));
+  --degrade-linha: linear-gradient(180deg, var(--tt-azul), var(--tt-rosa) 55%, var(--tt-laranja));
+  --degrade-linha-paradas: var(--tt-azul) 0, var(--tt-rosa) 0.55, var(--tt-laranja) 1;
+
+  /* carimbos das regras, sobre o cartao (todos acima de 4,5:1) */
+  --carimbo-1: var(--tt-roxo-escuro);
+  --carimbo-2: var(--tt-rosa-escuro);
+  --carimbo-3: var(--tt-azul-escuro);
+  --carimbo-4: var(--tt-noite);
+
+  --font-sans: 'DM Sans', 'Segoe UI', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+}
+
+/* ------------------------------------------------------------------
+   3. Faixas
+
+   Trechos da pagina que trocam os tokens de uso (VIS-01). Tudo o que
+   fica dentro da faixa usa os tokens, entao troca de cor junto.
+   Com o modelo Noite (VIS-05) a pagina inicial tem quatro faixas:
+   escura (azul-noite), roxa, clara (papel) e lilas.
+   ------------------------------------------------------------------ */
+
+/* faixa escura: azul-noite com texto branco e acao roxa.
+   Contraste: texto 19,4:1, muted 12:1, botao roxo com texto branco 5,6:1 */
+.faixa-escura {
+  color-scheme: dark;
+
+  --bg: var(--tt-noite);
+  --text: var(--tt-branco);
+  --text-muted: var(--tt-nevoa);
+  --acao: var(--tt-roxo);
+  --acao-texto: var(--tt-branco);
+  --foco: var(--tt-lilas);
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* faixa roxa: o roxo da logo com texto branco (5,6:1) e botao de papel */
+.faixa-roxa {
+  color-scheme: dark;
+
+  --bg: var(--tt-roxo);
+  --text: var(--tt-branco);
+  --text-muted: var(--tt-branco);
+  --acao: var(--tt-papel);
+  --acao-texto: var(--tt-noite);
+  --foco: var(--tt-noite);
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* faixa clara: papel com texto azul-noite.
+   Contraste: texto 18,4:1, muted e dim 9,1:1 */
+.faixa-clara {
+  color-scheme: light;
+
+  --bg: var(--tt-papel);
+  --text: var(--tt-noite);
+  --text-muted: var(--tt-cinza-noite);
+  --text-dim: var(--tt-cinza-noite);
+  --border: var(--tt-tinta-10);
+  --border-strong: var(--tt-tinta-20);
+
+  /* o vermelho de status do site e claro demais para o papel */
+  --negative: var(--tt-vermelho-tinta);
+  --negative-bg: var(--tt-vermelho-papel);
+  --negative-border: var(--tt-vermelho-tinta);
+  --acao: var(--tt-noite);
+  --acao-texto: var(--tt-papel);
+  --foco: var(--tt-roxo);
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* plataforma: as telas de dentro do portal (organizador, fornecedor e
+   administrador) com a cara da pagina inicial. O conteudo fica no papel,
+   como a faixa clara, com cartoes de contorno grosso e sombra dura roxa;
+   o titulo de cada tela abre numa faixa roxa (.faixa-roxa) e o menu
+   lateral fica no azul-noite (.sidebar, logo abaixo).
+   Contraste no papel: texto 18,1:1, apoio 8,5:1, roxo-escuro 6,8:1,
+   verde 5,4:1, vermelho 6,6:1 (no branco dos cartoes) */
+.plataforma,
+.toaster {
+  color-scheme: light;
+
+  --bg: var(--tt-papel);
+  --surface: var(--tt-branco);
+  --surface-raised: var(--tt-branco);
+  --surface-hover: #ecebf8;
+  --surface-muted: #efedfa;
+  --field-bg: var(--tt-branco);
+
+  --border: var(--tt-tinta-10);
+  --border-soft: var(--tt-tinta-6);
+  --border-strong: var(--tt-tinta-20);
+
+  --text: var(--tt-noite);
+  --text-muted: var(--tt-cinza-noite);
+  --text-dim: var(--tt-cinza-noite);
+  --text-faint: #5c5c78;
+
+  --accent: var(--tt-roxo-escuro);
+  --accent-bg: #4b3fe01f;
+  --marca-clara: var(--tt-roxo-escuro);
+  --marca-clara-halo: #4b3fe026;
+  --foco: var(--tt-roxo);
+
+  /* acao no papel: o botao sticker azul-noite, como na faixa clara */
+  --acao: var(--tt-noite);
+  --acao-texto: var(--tt-papel);
+
+  /* adesivo: contorno grosso e sombra dura roxa (cartoes e botoes) */
+  --adesivo-borda: 3px solid var(--contorno);
+  --adesivo-sombra: 6px 6px 0 0 var(--sombra-dura);
+  --adesivo-sombra-sm: 4px 4px 0 0 var(--sombra-dura);
+
+  --positive: #0b7a50;
+  --positive-bg: #dff3ea;
+  --positive-hover: #cdebdd;
+  --positive-border: #0b7a50;
+  --negative: var(--tt-vermelho-tinta);
+  --negative-bg: var(--tt-vermelho-papel);
+  --negative-hover: #fbdcda;
+  --negative-border: var(--tt-vermelho-tinta);
+  --waiting: #8a5a00;
+  --waiting-halo: #8a5a0026;
+
+  --vidro-topbar: var(--tt-papel);
+
+  --superficie-elevada: var(--surface);
+  --camada: none;
+  --camada-forte: none;
+  --realce: inset 0 0 0 0 transparent;
+  --realce-forte: inset 0 0 0 0 transparent;
+  --sombra-rasa: none;
+  --sombra: none;
+  --shadow: none;
+  --sombra-alta: 0 16px 40px -12px #0b0b1e59;
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* menu lateral da plataforma: azul-noite, como o topo da pagina inicial.
+   Contraste: texto 19,4:1, apoio 12:1, lilas 9,4:1 */
+.plataforma .sidebar {
+  color-scheme: dark;
+
+  --bg: var(--tt-noite);
+  --surface: #1a1a36;
+  --surface-hover: #222244;
+  --border: #c9c9e024;
+  --border-strong: #c9c9e047;
+  --text: var(--tt-branco);
+  --text-muted: var(--tt-nevoa);
+  --text-dim: #a8a8c8;
+  --accent: var(--tt-lilas);
+  --foco: var(--tt-lilas);
+  --acao: var(--tt-lilas);
+  --acao-texto: var(--tt-noite);
+
+  color: var(--text);
+}
+
+/* faixa lilas: texto azul-noite (9,4:1) e apoio em noite-lilas (7,5:1) */
+.faixa-lilas {
+  color-scheme: light;
+
+  --bg: var(--tt-lilas);
+  --text: var(--tt-noite);
+  --text-muted: var(--tt-noite-lilas);
+  --acao: var(--tt-noite);
+  --acao-texto: var(--tt-papel);
+  --foco: var(--tt-noite);
+
+  background: var(--bg);
+  color: var(--text);
+}

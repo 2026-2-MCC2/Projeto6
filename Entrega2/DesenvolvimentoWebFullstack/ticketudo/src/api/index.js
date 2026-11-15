@@ -1,0 +1,125 @@
+import { get, post, put, del } from './client'
+
+export const auth = {
+  cadastro: (dados) => post('/auth/cadastro', dados),
+  login: (email, senha) => post('/auth/login', { email, senha }),
+  eu: () => get('/auth/eu'),
+}
+
+export const catalogo = {
+  categorias: () => get('/categorias'),
+  locais: () => get('/locais'),
+  criarLocal: (dados) => post('/locais', dados),
+}
+
+export const eventos = {
+  publicos: () => get('/eventos'),
+  meus: () => get('/eventos/meus'),
+  detalhe: (id) => get(`/eventos/${id}`),
+  criar: (dados) => post('/eventos', dados),
+  editar: (id, dados) => put(`/eventos/${id}`, dados),
+  excluir: (id) => del(`/eventos/${id}`),
+  // dados + itens de custo + outros custos + totais (so o dono)
+  planejamento: (id) => get(`/eventos/${id}/planejamento`),
+  criarItem: (id, dados) => post(`/eventos/${id}/itens`, dados),
+  editarItem: (id, idItem, dados) => put(`/eventos/${id}/itens/${idItem}`, dados),
+  excluirItem: (id, idItem) => del(`/eventos/${id}/itens/${idItem}`),
+  criarCusto: (id, dados) => post(`/eventos/${id}/custos`, dados),
+  editarCusto: (id, idCusto, dados) => put(`/eventos/${id}/custos/${idCusto}`, dados),
+  excluirCusto: (id, idCusto) => del(`/eventos/${id}/custos/${idCusto}`),
+  abrirCotacao: (id) => post(`/eventos/${id}/abrir-cotacao`, {}),
+  encerrarCotacao: (id) => post(`/eventos/${id}/encerrar-cotacao`, {}),
+  // FLX-05: propostas de cada item e orcamento consolidado (so o dono)
+  propostas: (id) => get(`/eventos/${id}/propostas`),
+  orcamento: (id) => get(`/eventos/${id}/orcamento`),
+  ticket: (id) => get(`/eventos/${id}/ticket`),
+  criarLote: (id, dados) => post(`/eventos/${id}/lotes`, dados),
+  criarFornecedorExterno: (id, dados) => post(`/eventos/${id}/fornecedores-externos`, dados),
+  solicitarServico: (id, dados) => post(`/eventos/${id}/solicitacoes`, dados),
+  enviarAnalise: (id) => post(`/eventos/${id}/enviar-analise`, {}),
+}
+
+export const fornecedores = {
+  vitrine: () => get('/fornecedores'),
+  servicosDe: (id) => get(`/fornecedores/${id}/servicos`),
+  meuPerfil: () => get('/fornecedores/perfil'),
+  meusServicos: () => get('/fornecedores/meus-servicos'),
+  criarServico: (dados) => post('/fornecedores/servicos', dados),
+}
+
+// organizador e fornecedor: situacao e envio do credenciamento
+export const credenciamento = {
+  meu: () => get('/credenciamento/meu'),
+  enviar: (dados) => post('/credenciamento', dados),
+}
+
+// fornecedor credenciado: eventos em cotacao e as proprias propostas
+export const cotacoes = {
+  lista: () => get('/cotacoes'),
+  detalhe: (idEvento) => get(`/cotacoes/${idEvento}`),
+}
+
+export const propostas = {
+  enviar: (idItem, dados) => post(`/itens/${idItem}/propostas`, dados),
+  editar: (id, dados) => put(`/propostas/${id}`, dados),
+  cancelar: (id) => post(`/propostas/${id}/cancelar`, {}),
+  minhas: () => get('/propostas/minhas'),
+  // organizador escolhe (FLX-05)
+  selecionar: (id) => post(`/propostas/${id}/selecionar`, {}),
+  desmarcar: (id) => post(`/propostas/${id}/desmarcar`, {}),
+}
+
+export const solicitacoes = {
+  minhas: () => get('/solicitacoes'),
+  aceitar: (id) => post(`/solicitacoes/${id}/aceitar`, {}),
+  recusar: (id) => post(`/solicitacoes/${id}/recusar`, {}),
+}
+
+export const ingressos = {
+  meus: () => get('/ingressos/meus'),
+  revendaDoEvento: (id) => get(`/ingressos/revenda/${id}`),
+  anunciar: (id, preco) => post(`/ingressos/${id}/anunciar`, { preco }),
+  cancelarAnuncio: (id) => del(`/ingressos/${id}/anuncio`),
+}
+
+export const pedidos = {
+  comprar: (dados) => post('/pedidos', dados),
+  comprarRevenda: (dados) => post('/pedidos/revenda', dados),
+  meus: () => get('/pedidos/meus'),
+}
+
+export const chats = {
+  lista: () => get('/chats'),
+  naoLidas: () => get('/chats/nao-lidas'),
+  contatos: (busca = '') => get(`/chats/contatos?busca=${encodeURIComponent(busca)}`),
+  // abre (ou reaproveita) a conversa direta: { id_usuario, mensagem?, assunto? }
+  abrir: (dados) => post('/chats', dados),
+  // cabecalho + mensagens; com "depois", so as mensagens novas
+  conversa: (id, depois = 0) => get(`/chats/${id}?depois=${depois}`),
+  enviar: (id, texto) => post(`/chats/${id}/mensagens`, { texto }),
+  lida: (id, ate) => post(`/chats/${id}/lida`, { ate }),
+}
+
+export const admin = {
+  // status: em_analise, em_cotacao, aprovado... ou 'todos'
+  eventos: (status = 'em_analise') => get(`/admin/eventos?status=${status}`),
+  evento: (id) => get(`/admin/eventos/${id}`),
+  relatorios: () => get('/admin/relatorios'),
+  aprovacoes: () => get('/admin/aprovacoes'),
+  aprovarEvento: (id) => post(`/admin/eventos/${id}/aprovar`, {}),
+  recusarEvento: (id, motivo) => post(`/admin/eventos/${id}/recusar`, { motivo }),
+  // perfil: 'organizador' ou 'fornecedor'
+  credenciamentos: (perfil, status = 'em_analise') =>
+    get(`/admin/credenciamentos?perfil=${perfil}&status=${status}`),
+  // os dois perfis juntos, para os contadores
+  credenciamentosNaFila: async () => {
+    const [orgs, forns] = await Promise.all([
+      get('/admin/credenciamentos?perfil=organizador'),
+      get('/admin/credenciamentos?perfil=fornecedor'),
+    ])
+    return [...orgs, ...forns]
+  },
+  aprovarCredenciamento: (id) => post(`/admin/credenciamentos/${id}/aprovar`, {}),
+  recusarCredenciamento: (id, observacao) =>
+    post(`/admin/credenciamentos/${id}/recusar`, { observacao }),
+}

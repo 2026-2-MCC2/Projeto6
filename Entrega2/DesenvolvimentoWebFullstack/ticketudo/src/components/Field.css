@@ -1,0 +1,99 @@
+/* cartao de formulario: adesivo branco, como o cartao do login */
+.form-card {
+  padding: clamp(20px, 2.6vw, 34px);
+  background: var(--superficie-elevada);
+  border: var(--adesivo-borda, 1px solid var(--border));
+  border-radius: 22px;
+  box-shadow: var(--adesivo-sombra, none);
+}
+
+.form-card > h3 {
+  margin: 0 0 22px;
+  padding-bottom: 18px;
+  border-bottom: 2px dashed var(--contorno);
+  color: var(--text);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.field {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* campos no desenho do login: contorno grosso e cantos de 12px */
+.field input,
+.field textarea,
+.field select {
+  display: block;
+  width: 100%;
+  min-height: 50px;
+  margin-top: 8px;
+  padding: 11px 14px;
+  background: var(--field-bg);
+  border: 3px solid var(--contorno);
+  border-radius: 12px;
+  color: var(--text);
+  /* 16px ou mais: o celular nao da zoom ao tocar no campo */
+  font-size: 16px;
+  font-weight: 600;
+  outline: 0;
+}
+
+.field textarea {
+  line-height: 1.5;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--text-faint);
+  font-weight: 400;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field-error,
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.field-error {
+  color: var(--negative);
+}
+
+.field-hint {
+  color: var(--text-dim);
+}
+
+.field.has-error input,
+.field.has-error textarea,
+.field.has-error select {
+  border-color: var(--negative-border);
+}
+
+/* a lista aberta do select e desenhada pelo sistema, nao pelo CSS da
+   pagina. no Windows ela vinha branca com o texto branco por cima. */
+.field select option,
+.field select optgroup {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+/* foco do campo: o mesmo do login, contorno roxo fora do campo */
+.field select:focus-visible,
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 2px;
+}
